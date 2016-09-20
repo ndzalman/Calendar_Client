@@ -38,7 +38,7 @@ public class SignUpActivity extends AppCompatActivity {
         });
 
 
-
+        //date picker
          datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {

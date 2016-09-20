@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">Calendar</string>
+
+    <!--Alert Dialog - No internet-->
+    <string name="alert_dialog_title">No Internet Connection</string>
+    <string name="alert_dialog_positive">Try Again</string>
+    <string name="alert_dialog_negative">Exit</string>
+
+    <!--SplashScreen status-->
+    <string name="splash_screen_status_start">Please Wait..</string>
+    <string name="splash_screen_status_in_progress">Loading Components..</string>
+    <string name="splash_screen_status_end">Done !</string>
+
+    <!--LoginScreen -->
+    <string name="login_title">Login</string>
+    <string name="login_email_hint">Email</string>
+    <string name="login_password_hint">Password</string>
+    <string name="login_button">Login</string>
+    <string name="login_sign_up">No account yet? Create one</string>
+    <string name="login_password_error_length">minimum 5 letters</string>
+    <string name="login_password_error_empty">password is empty</string>
+    <string name="login_email_error_invalid">invalid email</string>
+    <string name="login_email_error_empty">email is empty</string>
+
+
+</resources>

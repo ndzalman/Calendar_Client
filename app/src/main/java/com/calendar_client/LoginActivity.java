@@ -59,7 +59,7 @@ public class LoginActivity extends AppCompatActivity {
                 }
 
                 if (valid){
-                    Intent eventIntent = new Intent(LoginActivity.this,EventActivity.class);
+                    Intent eventIntent = new Intent(LoginActivity.this,EventsActivity.class);
                     startActivity(eventIntent);
                 }
             }

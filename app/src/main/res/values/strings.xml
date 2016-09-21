@@ -22,5 +22,26 @@
     <string name="login_email_error_invalid">invalid email</string>
     <string name="login_email_error_empty">email is empty</string>
 
+    <!--SignUp Screen -->
+    <string name="sign_up_title">Sign Up</string>
+    <string name="sign_up_username_hint">User Name</string>
+    <string name="sign_up_email_hint">Email</string>
+    <string name="sign_up_password_hint">Password</string>
+    <string name="sign_up_confirm_password_hint">Confirm Password</string>
+    <string name="sign_up_date">Date Of Birth</string>
+    <string name="sign_up_link_login">Already a member? Login</string>
+    <string name="sign_up_btn_sign_up">Create Account</string>
+    <string name="sign_up_username_error_length">minimum 5 letters</string>
+    <string name="sign_up_username_error_empty">user name is empty</string>
+    <string name="sign_up_email_error_invalid">invalid email</string>
+    <string name="sign_up_email_error_empty">email is empty</string>
+    <string name="sign_up_password_error_length">minimum 5 letters</string>
+    <string name="sign_up_password_error_empty">password is empty</string>
+    <string name="sign_up_confirm_password_error_no_match">password are not equal</string>
+    <string name="sign_up_date_empty">pick your date of birth</string>
+    <string name="sign_up_successful">Account Created !</string>
+
+
+
 
 </resources>

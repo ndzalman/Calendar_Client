@@ -23,4 +23,25 @@
     <string name="login_email_error_invalid">כתובת אימייל לא תקינה</string>
     <string name="login_email_error_empty">כתובת אימייל לא יכולה להיות ריקה</string>
 
+    <!--SignUp Screen -->
+    <string name="sign_up_title">הרשמה</string>
+    <string name="sign_up_username_hint">שם משתמש</string>
+    <string name="sign_up_email_hint">דואר אלקטרוני</string>
+    <string name="sign_up_password_hint">סיסמא</string>
+    <string name="sign_up_confirm_password_hint">אמת סיסמא</string>
+    <string name="sign_up_date">תאריך לידה</string>
+    <string name="sign_up_link_login">כבר רשום? התחבר</string>
+    <string name="sign_up_btn_sign_up">צור חשבון</string>
+    <string name="sign_up_username_error_length">מינמום 5 תווים</string>
+    <string name="sign_up_username_error_empty">שם המשתמש ריק</string>
+    <string name="sign_up_email_error_invalid">כתובת דואר אלקטרוני לא חוקית</string>
+    <string name="sign_up_email_error_empty">כתובת דואר אלקטרוני ריקה</string>
+    <string name="sign_up_password_error_length">מינמום 5 תווים</string>
+    <string name="sign_up_password_error_empty">הסיסמא ריקה</string>
+    <string name="sign_up_confirm_password_error_no_match">הסיסמאות לא זהות</string>
+    <string name="sign_up_date_empty">הכנס תאריך לידה</string>
+    <string name="sign_up_successful">החשבון נוצר בהצלחה !</string>
+
+
+
 </resources>

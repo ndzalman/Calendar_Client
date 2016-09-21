@@ -42,6 +42,14 @@
     <string name="sign_up_date_empty">הכנס תאריך לידה</string>
     <string name="sign_up_successful">החשבון נוצר בהצלחה !</string>
 
+    <!--New Event Screen -->
+    <string name="new_event_title">הוסף אירוע חדש</string>
+    <string name="new_event_date_start_hint">תאריך התחלה</string>
+    <string name="new_event_date_end_hint">תאריך סיום</string>
+    <string name="new_event_time_start_hint">שעת התחלה</string>
+    <string name="new_event_time_end_hint">שעת סיום</string>
+    <string name="new_event_event_description_hint">תיאור</string>
+
 
 
 </resources>

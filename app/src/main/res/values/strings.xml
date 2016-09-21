@@ -41,6 +41,14 @@
     <string name="sign_up_date_empty">pick your date of birth</string>
     <string name="sign_up_successful">Account Created !</string>
 
+    <!--New Event Screen -->
+    <string name="new_event_title">Add New Event</string>
+    <string name="new_event_event_title_hint">Name of the event</string>
+    <string name="new_event_date_start_hint">Date Start</string>
+    <string name="new_event_date_end_hint">Date End</string>
+    <string name="new_event_time_start_hint">Time Start</string>
+    <string name="new_event_time_end_hint">Time End</string>
+    <string name="new_event_event_description_hint">Description</string>
 
 
 

@@ -1,6 +1,7 @@
 package com.calendar_client.data;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -14,14 +15,14 @@ public class User {
     private String userName;
     private String email;
     private String password;
-    private Date dateOfBirth;
+    private Calendar dateOfBirth;
     private List<Event> events = new ArrayList<>();
 
     public User(){
 
     }
 
-    public User(String userName, String email, String password, Date dateOfBirth, List<Event> events) {
+    public User(String userName, String email, String password, Calendar dateOfBirth, List<Event> events) {
         this.userName = userName;
         this.email = email;
         this.password = password;
@@ -52,11 +53,11 @@ public class User {
         this.password = password;
     }
 
-    public Date getDateOfBirth() {
+    public Calendar getDateOfBirth() {
         return dateOfBirth;
     }
 
-    public void setDateOfBirth(Date dateOfBirth) {
+    public void setDateOfBirth(Calendar dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
 
@@ -74,5 +75,17 @@ public class User {
 
     public void removeEvent(Event event){
         this.events.remove(event);
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", userName='" + userName + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", dateOfBirth=" + dateOfBirth +
+                ", events=" + events +
+                '}';
     }
 }

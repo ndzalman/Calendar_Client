@@ -3,6 +3,7 @@ package com.calendar_client.data;
 import android.location.Location;
 
 import java.sql.Time;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -13,9 +14,8 @@ public class Event {
 
     private int id;
     private String title;
-    private Date dateStart;
-    private Date dateEnd;
-    private Time timeStart;
+    private Calendar dateStart;
+    private Calendar dateEnd;
     private Location location;
     private String description;
 
@@ -23,11 +23,10 @@ public class Event {
 
     }
 
-    public Event(String title, Date dateStart, Date dateEnd, Time timeStart, String description) {
+    public Event(String title, Calendar dateStart, Calendar dateEnd, Time timeStart, String description) {
         this.title = title;
         this.dateStart = dateStart;
         this.dateEnd = dateEnd;
-        this.timeStart = timeStart;
         this.description = description;
     }
 
@@ -47,28 +46,20 @@ public class Event {
         this.title = title;
     }
 
-    public Date getDateStart() {
+    public Calendar getDateStart() {
         return dateStart;
     }
 
-    public void setDateStart(Date dateStart) {
+    public void setDateStart(Calendar dateStart) {
         this.dateStart = dateStart;
     }
 
-    public Date getDateEnd() {
+    public Calendar getDateEnd() {
         return dateEnd;
     }
 
-    public void setDateEnd(Date dateEnd) {
+    public void setDateEnd(Calendar dateEnd) {
         this.dateEnd = dateEnd;
-    }
-
-    public Time getTimeStart() {
-        return timeStart;
-    }
-
-    public void setTimeStart(Time timeStart) {
-        this.timeStart = timeStart;
     }
 
     public Location getLocation() {
@@ -101,5 +92,17 @@ public class Event {
     @Override
     public int hashCode() {
         return id;
+    }
+
+    @Override
+    public String toString() {
+        return "Event{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", dateStart=" + dateStart +
+                ", dateEnd=" + dateEnd +
+                ", location=" + location +
+                ", description='" + description + '\'' +
+                '}';
     }
 }

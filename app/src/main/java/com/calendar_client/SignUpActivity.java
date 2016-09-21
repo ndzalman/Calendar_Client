@@ -12,6 +12,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.calendar_client.data.User;
+
 import java.util.Calendar;
 
 import butterknife.ButterKnife;
@@ -19,10 +21,7 @@ import butterknife.InjectView;
 
 public class SignUpActivity extends AppCompatActivity {
 
-    private DatePicker datePicker;
     private int year, month, day;
-    private final static int DATE_DIALOG_ID = 999;
-    private DatePickerDialog datePickerDialog;
 
     @InjectView(R.id.etUserName)
     EditText etUserName;
@@ -74,6 +73,15 @@ public class SignUpActivity extends AppCompatActivity {
                     Toast.makeText
                             (SignUpActivity.this,getString(R.string.sign_up_successful),Toast.LENGTH_SHORT).show();
                 }
+                User user = new User();
+                user.setEmail(etEmail.getText().toString());
+                Calendar dateOfBirth = Calendar.getInstance();
+                dateOfBirth.set(Calendar.YEAR,year);
+                dateOfBirth.set(Calendar.MONTH,month);
+                dateOfBirth.set(Calendar.DAY_OF_MONTH,day);
+                user.setDateOfBirth(dateOfBirth);
+                user.setPassword(etPassword.getText().toString());
+                user.setUserName(etUserName.getText().toString());
             }
         });
 
@@ -81,8 +89,6 @@ public class SignUpActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 finish();
-//                Intent loginIntent = new Intent(SignUpActivity.this,LoginActivity.class);
-//                startActivity(loginIntent);
             }
         });
 

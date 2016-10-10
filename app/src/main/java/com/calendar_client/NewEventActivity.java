@@ -5,6 +5,7 @@ import android.app.TimePickerDialog;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -20,6 +21,7 @@ import java.util.Calendar;
 
 public class NewEventActivity extends AppCompatActivity {
 
+    private static final String TAG = "NEW_EVENT";
     private EditText etEventTitle;
     private TextView tvDateStart;
     private TextView tvTimeStart;
@@ -31,6 +33,8 @@ public class NewEventActivity extends AppCompatActivity {
     private int hourStart, minuteStart;
     private int yearEnd, monthEnd, dayEnd;
     private int hourEnd, minuteEnd;
+
+    EventsDBHandler dbHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +54,8 @@ public class NewEventActivity extends AppCompatActivity {
         dayEnd = c.get(Calendar.DAY_OF_MONTH);
         hourEnd = c.get(Calendar.HOUR_OF_DAY);
         minuteEnd = c.get(Calendar.MINUTE);
+
+        dbHandler = new EventsDBHandler(this);
 
         tvDateStart.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -128,6 +134,13 @@ public class NewEventActivity extends AppCompatActivity {
                 dateEnd.set(Calendar.HOUR_OF_DAY,hourEnd);
                 dateEnd.set(Calendar.MINUTE,minuteEnd);
                 newEvent.setDateStart(dateEnd);
+
+                boolean isSuccessful = dbHandler.addEvent(newEvent);
+                if(isSuccessful){
+                    Log.i(TAG,"Event added successfuly");
+                }else{
+                    Log.e(TAG,"Event Not added");
+                }
 
                 Toast.makeText(NewEventActivity.this,newEvent.toString(),Toast.LENGTH_LONG).show();
                 finish();

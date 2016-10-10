@@ -23,6 +23,11 @@ public class Event {
 
     }
 
+    public Event(String title, String description) {
+        this.title = title;
+        this.description = description;
+    }
+
     public Event(String title, Calendar dateStart, Calendar dateEnd, Time timeStart, String description) {
         this.title = title;
         this.dateStart = dateStart;

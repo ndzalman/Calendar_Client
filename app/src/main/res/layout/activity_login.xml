@@ -83,6 +83,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         style="@style/Base.Widget.AppCompat.Button"
+        android:background="@color/accent_material_dark"
         android:text="@string/login_button"
         android:id="@+id/btnLogin"
         android:gravity="center"

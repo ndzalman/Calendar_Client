@@ -22,6 +22,7 @@
     <string name="login_password_error_empty">הסיסמא לא יכולה להיות ריקה</string>
     <string name="login_email_error_invalid">כתובת אימייל לא תקינה</string>
     <string name="login_email_error_empty">כתובת אימייל לא יכולה להיות ריקה</string>
+    <string name="login_error">פרטי התחברות שגויים!</string>
 
     <!--SignUp Screen -->
     <string name="sign_up_title">הרשמה</string>
@@ -41,6 +42,7 @@
     <string name="sign_up_confirm_password_error_no_match">הסיסמאות לא זהות</string>
     <string name="sign_up_date_empty">הכנס תאריך לידה</string>
     <string name="sign_up_successful">החשבון נוצר בהצלחה !</string>
+    <string name="sign_up_error">מצטערים, לא הצלחנו ליצור את החשבון</string>
 
     <!--New Event Screen -->
     <string name="new_event_title">הוסף אירוע חדש</string>
@@ -49,7 +51,7 @@
     <string name="new_event_time_start_hint">שעת התחלה</string>
     <string name="new_event_time_end_hint">שעת סיום</string>
     <string name="new_event_event_description_hint">תיאור</string>
-
+    <string name="new_event_empty">יש למלא את כל השדות</string>
 
 
 </resources>

@@ -1,7 +1,8 @@
-package com.calendar_client;
+package com.calendar_client.ui;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,9 +14,9 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.calendar_client.R;
 import com.calendar_client.data.Event;
-
-import org.w3c.dom.Text;
+import com.calendar_client.utils.EventsDBHandler;
 
 import java.util.Calendar;
 
@@ -117,6 +118,19 @@ public class NewEventActivity extends AppCompatActivity {
         fabDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                String title = etEventTitle.getText().toString();
+                String dateStartTxt = tvDateStart.getText().toString();
+                String timeStartTxt = tvTimeStart.getText().toString();
+                String dateEndTxt = tvDateEnd.getText().toString();
+                String timeEndTxt = tvTimeEnd.getText().toString();
+                String description = etDescription.getText().toString();
+
+                if (title.isEmpty() || dateStartTxt.isEmpty() || timeStartTxt.isEmpty() ||
+                        dateEndTxt.isEmpty() || timeEndTxt.isEmpty() || description.isEmpty()){
+                    Toast.makeText(NewEventActivity.this,getString(R.string.new_event_empty),Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 Event newEvent = new Event();
                 newEvent.setDescription(etDescription.getText().toString());
                 newEvent.setTitle(etEventTitle.getText().toString());
@@ -133,7 +147,7 @@ public class NewEventActivity extends AppCompatActivity {
                 dateEnd.set(Calendar.DAY_OF_MONTH,dayEnd);
                 dateEnd.set(Calendar.HOUR_OF_DAY,hourEnd);
                 dateEnd.set(Calendar.MINUTE,minuteEnd);
-                newEvent.setDateStart(dateEnd);
+                newEvent.setDateEnd(dateEnd);
 
                 boolean isSuccessful = dbHandler.addEvent(newEvent);
                 if(isSuccessful){
@@ -143,7 +157,8 @@ public class NewEventActivity extends AppCompatActivity {
                 }
 
                 Toast.makeText(NewEventActivity.this,newEvent.toString(),Toast.LENGTH_LONG).show();
-                finish();
+                Intent eventsIntent = new Intent(NewEventActivity.this,EventsActivity.class);
+                startActivity(eventsIntent);
             }
         });
 

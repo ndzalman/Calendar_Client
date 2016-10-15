@@ -1,4 +1,4 @@
-package com.calendar_client;
+package com.calendar_client.utils;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -19,16 +19,18 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE " + EventsDBConstants.EVENTS_TABLE_NAME +
-                "( " + EventsDBConstants.EVENT_TITLE + " TEXT, " +
-                //EventsDBConstants.EVENT_START_DATE + " CALENDAR, " +
-                //EventsDBConstants.EVENT_END_DATE + " TEXT" +
-                EventsDBConstants.EVENT_DESCRIPTION + " TEXT)" );
+                "( " + EventsDBConstants.EVENTS_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                EventsDBConstants.EVENT_TITLE + " TEXT, " +
+                EventsDBConstants.EVENT_DESCRIPTION + " TEXT, " +
+                EventsDBConstants.EVENT_START_DATE + " TEXT, " +
+                EventsDBConstants.EVENT_END_DATE+ " TEXT)" );
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
-//        db.execSQL("alter table " + EventsDBConstants.EVENTS_TABLE_NAME + " add column " + EventsDBConstants.EVENT_TITLE + " TEXT");
+        // after delete the table, get all user events from server and fill the table
+        db.delete(EventsDBConstants.EVENTS_TABLE_NAME,null,null);
+        onCreate(db);
     }
 
 

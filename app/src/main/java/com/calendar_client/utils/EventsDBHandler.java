@@ -1,4 +1,4 @@
-package com.calendar_client;
+package com.calendar_client.utils;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -6,11 +6,14 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.calendar_client.data.Event;
+import com.calendar_client.utils.EventsDBConstants;
+import com.calendar_client.utils.MySQLiteHelper;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-
-import static android.R.attr.description;
+import java.util.Date;
 
 /**
  * Created by Nadav on 26-Sep-16.
@@ -33,10 +36,12 @@ public class EventsDBHandler {
 
         ContentValues columnValues = new ContentValues();
         columnValues.put(EventsDBConstants.EVENT_TITLE, newEvent.getTitle());
-        //columnValues.put(EventsDBConstants.EVENT_START_DATE, newEvent.getDateStart());
-       // columnValues.put(EventsDBConstants.EVENT_END_DATE, newEvent.getDateEnd());
         columnValues.put(EventsDBConstants.EVENT_DESCRIPTION, newEvent.getDescription());
-
+        SimpleDateFormat sdf = new SimpleDateFormat(EventsDBConstants.DATE_TIME_FORMAT);
+        Date date = newEvent.getDateStart().getTime();
+        columnValues.put(EventsDBConstants.EVENT_START_DATE, sdf.format(date));
+        date = newEvent.getDateEnd().getTime();
+        columnValues.put(EventsDBConstants.EVENT_END_DATE, sdf.format(date));
 
         long result = db.insert(EventsDBConstants.EVENTS_TABLE_NAME, null, columnValues);
 
@@ -53,17 +58,31 @@ public class EventsDBHandler {
         // this opens the connection to the DB
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
-        // select * from BOOKS table
         Cursor eventsCursor = db.query(EventsDBConstants.EVENTS_TABLE_NAME, null, null, null, null, null, null);
         // each round in the loop is a record in the DB
-        while(eventsCursor.moveToNext()) {
-            String eventTitle = eventsCursor.getString(0);
-          //  Calendar eventStartDate = eventsCursor.getString(1);
-          //  Calendar eventEndDate = eventsCursor.getString(2);
-            String eventDescription = eventsCursor.getString(1);
+        SimpleDateFormat sdf = new SimpleDateFormat(EventsDBConstants.DATE_TIME_FORMAT);
+        Calendar calendar = Calendar.getInstance();
 
-            Event e = new Event(eventTitle , eventDescription);
-            eventsList.add(e);
+        while(eventsCursor.moveToNext()) {
+            int eventId = eventsCursor.getInt(0);
+            String eventTitle = eventsCursor.getString(1);
+            String eventDescription = eventsCursor.getString(2);
+            String eventStartDate = eventsCursor.getString(3);
+            String eventEndDate = eventsCursor.getString(4);
+
+            Event event = new Event();
+            event.setId(eventId);
+            event.setTitle(eventTitle);
+            event.setDescription(eventDescription);
+            try {
+                calendar.setTime(sdf.parse(eventStartDate));
+                event.setDateStart(calendar);
+                calendar.setTime(sdf.parse(eventEndDate));
+                event.setDateEnd(calendar);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            eventsList.add(event);
         }
 
         return eventsList;

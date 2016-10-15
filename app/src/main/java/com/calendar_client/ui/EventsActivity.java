@@ -1,8 +1,7 @@
-package com.calendar_client;
+package com.calendar_client.ui;
 
 import android.content.Context;
 import android.content.Intent;
-import android.location.Location;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -14,18 +13,19 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.calendar_client.R;
 import com.calendar_client.data.Event;
+import com.calendar_client.utils.EventsDBHandler;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 public class EventsActivity extends AppCompatActivity {
 
-    List<Event> events;
-    ListView lvEvents;
+    private List<Event> events;
+    private ListView lvEvents;
     private FloatingActionButton fabAdd;
+    private EventsDBHandler dbHandler;
 
 
     @Override
@@ -34,29 +34,11 @@ public class EventsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_event);
 
         getSupportActionBar().setTitle(R.string.app_name);
+        dbHandler = new EventsDBHandler(this);
 
         fabAdd = (FloatingActionButton) findViewById(R.id.fabAdd);
-        events = new ArrayList<>();
         lvEvents = (ListView) findViewById(R.id.lvEvents);
-        Event event = new Event();
-        event.setId(1);
-        event.setTitle("HomeWork");
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.YEAR,2016);
-        calendar.set(Calendar.MONTH,8);
-        calendar.set(Calendar.DAY_OF_MONTH,2);
-        calendar.set(Calendar.HOUR_OF_DAY,12);
-        calendar.set(Calendar.MINUTE,02);
-        event.setDateStart(calendar);
-        calendar = Calendar.getInstance();
-        calendar.set(Calendar.YEAR,2016);
-        calendar.set(Calendar.MONTH,8);
-        calendar.set(Calendar.DAY_OF_MONTH,4);
-        calendar.set(Calendar.HOUR_OF_DAY,12);
-        calendar.set(Calendar.MINUTE,10);
-        event.setDateEnd(calendar);
-        event.setDescription("Algebra HomeWork");
-        events.add(event);
+        events = dbHandler.getAllEvents();
 
         lvEvents.setAdapter(new MyAdapter(this,R.layout.single_event,events));
 
@@ -65,6 +47,7 @@ public class EventsActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent newEventIntent = new Intent(EventsActivity.this,NewEventActivity.class);
                 startActivity(newEventIntent);
+                finish();
             }
         });
 

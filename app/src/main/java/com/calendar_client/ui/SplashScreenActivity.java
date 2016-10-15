@@ -1,18 +1,17 @@
-package com.calendar_client;
+package com.calendar_client.ui;
 
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.calendar_client.R;
 
 public class SplashScreenActivity extends AppCompatActivity {
 

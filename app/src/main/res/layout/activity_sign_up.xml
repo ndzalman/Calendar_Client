@@ -18,7 +18,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:weightSum="10"
-    tools:context="com.calendar_client.SignUpActivity">
+    tools:context="com.calendar_client.ui.SignUpActivity">
 
     <TextView
         android:id="@+id/tvTitle"
@@ -52,6 +52,7 @@
     <EditText
         android:id="@+id/etEmail"
         android:hint="@string/sign_up_email_hint"
+        android:inputType="textEmailAddress"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"

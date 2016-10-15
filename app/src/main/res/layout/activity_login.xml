@@ -51,6 +51,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/etEmail"
         android:gravity="center"
+        android:inputType="textEmailAddress"
         android:hint="@string/login_email_hint"
         android:layout_gravity="center_horizontal"
         android:layout_weight="0.5"

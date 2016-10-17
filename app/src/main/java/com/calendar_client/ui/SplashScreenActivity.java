@@ -48,8 +48,6 @@ public class SplashScreenActivity extends AppCompatActivity {
                 });
         alertDialog = alertDialogBuilder.create();
 
-        getSupportActionBar().hide();
-
         new CheckConnectivityTask().execute();
 
     }

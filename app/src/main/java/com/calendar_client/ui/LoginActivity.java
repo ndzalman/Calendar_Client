@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.calendar_client.R;
 import com.calendar_client.data.User;
+import com.calendar_client.utils.ApplicationConstants;
 import com.google.gson.Gson;
 
 import java.io.BufferedReader;
@@ -95,8 +96,6 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        getSupportActionBar().hide();
-
     }
 
     private class LoginTask extends AsyncTask<String, Void, String> {
@@ -113,7 +112,7 @@ public class LoginActivity extends AppCompatActivity {
         protected String doInBackground(String... strings) {
             StringBuilder response;
             try {
-                URL url = new URL("http://10.0.0.103:8080/CalendarServer/rest/users/checkUser" + "?email=" + email + "&password=" + password);
+                URL url = new URL(ApplicationConstants.LOGIN_URL + "?email=" + email + "&password=" + password);
                 response = new StringBuilder();
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 if (conn.getResponseCode() != HttpURLConnection.HTTP_OK) {

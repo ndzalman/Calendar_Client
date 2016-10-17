@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.calendar_client.R;
 import com.calendar_client.data.User;
+import com.calendar_client.utils.ApplicationConstants;
 import com.google.gson.Gson;
 
 import java.io.BufferedReader;
@@ -53,7 +54,6 @@ public class SignUpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
         ButterKnife.inject(this);
-        getSupportActionBar().hide();
 
         tvDateOfBirth = (TextView) findViewById(R.id.tvDateOfBirth);
         tvDateOfBirth.setOnClickListener(new View.OnClickListener() {
@@ -185,7 +185,7 @@ public class SignUpActivity extends AppCompatActivity {
             String jsonUser = gson.toJson(user, User.class);
             URL url = null;
             try {
-                url = new URL("http://10.0.0.103:8080/CalendarServer/rest/users/insertUser");
+                url = new URL(ApplicationConstants.SIGN_UP_URL);
                 HttpURLConnection con = (HttpURLConnection) url.openConnection();
                 con.setDoOutput(true);
                 con.setDoInput(true);

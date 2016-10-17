@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +21,7 @@ import com.calendar_client.utils.EventsDBHandler;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
-public class EventsActivity extends AppCompatActivity {
+public class EventsActivity extends DrawerActivity {
 
     private List<Event> events;
     private ListView lvEvents;
@@ -30,28 +31,25 @@ public class EventsActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_event);
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_event);
+            super.onCreateDrawer();
 
-        getSupportActionBar().setTitle(R.string.app_name);
         dbHandler = new EventsDBHandler(this);
 
-        fabAdd = (FloatingActionButton) findViewById(R.id.fabAdd);
-        lvEvents = (ListView) findViewById(R.id.lvEvents);
-        events = dbHandler.getAllEvents();
+            fabAdd = (FloatingActionButton) findViewById(R.id.fabAdd);
+            lvEvents = (ListView) findViewById(R.id.lvEvents);
+            events = dbHandler.getAllEvents();
 
-        lvEvents.setAdapter(new MyAdapter(this,R.layout.single_event,events));
+            lvEvents.setAdapter(new MyAdapter(this,R.layout.single_event,events));
 
-        fabAdd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent newEventIntent = new Intent(EventsActivity.this,NewEventActivity.class);
-                startActivity(newEventIntent);
-                finish();
-            }
-        });
-
-
+            fabAdd.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent newEventIntent = new Intent(EventsActivity.this,NewEventActivity.class);
+                    startActivity(newEventIntent);
+                }
+            });
     }
 
     private class MyAdapter extends BaseAdapter{

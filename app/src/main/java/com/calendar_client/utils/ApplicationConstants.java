@@ -6,8 +6,8 @@ package com.calendar_client.utils;
 
 public class ApplicationConstants {
 
-//    public static final String SERVER_IP = "10.0.0.103"; // nadav IP
-    public static final String SERVER_IP = "192.168.1.11"; // anael IP
+    public static final String SERVER_IP = "10.0.0.100"; // nadav IP
+//    public static final String SERVER_IP = "192.168.1.11"; // anael IP
     public static final String PORT = "8080";
 
 

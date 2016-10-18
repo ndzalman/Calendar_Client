@@ -2,10 +2,12 @@ package com.calendar_client.ui;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,9 +18,16 @@ import android.widget.TextView;
 
 import com.calendar_client.R;
 import com.calendar_client.data.Event;
+import com.calendar_client.utils.EventsDBConstants;
 import com.calendar_client.utils.EventsDBHandler;
+import com.prolificinteractive.materialcalendarview.CalendarDay;
+import com.prolificinteractive.materialcalendarview.CalendarMode;
+import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
+import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class EventsActivity extends DrawerActivity {
@@ -27,7 +36,8 @@ public class EventsActivity extends DrawerActivity {
     private ListView lvEvents;
     private FloatingActionButton fabAdd;
     private EventsDBHandler dbHandler;
-
+    private MaterialCalendarView calendar;
+    private MyAdapter eventAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,13 +45,21 @@ public class EventsActivity extends DrawerActivity {
             setContentView(R.layout.activity_event);
             super.onCreateDrawer();
 
+        calendar = (MaterialCalendarView) findViewById(R.id.calendarView);
+
+        calendar.state().edit()
+                .setFirstDayOfWeek(Calendar.SUNDAY)
+                .commit();
+        calendar.setSelectedDate(Calendar.getInstance());
+
         dbHandler = new EventsDBHandler(this);
 
             fabAdd = (FloatingActionButton) findViewById(R.id.fabAdd);
             lvEvents = (ListView) findViewById(R.id.lvEvents);
-            events = dbHandler.getAllEvents();
+            events = dbHandler.getEventByDay(calendar.getSelectedDate().getCalendar());
 
-            lvEvents.setAdapter(new MyAdapter(this,R.layout.single_event,events));
+            eventAdapter = new MyAdapter(this,R.layout.single_event,events);
+            lvEvents.setAdapter(eventAdapter);
 
             fabAdd.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -50,6 +68,17 @@ public class EventsActivity extends DrawerActivity {
                     startActivity(newEventIntent);
                 }
             });
+
+        calendar.setOnDateChangedListener(new OnDateSelectedListener() {
+            @Override
+            public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
+                events = dbHandler.getEventByDay(date.getCalendar());
+                eventAdapter.getData().clear();
+                eventAdapter.getData().addAll(events);
+                // fire the event
+                eventAdapter.notifyDataSetChanged();            }
+        });
+
     }
 
     private class MyAdapter extends BaseAdapter{
@@ -61,6 +90,10 @@ public class EventsActivity extends DrawerActivity {
             this.context = context;
             this.events = events;
             this.layout = layout;
+        }
+
+        public List<Event> getData(){
+            return this.events;
         }
 
         @Override
@@ -82,15 +115,15 @@ public class EventsActivity extends DrawerActivity {
         public View getView(int position, View convertView, ViewGroup parent) {
             ViewHolder holder;
             Event event = (Event) getItem(position);
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy MMM dd HH:mm");
 
             if (convertView == null) {
                 LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 convertView = inflater.inflate(layout, parent, false);
                 holder = new ViewHolder();
                 holder.tvTitle = (TextView) convertView.findViewById(R.id.tvTitle);
-                holder.tvFullDate = (TextView) convertView.findViewById(R.id.tvFullDate);
-                holder.imageViewEdit = (ImageView) convertView.findViewById(R.id.imageViewEdit);
+                holder.tvDescription = (TextView) convertView.findViewById(R.id.tvDescription);
+                holder.tvTime = (TextView) convertView.findViewById(R.id.tvTime);
+
 
                 convertView.setTag(holder);
 
@@ -99,13 +132,15 @@ public class EventsActivity extends DrawerActivity {
             }
 
             holder.tvTitle.setText(event.getTitle());
-            holder.tvFullDate.setText(sdf.format(event.getDateStart().getTime()));
-            holder.imageViewEdit.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
+            holder.tvDescription.setText(event.getDescription());
 
-                }
-            });
+            SimpleDateFormat sdf = new SimpleDateFormat(EventsDBConstants.TIME_FORMAT);
+            Date date = event.getDateStart().getTime();
+            String startTimetxt = sdf.format(date);
+            date = event.getDateEnd().getTime();
+            String endTimeTxt = sdf.format(date);
+            holder.tvTime.setText(startTimetxt + " - " + endTimeTxt);
+
 
             return convertView;
 
@@ -113,8 +148,8 @@ public class EventsActivity extends DrawerActivity {
 
         private class ViewHolder{
             TextView tvTitle;
-            TextView tvFullDate;
-            ImageView imageViewEdit;
+            TextView tvDescription;
+            TextView tvTime;
         }
     }
 }

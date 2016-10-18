@@ -17,11 +17,14 @@ import android.widget.TextView;
 import com.calendar_client.R;
 import com.calendar_client.data.User;
 import com.google.gson.Gson;
+import com.prolificinteractive.materialcalendarview.CalendarMode;
+import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 
 public abstract class DrawerActivity extends AppCompatActivity {
 
     private DrawerLayout drawerLayout;
     private TextView tvHeaderTitle;
+    private MaterialCalendarView calendar;
 
     protected void onCreateDrawer() {
 
@@ -34,6 +37,10 @@ public abstract class DrawerActivity extends AppCompatActivity {
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
+
+        View view = findViewById(R.id.main);
+        calendar = (MaterialCalendarView) drawerLayout.findViewById(R.id.calendarView);
+
 //        View headerView = navigationView.getHeaderView(0);
 //
 //        tvHeaderTitle = (TextView) headerView.findViewById(R.id.tvHeaderTitle);
@@ -46,10 +53,25 @@ public abstract class DrawerActivity extends AppCompatActivity {
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem) {
+
                 menuItem.setChecked(true);
                 drawerLayout.closeDrawers();
                 switch (menuItem.getItemId()){
-                    case R.id.navigation_item_events:
+                    case R.id.navigation_item_month:
+                        calendar.state().edit()
+                                .setCalendarDisplayMode(CalendarMode.MONTHS)
+                                .commit();
+                        break;
+                    case R.id.navigation_item_week:
+                        calendar.state().edit()
+                                .setCalendarDisplayMode(CalendarMode.WEEKS)
+                                .commit();
+                        break;
+                    case R.id.navigation_item_day:
+                        break;
+                    case R.id.navigation_item_schedule:
+                        break;
+                    case R.id.navigation_item_profile:
                         break;
                     case R.id.navigation_item_log_out:
                         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());

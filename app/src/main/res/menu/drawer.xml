@@ -6,18 +6,23 @@
         android:id="@+id/main_menu"
         android:checkableBehavior="single">
         <item
-            android:id="@+id/navigation_item_events"
+            android:id="@+id/navigation_item_month"
             android:checked="true"
-            android:icon="@drawable/ic_edit"
-            android:title="Event List" />
+            android:icon="@drawable/ic_action_calendar_month"
+            android:title="@string/menu_item_month" />
         <item
-            android:id="@+id/navigation_item_cart"
-            android:icon="@drawable/ic_done"
-            android:title="option2" />
+            android:id="@+id/navigation_item_week"
+            android:icon="@drawable/ic_view_week"
+            android:title="@string/menu_item_week" />
         <item
-            android:id="@+id/navigation_item_history"
-            android:icon="@drawable/ic_action_add"
-            android:title="option3" />
+            android:id="@+id/navigation_item_day"
+            android:icon="@drawable/ic_today"
+            android:title="@string/menu_item_day" />
+
+        <item
+            android:id="@+id/navigation_item_schedule"
+            android:icon="@drawable/ic_schedule"
+            android:title="@string/menu_item_schedule" />
 
     </group>
 
@@ -26,14 +31,16 @@
         android:checkableBehavior="single">
 
         <item
-            android:id="@+id/navigation_item_log_out"
-            android:icon="@drawable/ic_done"
-            android:title="Log Out" />
+            android:id="@+id/navigation_item_profile"
+            android:icon="@drawable/ic_action_user"
+            android:title="@string/menu_item_profile" />
+
 
         <item
-            android:id="@+id/navigation_item_about"
-            android:icon="@drawable/ic_action_add"
-            android:title="option5" />
+            android:id="@+id/navigation_item_log_out"
+            android:icon="@drawable/ic_exit_to_app"
+            android:title="@string/menu_item_log_out" />
+
 
     </group>
 

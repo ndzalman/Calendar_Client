@@ -52,6 +52,12 @@
     <string name="new_event_time_end_hint">שעת סיום</string>
     <string name="new_event_event_description_hint">תיאור</string>
     <string name="new_event_empty">יש למלא את כל השדות</string>
+    <string name="menu_item_month">חודש</string>
+    <string name="menu_item_week">שבוע</string>
+    <string name="menu_item_day">יום</string>
+    <string name="menu_item_schedule">לוח זמנים</string>
+    <string name="menu_item_profile">פרופיל</string>
+    <string name="menu_item_log_out">התנתק</string>
 
 
 </resources>

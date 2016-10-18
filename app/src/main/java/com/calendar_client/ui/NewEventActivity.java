@@ -65,6 +65,9 @@ public class NewEventActivity extends AppCompatActivity {
                     @Override
                     public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                         tvDateStart.setText(day + "/" + (month + 1) + "/" + year);
+                        yearStart = year;
+                        monthStart = month;
+                        dayStart = day;
                     }
                 }, yearStart, monthStart, dayStart);
 
@@ -79,6 +82,9 @@ public class NewEventActivity extends AppCompatActivity {
                     @Override
                     public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                         tvDateEnd.setText(day + "/" + (month + 1) + "/" + year);
+                        yearEnd = year;
+                        monthEnd = month;
+                        dayEnd = day;
                     }
                 }, yearEnd, monthEnd, dayEnd);
 
@@ -94,6 +100,8 @@ public class NewEventActivity extends AppCompatActivity {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
                         tvTimeStart.setText(selectedHour + ":" + selectedMinute);
+                        hourStart = selectedHour;
+                        minuteStart = selectedMinute;
                     }
                 }, hourStart, minuteStart, true);
                 //timePickerDialog.setTitle("");
@@ -108,6 +116,8 @@ public class NewEventActivity extends AppCompatActivity {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
                         tvTimeEnd.setText(selectedHour + ":" + selectedMinute);
+                        hourEnd = selectedHour;
+                        minuteEnd = selectedMinute;
                     }
                 }, hourEnd, minuteEnd, true);
                 //timePickerDialog.setTitle("");

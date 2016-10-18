@@ -104,9 +104,9 @@ public class Event {
         return "Event{" +
                 "id=" + id +
                 ", title='" + title + '\'' +
-                ", dateStart=" + dateStart +
-                ", dateEnd=" + dateEnd +
-                ", location=" + location +
+                ", dateStart=" + dateStart.getTime() +
+                ", dateEnd=" + dateEnd.getTime() +
+//                ", location=" + location +
                 ", description='" + description + '\'' +
                 '}';
     }

@@ -58,6 +58,12 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="openDrawer">open_drawer</string>
     <string name="closeDrawer">close_drawer</string>
+    <string name="menu_item_month">Month</string>
+    <string name="menu_item_week">Week</string>
+    <string name="menu_item_day">Day</string>
+    <string name="menu_item_schedule">Schedule</string>
+    <string name="menu_item_profile">Profile</string>
+    <string name="menu_item_log_out">Log Out</string>
 
 
 </resources>

@@ -33,7 +33,7 @@
             android:id="@+id/header_image"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_done"
+            android:src="@drawable/ic_action_user"
             android:layout_above="@id/tvHeaderTitle" />
 
     </RelativeLayout>

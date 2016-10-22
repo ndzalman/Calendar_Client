@@ -2,6 +2,8 @@ package com.calendar_client.ui;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -18,8 +21,10 @@ import android.widget.TextView;
 
 import com.calendar_client.R;
 import com.calendar_client.data.Event;
+import com.calendar_client.data.User;
 import com.calendar_client.utils.EventsDBConstants;
 import com.calendar_client.utils.EventsDBHandler;
+import com.google.gson.Gson;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.CalendarMode;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
@@ -38,12 +43,19 @@ public class EventsActivity extends DrawerActivity {
     private EventsDBHandler dbHandler;
     private MaterialCalendarView calendar;
     private MyAdapter eventAdapter;
+    private SharedPreferences sharedPreferences;
+    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_event);
             super.onCreateDrawer();
+
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        String userJSON = sharedPreferences.getString("user", "");
+        Gson gson = new Gson();
+        user = gson.fromJson(userJSON, User.class);
 
         calendar = (MaterialCalendarView) findViewById(R.id.calendarView);
 
@@ -56,7 +68,7 @@ public class EventsActivity extends DrawerActivity {
 
             fabAdd = (FloatingActionButton) findViewById(R.id.fabAdd);
             lvEvents = (ListView) findViewById(R.id.lvEvents);
-            events = dbHandler.getEventByDay(calendar.getSelectedDate().getCalendar());
+            events = dbHandler.getEventByDay(calendar.getSelectedDate().getCalendar(),user.getId());
 
             eventAdapter = new MyAdapter(this,R.layout.single_event,events);
             lvEvents.setAdapter(eventAdapter);
@@ -66,17 +78,29 @@ public class EventsActivity extends DrawerActivity {
                 public void onClick(View view) {
                     Intent newEventIntent = new Intent(EventsActivity.this,NewEventActivity.class);
                     startActivity(newEventIntent);
+                    finish();
                 }
             });
 
         calendar.setOnDateChangedListener(new OnDateSelectedListener() {
             @Override
             public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
-                events = dbHandler.getEventByDay(date.getCalendar());
+                events = dbHandler.getEventByDay(date.getCalendar(),user.getId());
                 eventAdapter.getData().clear();
                 eventAdapter.getData().addAll(events);
                 // fire the event
-                eventAdapter.notifyDataSetChanged();            }
+                eventAdapter.notifyDataSetChanged();}
+        });
+
+        lvEvents.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                Event event = (Event) adapterView.getItemAtPosition(position);
+                Intent editEvent = new Intent(EventsActivity.this,NewEventActivity.class);
+                editEvent.putExtra("event",event);
+                startActivity(editEvent);
+                finish();
+            }
         });
 
     }

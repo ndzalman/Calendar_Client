@@ -77,6 +77,10 @@ public class User {
         this.events.remove(event);
     }
 
+    public int getId() {
+        return id;
+    }
+
     @Override
     public String toString() {
         return "User{" +

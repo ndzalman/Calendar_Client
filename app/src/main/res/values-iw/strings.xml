@@ -46,6 +46,7 @@
 
     <!--New Event Screen -->
     <string name="new_event_title">הוסף אירוע חדש</string>
+    <string name="new_event_edit_title">ערוך אירוע</string>
     <string name="new_event_date_start_hint">תאריך התחלה</string>
     <string name="new_event_date_end_hint">תאריך סיום</string>
     <string name="new_event_time_start_hint">שעת התחלה</string>

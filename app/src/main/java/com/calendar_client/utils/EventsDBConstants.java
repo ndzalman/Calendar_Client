@@ -13,6 +13,7 @@ public class EventsDBConstants {
 
     public static final String EVENTS_TABLE_NAME = "EVENTS";
     public static final String EVENTS_ID = "ID";
+    public static final String EVENTS_USER_ID = "USRE_ID";
     public static final String EVENT_TITLE = "TITLE";
     public static final String EVENT_START_DATE = "START_DATE";
     public static final String EVENT_END_DATE = "END_DATE";

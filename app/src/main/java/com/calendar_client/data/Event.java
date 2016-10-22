@@ -2,6 +2,7 @@ package com.calendar_client.data;
 
 import android.location.Location;
 
+import java.io.Serializable;
 import java.sql.Time;
 import java.util.Calendar;
 import java.util.Date;
@@ -10,7 +11,7 @@ import java.util.Date;
  * Created by Nadav on 21-Sep-16.
  */
 
-public class Event {
+public class Event implements Serializable{
 
     private int id;
     private String title;
@@ -18,6 +19,7 @@ public class Event {
     private Calendar dateEnd;
     private Location location;
     private String description;
+    private User user;
 
     public Event(){
 
@@ -81,6 +83,14 @@ public class Event {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     @Override

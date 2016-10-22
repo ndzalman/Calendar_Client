@@ -83,6 +83,7 @@ public class LoginActivity extends AppCompatActivity {
                 }
 
                 if (valid) {
+                    btnLogin.setEnabled(false);
                     new LoginTask().execute();
                 }
             }
@@ -156,6 +157,7 @@ public class LoginActivity extends AppCompatActivity {
                 LoginActivity.this.finish();
 
             } else {
+                btnLogin.setEnabled(true);
                 Toast.makeText(LoginActivity.this, getResources().getString(R.string.login_error)
                         , Toast.LENGTH_LONG).show();
             }

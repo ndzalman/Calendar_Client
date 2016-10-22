@@ -1,38 +1,45 @@
 package com.calendar_client.ui;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.calendar_client.R;
 import com.calendar_client.data.Event;
 import com.calendar_client.data.User;
+import com.calendar_client.utils.EventDecorator;
 import com.calendar_client.utils.EventsDBConstants;
 import com.calendar_client.utils.EventsDBHandler;
 import com.google.gson.Gson;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
-import com.prolificinteractive.materialcalendarview.CalendarMode;
+import com.prolificinteractive.materialcalendarview.DayViewDecorator;
+import com.prolificinteractive.materialcalendarview.DayViewFacade;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
+import com.prolificinteractive.materialcalendarview.OnMonthChangedListener;
+import com.prolificinteractive.materialcalendarview.spans.DotSpan;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 
 public class EventsActivity extends DrawerActivity {
@@ -45,6 +52,8 @@ public class EventsActivity extends DrawerActivity {
     private MyAdapter eventAdapter;
     private SharedPreferences sharedPreferences;
     private User user;
+    private HashSet<CalendarDay> dates;
+    private EventDecorator eventDecorator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +65,8 @@ public class EventsActivity extends DrawerActivity {
         String userJSON = sharedPreferences.getString("user", "");
         Gson gson = new Gson();
         user = gson.fromJson(userJSON, User.class);
+        final int color = ContextCompat.getColor(this, R.color.colorPrimary);
+
 
         calendar = (MaterialCalendarView) findViewById(R.id.calendarView);
 
@@ -76,7 +87,8 @@ public class EventsActivity extends DrawerActivity {
             fabAdd.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent newEventIntent = new Intent(EventsActivity.this,NewEventActivity.class);
+                    Intent newEventIntent = new Intent(EventsActivity.this,EventDetailsActivity.class);
+                    newEventIntent.putExtra("selectedDay",calendar.getSelectedDate().getCalendar());
                     startActivity(newEventIntent);
                     finish();
                 }
@@ -96,14 +108,33 @@ public class EventsActivity extends DrawerActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 Event event = (Event) adapterView.getItemAtPosition(position);
-                Intent editEvent = new Intent(EventsActivity.this,NewEventActivity.class);
+                Intent editEvent = new Intent(EventsActivity.this,EventDetailsActivity.class);
                 editEvent.putExtra("event",event);
                 startActivity(editEvent);
-                finish();
             }
         });
 
+        calendar.setOnMonthChangedListener(new OnMonthChangedListener() {
+            @Override
+            public void onMonthChanged(MaterialCalendarView widget, CalendarDay date) {
+                Log.d("dates","before");
+                Log.d("status","month changed");
+
+                dates = dbHandler.getEventByMonth(date.getCalendar(),user.getId());
+                Log.d("status","dates size: "+ dates.size());
+                calendar.removeDecorator(eventDecorator);
+                eventDecorator = new EventDecorator(color, dates);
+                calendar.addDecorator(eventDecorator);
+                calendar.invalidate();
+            }
+        });
+
+        dates = dbHandler.getEventByMonth
+                (calendar.getSelectedDate().getCalendar(),user.getId());
+        eventDecorator = new EventDecorator(color, dates);
+        calendar.addDecorator(eventDecorator);
     }
+
 
     private class MyAdapter extends BaseAdapter{
         List<Event> events;
@@ -175,5 +206,23 @@ public class EventsActivity extends DrawerActivity {
             TextView tvDescription;
             TextView tvTime;
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        new AlertDialog.Builder(this)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setTitle(getString(R.string.exit_dialog_title))
+                .setMessage(getString(R.string.exit_dialog_message))
+                .setPositiveButton(getString(R.string.exit_dialog_postive), new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+
+                })
+                .setNegativeButton(getString(R.string.exit_dialog_negative), null)
+                .show();
     }
 }

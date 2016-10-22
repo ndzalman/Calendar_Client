@@ -80,6 +80,7 @@ public class SignUpActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (validate()){
+                    btnSignUp.setEnabled(false);
                     new SignUpTask().execute();
                 }
 
@@ -237,6 +238,7 @@ public class SignUpActivity extends AppCompatActivity {
                 startActivity(intent);
                 SignUpActivity.this.finish();
             } else {
+                btnSignUp.setEnabled(true);
                 Toast.makeText(SignUpActivity.this, getResources().getString(R.string.sign_up_error), Toast.LENGTH_LONG).show();
             }
         }

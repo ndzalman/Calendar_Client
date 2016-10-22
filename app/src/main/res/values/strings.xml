@@ -46,6 +46,7 @@
     <!--New Event Screen -->
     <string name="new_event_title">Add New Event</string>
     <string name="new_event_title_hint">Event Title</string>
+    <string name="new_event_edit_title">Edit Event</string>
     <string name="new_event_date_start_hint">Date Start</string>
     <string name="new_event_date_end_hint">Date End</string>
     <string name="new_event_time_start_hint">Time Start</string>
@@ -53,6 +54,8 @@
     <string name="new_event_description_hint">Description</string>
     <string name="new_event_location_hint">Location</string>
     <string name="new_event_empty">You must fill all fields</string>
+    <string name="new_event_date_error">Illegal date!</string>
+    <string name="new_event_time_error">Illegal time!</string>
 
     <!--Navigation Drawer-->
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -65,6 +68,12 @@
     <string name="menu_item_schedule">Schedule</string>
     <string name="menu_item_profile">Profile</string>
     <string name="menu_item_log_out">Log Out</string>
+
+    <!--Alert Dialog - exit dialog-->
+    <string name="exit_dialog_title">Exit Application</string>
+    <string name="exit_dialog_message">Are you sure you want to exit ?</string>
+    <string name="exit_dialog_postive">YES</string>
+    <string name="exit_dialog_negative">NO</string>
 
 
 </resources>

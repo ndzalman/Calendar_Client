@@ -19,7 +19,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE " + EventsDBConstants.EVENTS_TABLE_NAME +
-                "( " + EventsDBConstants.EVENTS_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "( " + EventsDBConstants.EVENTS_ID + " INTEGER, " +
                 EventsDBConstants.EVENTS_USER_ID + " INTEGER, " +
                 EventsDBConstants.EVENT_TITLE + " TEXT, " +
                 EventsDBConstants.EVENT_DESCRIPTION + " TEXT, " +

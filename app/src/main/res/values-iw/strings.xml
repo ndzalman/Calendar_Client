@@ -51,7 +51,14 @@
     <string name="new_event_time_start_hint">שעת התחלה</string>
     <string name="new_event_time_end_hint">שעת סיום</string>
     <string name="new_event_event_description_hint">תיאור</string>
+    <string name="new_event_location_hint">מיקום</string>
     <string name="new_event_empty">יש למלא את כל השדות</string>
+
+    <!--Navigation Drawer-->
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="openDrawer">open_drawer</string>
+    <string name="closeDrawer">close_drawer</string>
     <string name="menu_item_month">חודש</string>
     <string name="menu_item_week">שבוע</string>
     <string name="menu_item_day">יום</string>

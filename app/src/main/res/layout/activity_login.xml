@@ -17,7 +17,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:orientation="vertical"
-    android:weightSum="10"
+    android:weightSum="80"
     tools:context="com.calendar_client.ui.LoginActivity"
     >
 
@@ -28,7 +28,7 @@
         android:id="@+id/imageView"
         android:src="@android:drawable/ic_menu_my_calendar"
         android:layout_gravity="center_horizontal"
-        android:layout_weight="3"
+        android:layout_weight="20"
         />
 
     <TextView
@@ -36,11 +36,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@color/colorPrimary"
         android:text="@string/login_title"
         android:id="@+id/tvTitle"
         android:gravity="center"
         android:layout_gravity="center_horizontal"
-        android:layout_weight="3"
+        android:layout_weight="20"
         />
 
     <android.support.design.widget.TextInputLayout
@@ -54,10 +55,11 @@
         android:layout_height="wrap_content"
         android:id="@+id/etEmail"
         android:gravity="center"
+        android:textColorHint="@color/colorPrimary"
         android:inputType="textEmailAddress"
         android:hint="@string/login_email_hint"
         android:layout_gravity="center_horizontal"
-        android:layout_weight="0.5"
+        android:layout_weight="10"
         />
     </android.support.design.widget.TextInputLayout>
 
@@ -74,10 +76,11 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:inputType="textVisiblePassword"
+        android:textColorHint="@color/colorPrimary"
         android:hint="@string/login_password_hint"
         android:ems="10"
         android:id="@+id/etPassword"
-        android:layout_weight="0.5"
+        android:layout_weight="10"
         />
     </android.support.design.widget.TextInputLayout>
 
@@ -88,12 +91,13 @@
         android:layout_height="wrap_content"
         style="@style/Base.Widget.AppCompat.Button"
         android:background="@color/colorHeadlines"
+        android:textColor="@color/abc_primary_text_disable_only_material_dark"
         android:text="@string/login_button"
         android:id="@+id/btnLogin"
         android:gravity="center"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:layout_gravity="center_horizontal"
-        android:layout_weight="1"
+        android:layout_weight="10"
         />
 
     <TextView
@@ -105,7 +109,7 @@
         android:id="@+id/tvSignUp"
         android:clickable="true"
         android:layout_gravity="center_horizontal"
-        android:layout_weight="2"
+        android:layout_weight="10"
         />
 </LinearLayout>
 </ScrollView>

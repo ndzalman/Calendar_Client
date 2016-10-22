@@ -45,12 +45,13 @@
 
     <!--New Event Screen -->
     <string name="new_event_title">Add New Event</string>
-    <string name="new_event_event_title_hint">Name of the event</string>
+    <string name="new_event_title_hint">Event Title</string>
     <string name="new_event_date_start_hint">Date Start</string>
     <string name="new_event_date_end_hint">Date End</string>
     <string name="new_event_time_start_hint">Time Start</string>
     <string name="new_event_time_end_hint">Time End</string>
-    <string name="new_event_event_description_hint">Description</string>
+    <string name="new_event_description_hint">Description</string>
+    <string name="new_event_location_hint">Location</string>
     <string name="new_event_empty">You must fill all fields</string>
 
     <!--Navigation Drawer-->

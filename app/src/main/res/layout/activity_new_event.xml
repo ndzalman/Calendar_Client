@@ -10,103 +10,168 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:weightSum="10">
+        android:weightSum="85">
 
-        <TextView
-            android:id="@+id/tvTitle"
+        <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:gravity="center"
-            android:text="TextView"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            tools:text="@string/new_event_title" />
+            android:layout_weight="15">
 
-        <EditText
-            android:id="@+id/etEventTitle"
+            <TextView
+                android:id="@+id/tvTitle"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="5"
+                android:textColor="@color/colorPrimary"
+                android:gravity="center"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/new_event_title" />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_action_add"
+                android:id="@+id/imageView2"
+                android:layout_weight="10" />
+
+
+        </LinearLayout>
+
+
+        <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:ems="10"
-            android:hint="@string/new_event_event_title_hint"
-            android:inputType="text"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp">
+
+            <EditText
+                android:id="@+id/etEventTitle"
+                android:hint="@string/new_event_title_hint"
+                android:textColorHint="@color/colorPrimary"
+                android:layout_width="match_parent"
+                android:inputType="text"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="10" />
+        </android.support.design.widget.TextInputLayout>
+
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="10"
             android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/tvDateStart"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_weight="1"
-                android:gravity="start"
+                android:layout_height="match_parent"
+                android:layout_weight="5"
+                android:layout_margin="5dp"
+                android:textColorHint="@color/colorPrimary"
+                android:gravity="center"
                 android:hint="@string/new_event_date_start_hint"
+                android:background="@drawable/clickable_text_view"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
 
             <TextView
                 android:id="@+id/tvTimeStart"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="start"
+                android:layout_height="match_parent"
+                android:layout_weight="5"
+                android:layout_margin="5dp"
+                android:textColorHint="@color/colorPrimary"
+                android:gravity="center"
                 android:hint="@string/new_event_time_start_hint"
+                android:background="@drawable/clickable_text_view"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
         </LinearLayout>
 
+
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="10"
             android:orientation="horizontal">
 
 
             <TextView
                 android:id="@+id/tvDateEnd"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
+                android:layout_margin="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="5"
+                android:textColorHint="@color/colorPrimary"
+                android:gravity="center"
                 android:hint="@string/new_event_date_end_hint"
+                android:background="@drawable/clickable_text_view"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <TextView
                 android:id="@+id/tvTimeEnd"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="5"
+                android:textColorHint="@color/colorPrimary"
+                android:layout_margin="5dp"
+                android:gravity="center"
                 android:hint="@string/new_event_time_end_hint"
+                android:background="@drawable/clickable_text_view"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
         </LinearLayout>
 
-        <EditText
-            android:id="@+id/etDescription"
+        <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="4.30"
-            android:ems="10"
-            android:hint="@string/new_event_event_description_hint"
-            android:inputType="textMultiLine" />
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp">
+
+            <EditText
+                android:id="@+id/etLocation"
+                android:hint="@string/new_event_location_hint"
+                android:textColorHint="@color/colorPrimary"
+                android:layout_width="match_parent"
+                android:inputType="text"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="15" />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp">
+
+            <EditText
+                android:id="@+id/etDescription"
+                android:hint="@string/new_event_description_hint"
+                android:textColorHint="@color/colorPrimary"
+                android:layout_width="match_parent"
+                android:inputType="text"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="15"
+                />
+        </android.support.design.widget.TextInputLayout>
+
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fabDone"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_gravity="bottom|end"
             android:layout_margin="16dp"
-            android:layout_weight="1"
+            android:layout_weight="10"
             android:src="@drawable/ic_done" />
     </LinearLayout>
 

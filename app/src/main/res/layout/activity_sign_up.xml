@@ -20,10 +20,12 @@
     tools:context="com.calendar_client.ui.SignUpActivity">
 
     <TextView
+        android:layout_marginTop="10dp"
         android:id="@+id/tvTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="4"
+        android:textColor="@color/colorPrimary"
+        android:layout_weight="1"
         android:gravity="center"
         android:text="@string/sign_up_title"
         android:textAppearance="?android:attr/textAppearanceLarge" />
@@ -33,12 +35,15 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginTop="8dp">
+
         <EditText
             android:id="@+id/etUserName"
             android:hint="@string/sign_up_username_hint"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:textColorHint="@color/colorPrimary"
+            android:textColor="@color/colorPrimary"
             android:layout_weight="0.5" />
     </android.support.design.widget.TextInputLayout>
 
@@ -55,6 +60,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
+        android:textColorHint="@color/colorPrimary"
         android:layout_weight="0.5" />
     </android.support.design.widget.TextInputLayout>
 
@@ -69,6 +75,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
+        android:textColorHint="@color/colorPrimary"
         android:layout_weight="0.5" />
     </android.support.design.widget.TextInputLayout>
 
@@ -84,6 +91,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
+        android:textColorHint="@color/colorPrimary"
         android:layout_weight="0.5" />
     </android.support.design.widget.TextInputLayout>
 
@@ -94,6 +102,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
+        android:textColor="@color/colorPrimary"
         android:layout_weight="1"
         android:text="@string/sign_up_date"
         android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -105,6 +114,7 @@
         android:layout_height="wrap_content"
         style="@style/Base.Widget.AppCompat.Button"
         android:background="@color/colorHeadlines"
+        android:textColor="@color/abc_primary_text_disable_only_material_dark"
         android:text="@string/sign_up_btn_sign_up"
         android:id="@+id/btnSignUp"
         android:gravity="center"
@@ -119,6 +129,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
+        android:textColor="@color/colorPrimaryDark"
         android:layout_weight="1"
         android:gravity="center"
         android:text="@string/sign_up_link_login"

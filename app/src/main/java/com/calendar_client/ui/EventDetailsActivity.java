@@ -5,7 +5,6 @@ import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -400,7 +399,7 @@ public class EventDetailsActivity extends AppCompatActivity {
                     Log.e(TAG, "Event Not added");
                 }
                 finish();
-                Intent events = new Intent(EventDetailsActivity.this,EventsActivity.class);
+                Intent events = new Intent(EventDetailsActivity.this,CalendarActivity.class);
                 startActivity(events);
             } else{
                 fabDone.setEnabled(true);
@@ -473,7 +472,7 @@ public class EventDetailsActivity extends AppCompatActivity {
         protected void onPostExecute(Boolean aBoolean) {
             if (result) {
                 finish();
-                Intent events = new Intent(EventDetailsActivity.this,EventsActivity.class);
+                Intent events = new Intent(EventDetailsActivity.this,CalendarActivity.class);
                 startActivity(events);
             } else{
                 fabDone.setEnabled(true);
@@ -543,8 +542,9 @@ public class EventDetailsActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Boolean aBoolean) {
             if (result) {
+                Toast.makeText(EventDetailsActivity.this,getString(R.string.event_deleted),Toast.LENGTH_SHORT).show();
                 finish();
-                Intent events = new Intent(EventDetailsActivity.this,EventsActivity.class);
+                Intent events = new Intent(EventDetailsActivity.this,CalendarActivity.class);
                 startActivity(events);
             } else{
                 fabDelete.setEnabled(true);
@@ -555,7 +555,7 @@ public class EventDetailsActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         finish();
-        Intent events = new Intent(EventDetailsActivity.this,EventsActivity.class);
+        Intent events = new Intent(EventDetailsActivity.this,CalendarActivity.class);
         startActivity(events);
     }
 }

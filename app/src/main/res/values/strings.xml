@@ -43,7 +43,7 @@
     <string name="sign_up_successful">Account Created !</string>
     <string name="sign_up_error">We Could not create your account</string>
 
-    <!--New Event Screen -->
+    <!--New/Edit Event Screen -->
     <string name="new_event_title">Add New Event</string>
     <string name="new_event_title_hint">Event Title</string>
     <string name="new_event_edit_title">Edit Event</string>
@@ -56,6 +56,7 @@
     <string name="new_event_empty">You must fill all fields</string>
     <string name="new_event_date_error">Illegal date!</string>
     <string name="new_event_time_error">Illegal time!</string>
+    <string name="event_deleted">Event Deleted</string>
 
     <!--Navigation Drawer-->
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -68,6 +69,8 @@
     <string name="menu_item_schedule">Schedule</string>
     <string name="menu_item_profile">Profile</string>
     <string name="menu_item_log_out">Log Out</string>
+    <string name="menu_item_update">Today</string>
+
 
     <!--Alert Dialog - exit dialog-->
     <string name="exit_dialog_title">Exit Application</string>

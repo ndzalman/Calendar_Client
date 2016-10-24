@@ -10,6 +10,8 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -19,6 +21,8 @@ import com.calendar_client.data.User;
 import com.google.gson.Gson;
 import com.prolificinteractive.materialcalendarview.CalendarMode;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
+
+import java.util.Calendar;
 
 public abstract class DrawerActivity extends AppCompatActivity {
 
@@ -71,6 +75,8 @@ public abstract class DrawerActivity extends AppCompatActivity {
                     case R.id.navigation_item_day:
                         break;
                     case R.id.navigation_item_schedule:
+                        Intent eventsActivity = new Intent(DrawerActivity.this,EventsActivity.class);
+                        startActivity(eventsActivity);
                         break;
                     case R.id.navigation_item_profile:
                         break;
@@ -92,6 +98,13 @@ public abstract class DrawerActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.toolbar_menu, menu);
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
@@ -102,6 +115,11 @@ public abstract class DrawerActivity extends AppCompatActivity {
             case android.R.id.home:
                 drawerLayout.openDrawer(GravityCompat.START);
                 return true;
+            case R.id.item_update:
+                calendar.setCurrentDate(Calendar.getInstance());
+                return true;
+            default:
+                break;
         }
 
         return super.onOptionsItemSelected(item);

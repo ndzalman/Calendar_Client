@@ -47,7 +47,7 @@ public class LoginActivity extends AppCompatActivity {
 
         if (user != null && !user.equals("")) {
             finish();
-            Intent homeScreen = new Intent(this, EventsActivity.class);
+            Intent homeScreen = new Intent(this, CalendarActivity.class);
             startActivity(homeScreen);
         }
 
@@ -152,7 +152,7 @@ public class LoginActivity extends AppCompatActivity {
                 editor.putString("user", userJSON);
                 editor.apply();
 
-                Intent intent = new Intent(LoginActivity.this, EventsActivity.class);
+                Intent intent = new Intent(LoginActivity.this, CalendarActivity.class);
                 startActivity(intent);
                 LoginActivity.this.finish();
 

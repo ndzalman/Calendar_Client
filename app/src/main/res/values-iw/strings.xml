@@ -44,7 +44,7 @@
     <string name="sign_up_successful">החשבון נוצר בהצלחה !</string>
     <string name="sign_up_error">מצטערים, לא הצלחנו ליצור את החשבון</string>
 
-    <!--New Event Screen -->
+    <!--New/Edit Event Screen -->
     <string name="new_event_title">הוסף אירוע חדש</string>
     <string name="new_event_edit_title">ערוך אירוע</string>
     <string name="new_event_date_start_hint">תאריך התחלה</string>
@@ -56,6 +56,7 @@
     <string name="new_event_empty">יש למלא את כל השדות</string>
     <string name="new_event_date_error">תאריך לא חוקי!</string>
     <string name="new_event_time_error">זמן לא חוקי!</string>
+    <string name="event_deleted">האירוע נמחק</string>
 
     <!--Navigation Drawer-->
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -68,6 +69,8 @@
     <string name="menu_item_schedule">לוח זמנים</string>
     <string name="menu_item_profile">פרופיל</string>
     <string name="menu_item_log_out">התנתק</string>
+    <string name="menu_item_update">חזור להיום</string>
+
 
     <!--Alert Dialog - exit dialog-->
     <string name="exit_dialog_title">יציאה מהאפליקציה</string>

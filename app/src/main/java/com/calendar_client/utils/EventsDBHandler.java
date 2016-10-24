@@ -66,7 +66,8 @@ public class EventsDBHandler {
         ArrayList<Event> eventsList = new ArrayList<Event>();
         // this opens the connection to the DB
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        String selectQuery = "SELECT  * FROM " + EventsDBConstants.EVENTS_TABLE_NAME + "WHERE USER_ID = " + userId;
+        String selectQuery = "SELECT  * FROM " + EventsDBConstants.EVENTS_TABLE_NAME + " WHERE "
+                + EventsDBConstants.EVENTS_USER_ID +"=" + userId;
         Cursor eventsCursor = db.rawQuery(selectQuery, null);
 
         // each round in the loop is a record in the DB
@@ -122,7 +123,6 @@ public class EventsDBHandler {
         Calendar between = Calendar.getInstance();
 
         sdf = new SimpleDateFormat(EventsDBConstants.DATE_TIME_FORMAT);
-        Log.d("task","num of events found for " + dateTxt + " is: " + eventsCursor.getCount());
 
         while(eventsCursor.moveToNext()) {
             if (userId == eventsCursor.getInt(1)) {
@@ -159,9 +159,6 @@ public class EventsDBHandler {
         }
 
         db.close();
-        Log.d("task","num of events after " + eventsList.size());
-
-
 
         return eventsList;
 
@@ -258,7 +255,6 @@ public class EventsDBHandler {
         }
         db.close();
 
-        Log.d("dates",dates.toString());
         return dates;
 
 

@@ -19,9 +19,10 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.LoginActivity" />
-        <activity android:name=".ui.EventsActivity" />
+        <activity android:name=".ui.CalendarActivity" />
         <activity android:name=".ui.SignUpActivity" />
         <activity android:name=".ui.EventDetailsActivity" />
+        <activity android:name=".ui.EventsActivity" />
     </application>
 
 </manifest>

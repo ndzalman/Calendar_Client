@@ -203,12 +203,14 @@ public class EventDetailsActivity extends AppCompatActivity {
                                 ){
                             Toast.makeText(EventDetailsActivity.this,getString(R.string.new_event_time_error),Toast.LENGTH_SHORT).show();
                         } else {
+                            hourStart = selectedHour;
+                            minuteStart = selectedMinute;
                             if (minuteStart < 10){
                                 tvTimeStart.setText(hourStart + ":0" + minuteStart);
                             }else{
                                 tvTimeStart.setText(hourStart + ":" + minuteStart);
                             }                            hourStart = selectedHour;
-                            minuteStart = selectedMinute;
+
                         }
                     }
                 }, hourStart, minuteStart, true);
@@ -228,12 +230,13 @@ public class EventDetailsActivity extends AppCompatActivity {
                                 ){
                             Toast.makeText(EventDetailsActivity.this,getString(R.string.new_event_time_error),Toast.LENGTH_SHORT).show();
                         } else {
+                            hourEnd = selectedHour;
+                            minuteEnd = selectedMinute;
                             if (minuteEnd < 10){
                                 tvTimeEnd.setText(hourEnd + ":0" + minuteEnd);
                             }else{
                                 tvTimeEnd.setText(hourEnd + ":" + minuteEnd);
                             }                            hourEnd = selectedHour;
-                            minuteEnd = selectedMinute;
                         }
                     }
                 }, hourEnd, minuteEnd, true);

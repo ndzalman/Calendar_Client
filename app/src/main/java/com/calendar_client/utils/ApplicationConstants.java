@@ -1,14 +1,9 @@
 package com.calendar_client.utils;
-
-/**
- * Created by anael on 17/10/16.
- */
-
 public class ApplicationConstants {
 
-//    public static final String SERVER_IP = "10.0.0.102"; // nadav IP
-    public static final String SERVER_IP = "192.168.1.19"; // anael IP
-//    public static final String SERVER_IP = "localhost";
+    public static final String SERVER_IP = "10.0.0.100"; // nadav IP
+//    public static final String SERVER_IP = "192.168.1.19"; // anael IP
+//   public static final String SERVER_IP = "localhost";
     public static final String PORT = "8080";
 
 

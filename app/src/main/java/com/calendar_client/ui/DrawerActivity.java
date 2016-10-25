@@ -117,6 +117,7 @@ public abstract class DrawerActivity extends AppCompatActivity {
                 return true;
             case R.id.item_update:
                 calendar.setCurrentDate(Calendar.getInstance());
+                calendar.setSelectedDate(Calendar.getInstance());
                 return true;
             default:
                 break;

@@ -1,12 +1,20 @@
 package com.calendar_client.ui;
 
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,6 +28,7 @@ import android.widget.Toast;
 import com.calendar_client.R;
 import com.calendar_client.data.Event;
 import com.calendar_client.data.User;
+import com.calendar_client.utils.NotificationReciever;
 import com.calendar_client.utils.ApplicationConstants;
 import com.calendar_client.utils.EventsDBHandler;
 import com.google.gson.Gson;
@@ -63,24 +72,29 @@ public class EventDetailsActivity extends AppCompatActivity {
         initComponents();
         final Calendar c = Calendar.getInstance();
         dbHandler = new EventsDBHandler(this);
+        event = new Event();
 
-        if (getIntent().getSerializableExtra("selectedDay") != null){
+        if (getIntent().getSerializableExtra("selectedDay") != null) {
             selected = (Calendar) getIntent().getSerializableExtra("selectedDay");
-        }
-        else if (getIntent().getSerializableExtra("event")!= null){
+        } else if (getIntent().getSerializableExtra("event") != null) {
             event = (Event) getIntent().getSerializableExtra("event");
             isNew = false;
         }
-        if (isNew){
+        if (isNew) {
+            //set deault date start
+            event.setDateStart(selected);
+            //set deault date end
+            event.setDateEnd(selected);
+
             yearStart = selected.get(Calendar.YEAR);
             monthStart = selected.get(Calendar.MONTH);
             dayStart = selected.get(Calendar.DAY_OF_MONTH);
             hourStart = c.get(Calendar.HOUR_OF_DAY);
             minuteStart = c.get(Calendar.MINUTE);
-            tvDateStart.setText(selected.get(Calendar.DAY_OF_MONTH) + "/" + (selected.get(Calendar.MONTH)+1) + "/" + selected.get(Calendar.YEAR));
-            if (minuteStart < 10){
+            tvDateStart.setText(selected.get(Calendar.DAY_OF_MONTH) + "/" + (selected.get(Calendar.MONTH) + 1) + "/" + selected.get(Calendar.YEAR));
+            if (minuteStart < 10) {
                 tvTimeStart.setText(hourStart + ":0" + minuteStart);
-            }else{
+            } else {
                 tvTimeStart.setText(hourStart + ":" + minuteStart);
             }
 
@@ -89,15 +103,15 @@ public class EventDetailsActivity extends AppCompatActivity {
             dayEnd = selected.get(Calendar.DAY_OF_MONTH);
             hourEnd = c.get(Calendar.HOUR_OF_DAY);
             minuteEnd = c.get(Calendar.MINUTE);
-            tvDateEnd.setText(selected.get(Calendar.DAY_OF_MONTH) + "/" + (selected.get(Calendar.MONTH)+1) + "/" + selected.get(Calendar.YEAR));
-            if (minuteEnd < 10){
+            tvDateEnd.setText(selected.get(Calendar.DAY_OF_MONTH) + "/" + (selected.get(Calendar.MONTH) + 1) + "/" + selected.get(Calendar.YEAR));
+            if (minuteEnd < 10) {
                 tvTimeEnd.setText(hourEnd + ":0" + minuteEnd);
-            }else{
+            } else {
                 tvTimeEnd.setText(hourEnd + ":" + minuteEnd);
             }
 
 
-        } else{ // if this is edit event
+        } else { // if this is edit event
 
             yearStart = event.getDateStart().get(Calendar.YEAR);
             monthStart = event.getDateStart().get(Calendar.MONTH);
@@ -113,9 +127,9 @@ public class EventDetailsActivity extends AppCompatActivity {
 
             etEventTitle.setText(event.getTitle());
             etDescription.setText(event.getDescription());
-            String dateStart = dayStart + "/" + monthStart + "/" + yearEnd;
+            String dateStart = dayStart + "/" + (monthStart + 1) + "/" + yearEnd;
             tvDateStart.setText(dateStart);
-            String dateEnd = dayEnd + "/" + monthEnd + "/" + yearEnd;
+            String dateEnd = dayEnd + "/" + (monthEnd + 1) + "/" + yearEnd;
             tvDateEnd.setText(dateEnd);
             String timeStart = hourStart + ":" + minuteStart;
             tvTimeStart.setText(timeStart);
@@ -134,12 +148,12 @@ public class EventDetailsActivity extends AppCompatActivity {
 
                     boolean isSuccessful = dbHandler.deleteEvent(event);
                     if (isSuccessful) {
-                        Log.i(TAG, "Event Edited successfuly");
+                        Log.i(TAG, "Event Deleted successfuly");
                     } else {
                         Log.e(TAG, "Event Not edited");
                     }
 
-                   new DeleteEventTask().execute();
+                    new DeleteEventTask().execute();
                 }
             });
 
@@ -153,7 +167,7 @@ public class EventDetailsActivity extends AppCompatActivity {
                     @Override
                     public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                         if (c.get(Calendar.YEAR) > year || c.get(Calendar.MONTH) > month || c.get(Calendar.DAY_OF_MONTH) > day) {
-                            Toast.makeText(EventDetailsActivity.this,getString(R.string.new_event_date_error),Toast.LENGTH_SHORT).show();
+                            Toast.makeText(EventDetailsActivity.this, getString(R.string.new_event_date_error), Toast.LENGTH_SHORT).show();
                         } else {
                             tvDateStart.setText(day + "/" + (month + 1) + "/" + year);
                             yearStart = year;
@@ -176,7 +190,7 @@ public class EventDetailsActivity extends AppCompatActivity {
                     public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                         if (c.get(Calendar.YEAR) > year || c.get(Calendar.YEAR) < yearStart ||
                                 (c.get(Calendar.YEAR) == yearStart && month < monthStart) || (month == monthStart && day < dayStart)) {
-                            Toast.makeText(EventDetailsActivity.this,getString(R.string.new_event_date_error),Toast.LENGTH_SHORT).show();
+                            Toast.makeText(EventDetailsActivity.this, getString(R.string.new_event_date_error), Toast.LENGTH_SHORT).show();
                         } else {
                             tvDateEnd.setText(day + "/" + (month + 1) + "/" + year);
                             yearEnd = year;
@@ -200,16 +214,17 @@ public class EventDetailsActivity extends AppCompatActivity {
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
                         if ((selectedHour < c.get(Calendar.HOUR_OF_DAY) && c.get(Calendar.DAY_OF_MONTH) == dayStart ||
                                 (selectedMinute < c.get(Calendar.MINUTE)) && selectedHour == c.get(Calendar.HOUR_OF_DAY))
-                                ){
-                            Toast.makeText(EventDetailsActivity.this,getString(R.string.new_event_time_error),Toast.LENGTH_SHORT).show();
+                                ) {
+                            Toast.makeText(EventDetailsActivity.this, getString(R.string.new_event_time_error), Toast.LENGTH_SHORT).show();
                         } else {
                             hourStart = selectedHour;
                             minuteStart = selectedMinute;
-                            if (minuteStart < 10){
+                            if (minuteStart < 10) {
                                 tvTimeStart.setText(hourStart + ":0" + minuteStart);
-                            }else{
+                            } else {
                                 tvTimeStart.setText(hourStart + ":" + minuteStart);
-                            }                            hourStart = selectedHour;
+                            }
+                            hourStart = selectedHour;
 
                         }
                     }
@@ -227,16 +242,17 @@ public class EventDetailsActivity extends AppCompatActivity {
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
                         if ((selectedHour < hourStart && dayEnd == dayStart) ||
                                 (selectedMinute < minuteStart && selectedHour == hourStart)
-                                ){
-                            Toast.makeText(EventDetailsActivity.this,getString(R.string.new_event_time_error),Toast.LENGTH_SHORT).show();
+                                ) {
+                            Toast.makeText(EventDetailsActivity.this, getString(R.string.new_event_time_error), Toast.LENGTH_SHORT).show();
                         } else {
                             hourEnd = selectedHour;
                             minuteEnd = selectedMinute;
-                            if (minuteEnd < 10){
+                            if (minuteEnd < 10) {
                                 tvTimeEnd.setText(hourEnd + ":0" + minuteEnd);
-                            }else{
+                            } else {
                                 tvTimeEnd.setText(hourEnd + ":" + minuteEnd);
-                            }                            hourEnd = selectedHour;
+                            }
+                            hourEnd = selectedHour;
                         }
                     }
                 }, hourEnd, minuteEnd, true);
@@ -248,34 +264,35 @@ public class EventDetailsActivity extends AppCompatActivity {
         fabDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (isNew) {
-                    event = new Event();
-                }
-                saveEvent();
+//                if (isNew) {
+//                    event = new Event();
+//                }
+                boolean isValid = saveEvent();
+                if (isValid) {
 
+                    SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                    String user = sharedPreferences.getString("user", "");
+                    Gson gson = new Gson();
+                    User thisUser = gson.fromJson(user, User.class);
+                    event.setUser(thisUser);
 
-                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                String user = sharedPreferences.getString("user", "");
-                Gson gson = new Gson();
-                User thisUser = gson.fromJson(user, User.class);
-                event.setUser(thisUser);
+                    if (isNew) {
 
-                if (isNew) {
+                        fabDone.setEnabled(false);
+                        new AddEventTask().execute();
 
-                    fabDone.setEnabled(false);
-                    new AddEventTask().execute();
-
-                } else{
-
-                    fabDone.setEnabled(false);
-                    boolean isSuccessful = dbHandler.updateEvent(event);
-                    if (isSuccessful) {
-                        Log.i(TAG, "Event Edited successfuly");
                     } else {
-                        Log.e(TAG, "Event Not edited");
-                    }
 
-                    new EditEventTask().execute();
+                        fabDone.setEnabled(false);
+                        boolean isSuccessful = dbHandler.updateEvent(event);
+                        if (isSuccessful) {
+                            Log.i(TAG, "Event Edited successfuly");
+                        } else {
+                            Log.e(TAG, "Event Not edited");
+                        }
+
+                        new EditEventTask().execute();
+                    }
                 }
             }
         });
@@ -283,7 +300,50 @@ public class EventDetailsActivity extends AppCompatActivity {
 
     }
 
-    private void saveEvent(){
+    private void scheduleNotification() {
+
+        Intent notificationIntent = new Intent(this, NotificationReciever.class);
+        notificationIntent.putExtra(NotificationReciever.NOTIFICATION_ID, event.getId());
+        notificationIntent.putExtra(NotificationReciever.NOTIFICATION, getNotification());
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, event.getDateStart().getTimeInMillis(), pendingIntent);
+
+
+    }
+
+    private Notification getNotification() {
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(this)
+                        .setSmallIcon(R.drawable.ic_stat_name)
+                        .setContentTitle(event.getTitle())
+                        .setContentText(event.getDateStart().get(Calendar.HOUR_OF_DAY) + ":" + event.getDateStart().get(Calendar.MINUTE)
+                        + " - " + event.getDateEnd().get(Calendar.HOUR_OF_DAY) + ":" + event.getDateEnd().get(Calendar.MINUTE)
+                        )
+                        .setVibrate(new long[]{1000,1000,1000,1000,1000});
+// Creates an explicit intent for an Activity in your app
+        Intent resultIntent = new Intent(this, CalendarActivity.class);
+
+// The stack builder object will contain an artificial back stack for the
+// started Activity.
+// This ensures that navigating backward from the Activity leads out of
+// your application to the Home screen.
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+// Adds the back stack for the Intent (but not the Intent itself)
+        stackBuilder.addParentStack(EventsActivity.class);
+// Adds the Intent that starts the Activity to the top of the stack
+        stackBuilder.addNextIntent(resultIntent);
+        PendingIntent resultPendingIntent =
+                stackBuilder.getPendingIntent(
+                        0,
+                        PendingIntent.FLAG_UPDATE_CURRENT
+                );
+        mBuilder.setContentIntent(resultPendingIntent);
+        return mBuilder.build();
+    }
+
+    private boolean saveEvent() {
         String title = etEventTitle.getText().toString();
         String dateStartTxt = tvDateStart.getText().toString();
         String timeStartTxt = tvTimeStart.getText().toString();
@@ -292,27 +352,29 @@ public class EventDetailsActivity extends AppCompatActivity {
         String description = etDescription.getText().toString();
 
         if (title.isEmpty() || dateStartTxt.isEmpty() || timeStartTxt.isEmpty() ||
-                dateEndTxt.isEmpty() || timeEndTxt.isEmpty() || description.isEmpty()){
-            Toast.makeText(EventDetailsActivity.this,getString(R.string.new_event_empty),Toast.LENGTH_SHORT).show();
-            return;
-        }
+                dateEndTxt.isEmpty() || timeEndTxt.isEmpty() || description.isEmpty()) {
+            Toast.makeText(EventDetailsActivity.this, getString(R.string.new_event_empty), Toast.LENGTH_SHORT).show();
+            return false;
+        } else {
 
-        event.setDescription(etDescription.getText().toString());
-        event.setTitle(etEventTitle.getText().toString());
-        Calendar dateStart = Calendar.getInstance();
-        dateStart.set(Calendar.YEAR,yearStart);
-        dateStart.set(Calendar.MONTH,monthStart);
-        dateStart.set(Calendar.DAY_OF_MONTH,dayStart);
-        dateStart.set(Calendar.HOUR_OF_DAY,hourStart);
-        dateStart.set(Calendar.MINUTE,minuteStart);
-        event.setDateStart(dateStart);
-        Calendar dateEnd = Calendar.getInstance();
-        dateEnd.set(Calendar.YEAR,yearEnd);
-        dateEnd.set(Calendar.MONTH,monthEnd);
-        dateEnd.set(Calendar.DAY_OF_MONTH,dayEnd);
-        dateEnd.set(Calendar.HOUR_OF_DAY,hourEnd);
-        dateEnd.set(Calendar.MINUTE,minuteEnd);
-        event.setDateEnd(dateEnd);
+            event.setDescription(etDescription.getText().toString());
+            event.setTitle(etEventTitle.getText().toString());
+            Calendar dateStart = Calendar.getInstance();
+            dateStart.set(Calendar.YEAR, yearStart);
+            dateStart.set(Calendar.MONTH, monthStart);
+            dateStart.set(Calendar.DAY_OF_MONTH, dayStart);
+            dateStart.set(Calendar.HOUR_OF_DAY, hourStart);
+            dateStart.set(Calendar.MINUTE, minuteStart);
+            event.setDateStart(dateStart);
+            Calendar dateEnd = Calendar.getInstance();
+            dateEnd.set(Calendar.YEAR, yearEnd);
+            dateEnd.set(Calendar.MONTH, monthEnd);
+            dateEnd.set(Calendar.DAY_OF_MONTH, dayEnd);
+            dateEnd.set(Calendar.HOUR_OF_DAY, hourEnd);
+            dateEnd.set(Calendar.MINUTE, minuteEnd);
+            event.setDateEnd(dateEnd);
+            return true;
+        }
     }
 
     private void initComponents() {
@@ -327,7 +389,7 @@ public class EventDetailsActivity extends AppCompatActivity {
 
     }
 
-    private class AddEventTask extends AsyncTask<String,Void,Boolean> {
+    private class AddEventTask extends AsyncTask<String, Void, Boolean> {
         boolean result = true;
         int id;
 
@@ -376,7 +438,7 @@ public class EventDetailsActivity extends AppCompatActivity {
 
                 if (response.toString().trim().equals("-1")) {
                     result = false;
-                }else{
+                } else {
                     id = Integer.parseInt(response.toString().trim());
                 }
 
@@ -398,19 +460,20 @@ public class EventDetailsActivity extends AppCompatActivity {
                 boolean isSuccessful = dbHandler.addEvent(event);
                 if (isSuccessful) {
                     Log.i(TAG, "Event added successfuly");
+                    scheduleNotification();
                 } else {
                     Log.e(TAG, "Event Not added");
                 }
                 finish();
-                Intent events = new Intent(EventDetailsActivity.this,CalendarActivity.class);
+                Intent events = new Intent(EventDetailsActivity.this, CalendarActivity.class);
                 startActivity(events);
-            } else{
+            } else {
                 fabDone.setEnabled(true);
             }
         }
     }
 
-    private class EditEventTask extends AsyncTask<String,Void,Boolean> {
+    private class EditEventTask extends AsyncTask<String, Void, Boolean> {
         boolean result = false;
 
         @Override
@@ -475,15 +538,15 @@ public class EventDetailsActivity extends AppCompatActivity {
         protected void onPostExecute(Boolean aBoolean) {
             if (result) {
                 finish();
-                Intent events = new Intent(EventDetailsActivity.this,CalendarActivity.class);
+                Intent events = new Intent(EventDetailsActivity.this, CalendarActivity.class);
                 startActivity(events);
-            } else{
+            } else {
                 fabDone.setEnabled(true);
             }
         }
     }
 
-    private class DeleteEventTask extends AsyncTask<String,Void,Boolean> {
+    private class DeleteEventTask extends AsyncTask<String, Void, Boolean> {
         boolean result = false;
 
         @Override
@@ -545,11 +608,11 @@ public class EventDetailsActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Boolean aBoolean) {
             if (result) {
-                Toast.makeText(EventDetailsActivity.this,getString(R.string.event_deleted),Toast.LENGTH_SHORT).show();
+                Toast.makeText(EventDetailsActivity.this, getString(R.string.event_deleted), Toast.LENGTH_SHORT).show();
                 finish();
-                Intent events = new Intent(EventDetailsActivity.this,CalendarActivity.class);
+                Intent events = new Intent(EventDetailsActivity.this, CalendarActivity.class);
                 startActivity(events);
-            } else{
+            } else {
                 fabDelete.setEnabled(true);
             }
         }
@@ -558,7 +621,7 @@ public class EventDetailsActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         finish();
-        Intent events = new Intent(EventDetailsActivity.this,CalendarActivity.class);
+        Intent events = new Intent(EventDetailsActivity.this, CalendarActivity.class);
         startActivity(events);
     }
 }

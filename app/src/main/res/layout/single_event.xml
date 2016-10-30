@@ -44,6 +44,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:id="@+id/tvTime"
+            android:gravity="start"
             android:textColor="@color/colorAccent"
             android:layout_weight="1" />
 

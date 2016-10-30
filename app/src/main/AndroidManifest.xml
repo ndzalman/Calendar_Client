@@ -4,6 +4,11 @@
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- permission required to use Alarm Manager -->
+    <uses-permission android:name="com.android.alarm.permission.SET_ALARM"/>
+
+    <!-- Register the Alarm Receiver -->
+    <receiver android:name="com.example.alarmmanagernotifcation.AlarmReceiver"/>
 
     <application
         android:allowBackup="true"
@@ -23,6 +28,8 @@
         <activity android:name=".ui.SignUpActivity" />
         <activity android:name=".ui.EventDetailsActivity" />
         <activity android:name=".ui.EventsActivity" />
+
+        <receiver android:name=".utils.NotificationReciever" />
     </application>
 
 </manifest>

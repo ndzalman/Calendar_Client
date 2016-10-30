@@ -9,6 +9,9 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
@@ -309,11 +312,19 @@ public class EventDetailsActivity extends AppCompatActivity {
 
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         alarmManager.set(AlarmManager.RTC_WAKEUP, event.getDateStart().getTimeInMillis(), pendingIntent);
+    }
 
+    private void updateNotifcation(){
+
+    }
+
+    private void deleteNotifcation(){
 
     }
 
     private Notification getNotification() {
+        Uri uri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.drawable.ic_stat_name)
@@ -321,7 +332,9 @@ public class EventDetailsActivity extends AppCompatActivity {
                         .setContentText(event.getDateStart().get(Calendar.HOUR_OF_DAY) + ":" + event.getDateStart().get(Calendar.MINUTE)
                         + " - " + event.getDateEnd().get(Calendar.HOUR_OF_DAY) + ":" + event.getDateEnd().get(Calendar.MINUTE)
                         )
-                        .setVibrate(new long[]{1000,1000,1000,1000,1000});
+                .setAutoCancel(true)
+                .setSound(uri);
+
 // Creates an explicit intent for an Activity in your app
         Intent resultIntent = new Intent(this, CalendarActivity.class);
 

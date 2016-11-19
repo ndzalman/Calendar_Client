@@ -47,11 +47,12 @@
     <!--New/Edit Event Screen -->
     <string name="new_event_title">הוסף אירוע חדש</string>
     <string name="new_event_edit_title">ערוך אירוע</string>
+    <string name="new_event_title_hint">שם האירוע</string>
+    <string name="new_event_description_hint">תיאור</string>
     <string name="new_event_date_start_hint">תאריך התחלה</string>
     <string name="new_event_date_end_hint">תאריך סיום</string>
     <string name="new_event_time_start_hint">שעת התחלה</string>
     <string name="new_event_time_end_hint">שעת סיום</string>
-    <string name="new_event_event_description_hint">תיאור</string>
     <string name="new_event_location_hint">מיקום</string>
     <string name="new_event_empty">יש למלא את כל השדות</string>
     <string name="new_event_date_error">תאריך לא חוקי!</string>

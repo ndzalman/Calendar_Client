@@ -22,13 +22,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import butterknife.ButterKnife;
-import butterknife.InjectView;
-
 public class LoginActivity extends AppCompatActivity {
-    @InjectView(R.id.etPassword)
     EditText etPassword;
-    @InjectView(R.id.etEmail)
     EditText etEmail;
 
     private SharedPreferences sharedPreferences;
@@ -40,7 +35,10 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        ButterKnife.inject(this);
+
+        etPassword = (EditText) findViewById(R.id.etPassword);
+        etEmail = (EditText) findViewById(R.id.etEmail);
+
 
         // get user from shared preference. if doesnt exist return empty string
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
@@ -64,27 +62,27 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 boolean valid = true;
 
-                String password = etPassword.getText().toString();
-                if (password.isEmpty()) {
-                    etPassword.setError(getString(R.string.login_password_error_empty));
-                    valid = false;
-                } else if (password.length() < 5) {
-                    etPassword.setError(getString(R.string.login_password_error_length));
-                    valid = false;
-                } else {
-                    etPassword.setError(null);
-                }
-
-                String email = etEmail.getText().toString();
-                if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-                    etEmail.setError(getString(R.string.login_email_error_invalid));
-                    valid = false;
-                } else if (email.isEmpty()) {
-                    etEmail.setError(getString(R.string.login_email_error_empty));
-                    valid = false;
-                } else {
-                    etEmail.setError(null);
-                }
+//                String password = etPassword.getText().toString();
+//                if (password.isEmpty()) {
+//                    etPassword.setError(getString(R.string.login_password_error_empty));
+//                    valid = false;
+//                } else if (password.length() < 5) {
+//                    etPassword.setError(getString(R.string.login_password_error_length));
+//                    valid = false;
+//                } else {
+//                    etPassword.setError(null);
+//                }
+//
+//                String email = etEmail.getText().toString();
+//                if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+//                    etEmail.setError(getString(R.string.login_email_error_invalid));
+//                    valid = false;
+//                } else if (email.isEmpty()) {
+//                    etEmail.setError(getString(R.string.login_email_error_empty));
+//                    valid = false;
+//                } else {
+//                    etEmail.setError(null);
+//                }
 
                 if (valid) {
                     btnLogin.setEnabled(false);

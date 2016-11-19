@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -220,8 +221,8 @@ public class CalendarActivity extends DrawerActivity {
     public void onBackPressed() {
         new AlertDialog.Builder(this)
                 .setIcon(android.R.drawable.ic_dialog_alert)
-                .setTitle(getString(R.string.exit_dialog_title))
-                .setMessage(getString(R.string.exit_dialog_message))
+                .setTitle(getResources().getString(R.string.exit_dialog_title))
+                .setMessage(getResources().getString(R.string.exit_dialog_message))
                 .setPositiveButton(getString(R.string.exit_dialog_postive), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

@@ -37,7 +37,7 @@ public abstract class DrawerActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
         actionBar.setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle(getString(R.string.app_name));
+        getSupportActionBar().setTitle(getResources().getString(R.string.app_name));
 //        getSupportActionBar().setLogo(getDrawable(R.drawable.logo));
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -53,7 +53,9 @@ public abstract class DrawerActivity extends AppCompatActivity {
         Gson gson = new Gson();
         String userJSON = sharedPreferences.getString("user", "");
         User u = gson.fromJson(userJSON, User.class);
-        tvHeaderTitle.setText(u.getUserName());
+        if (u != null) {
+            tvHeaderTitle.setText(u.getUserName());
+        }
 
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override

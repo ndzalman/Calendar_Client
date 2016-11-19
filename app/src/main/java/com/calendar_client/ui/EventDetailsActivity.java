@@ -72,7 +72,7 @@ public class EventDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_event_details);
 
         initComponents();
-        final Calendar c = Calendar.getInstance();
+        c = Calendar.getInstance();
         dbHandler = new EventsDBHandler(this);
         event = new Event();
 
@@ -144,7 +144,7 @@ public class EventDetailsActivity extends AppCompatActivity {
             String timeEnd = hourEnd + ":" + minuteEnd;
 
             tvTimeEnd.setText(timeEnd);
-            tvTitle.setText(getString(R.string.new_event_edit_title));
+            tvTitle.setText(getResources().getString(R.string.new_event_edit_title));
 
             fabDelete = (FloatingActionButton) findViewById(R.id.fabDelete);
             fabDelete.setVisibility(View.VISIBLE);
@@ -219,7 +219,7 @@ public class EventDetailsActivity extends AppCompatActivity {
                     @Override
                     public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                         if (c.get(Calendar.YEAR) > year || c.get(Calendar.MONTH) > month || c.get(Calendar.DAY_OF_MONTH) > day) {
-                            Toast.makeText(EventDetailsActivity.this, getString(R.string.new_event_date_error), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(EventDetailsActivity.this, getResources().getString(R.string.new_event_date_error), Toast.LENGTH_SHORT).show();
                         } else {
                             tvDateStart.setText(day + "/" + (month + 1) + "/" + year);
                             yearStart = year;
@@ -242,7 +242,7 @@ public class EventDetailsActivity extends AppCompatActivity {
                     public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                         if (c.get(Calendar.YEAR) > year || c.get(Calendar.YEAR) < yearStart ||
                                 (c.get(Calendar.YEAR) == yearStart && month < monthStart) || (month == monthStart && day < dayStart)) {
-                            Toast.makeText(EventDetailsActivity.this, getString(R.string.new_event_date_error), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(EventDetailsActivity.this, getResources().getString(R.string.new_event_date_error), Toast.LENGTH_SHORT).show();
                         } else {
                             tvDateEnd.setText(day + "/" + (month + 1) + "/" + year);
                             yearEnd = year;
@@ -267,7 +267,7 @@ public class EventDetailsActivity extends AppCompatActivity {
                         if ((selectedHour < c.get(Calendar.HOUR_OF_DAY) && c.get(Calendar.DAY_OF_MONTH) == dayStart ||
                                 (selectedMinute < c.get(Calendar.MINUTE)) && selectedHour == c.get(Calendar.HOUR_OF_DAY))
                                 ) {
-                            Toast.makeText(EventDetailsActivity.this, getString(R.string.new_event_time_error), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(EventDetailsActivity.this, getResources().getString(R.string.new_event_time_error), Toast.LENGTH_SHORT).show();
                         } else {
                             hourStart = selectedHour;
                             minuteStart = selectedMinute;
@@ -295,7 +295,7 @@ public class EventDetailsActivity extends AppCompatActivity {
                         if ((selectedHour < hourStart && dayEnd == dayStart) ||
                                 (selectedMinute < minuteStart && selectedHour == hourStart)
                                 ) {
-                            Toast.makeText(EventDetailsActivity.this, getString(R.string.new_event_time_error), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(EventDetailsActivity.this, getResources().getString(R.string.new_event_time_error), Toast.LENGTH_SHORT).show();
                         } else {
                             hourEnd = selectedHour;
                             minuteEnd = selectedMinute;
@@ -376,7 +376,7 @@ public class EventDetailsActivity extends AppCompatActivity {
 
         if (title.isEmpty() || dateStartTxt.isEmpty() || timeStartTxt.isEmpty() ||
                 dateEndTxt.isEmpty() || timeEndTxt.isEmpty() || description.isEmpty()) {
-            Toast.makeText(EventDetailsActivity.this, getString(R.string.new_event_empty), Toast.LENGTH_SHORT).show();
+            Toast.makeText(EventDetailsActivity.this, getResources().getString(R.string.new_event_empty), Toast.LENGTH_SHORT).show();
             return false;
         } else {
 
@@ -619,7 +619,7 @@ public class EventDetailsActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Boolean aBoolean) {
             if (result) {
-                Toast.makeText(EventDetailsActivity.this, getString(R.string.event_deleted), Toast.LENGTH_SHORT).show();
+                Toast.makeText(EventDetailsActivity.this, getResources().getString(R.string.event_deleted), Toast.LENGTH_SHORT).show();
                 finish();
                 Intent events = new Intent(EventDetailsActivity.this, CalendarActivity.class);
                 startActivity(events);

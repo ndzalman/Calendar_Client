@@ -27,33 +27,24 @@ import java.net.ProtocolException;
 import java.net.URL;
 import java.util.Calendar;
 
-import butterknife.ButterKnife;
-import butterknife.InjectView;
-
 public class SignUpActivity extends AppCompatActivity {
 
     private int year, month, day;
 
-    @InjectView(R.id.etUserName)
     EditText etUserName;
-    @InjectView(R.id.etEmail)
     EditText etEmail;
-    @InjectView(R.id.etPassword)
     EditText etPassword;
-    @InjectView(R.id.etConfirmPassword)
     EditText etConfirmPassword;
-    @InjectView(R.id.tvDateOfBirth)
     TextView tvDateOfBirth;
-    @InjectView(R.id.btnSignUp)
     Button btnSignUp;
-    @InjectView(R.id.tvLoginLink)
     TextView tvLoginLink;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
-        ButterKnife.inject(this);
+
+        initComponents();
 
         tvDateOfBirth = (TextView) findViewById(R.id.tvDateOfBirth);
         tvDateOfBirth.setOnClickListener(new View.OnClickListener() {
@@ -107,10 +98,10 @@ public class SignUpActivity extends AppCompatActivity {
 
         // user name validation
         if (userName.isEmpty()) {
-            etUserName.setError(getString(R.string.sign_up_username_error_empty));
+            etUserName.setError(getResources().getString(R.string.sign_up_username_error_empty));
             valid = false;
         } else if (userName.length() < 5) {
-            etUserName.setError(getString(R.string.sign_up_username_error_length));
+            etUserName.setError(getResources().getString(R.string.sign_up_username_error_length));
             valid = false;
         } else {
             etUserName.setError(null);
@@ -118,10 +109,10 @@ public class SignUpActivity extends AppCompatActivity {
 
         // email validation
         if (email.isEmpty()) {
-            etEmail.setError(getString(R.string.sign_up_email_error_empty));
+            etEmail.setError(getResources().getString(R.string.sign_up_email_error_empty));
             valid = false;
         } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            etEmail.setError(getString(R.string.sign_up_email_error_invalid));
+            etEmail.setError(getResources().getString(R.string.sign_up_email_error_invalid));
             valid = false;
         } else {
             etEmail.setError(null);
@@ -129,10 +120,10 @@ public class SignUpActivity extends AppCompatActivity {
 
         // password validation
         if (password.isEmpty()) {
-            etPassword.setError(getString(R.string.sign_up_password_error_empty));
+            etPassword.setError(getResources().getString(R.string.sign_up_password_error_empty));
             valid = false;
         } else if (password.length() < 5) {
-            etPassword.setError(getString(R.string.sign_up_password_error_length));
+            etPassword.setError(getResources().getString(R.string.sign_up_password_error_length));
             valid = false;
         } else {
             etPassword.setError(null);
@@ -140,21 +131,32 @@ public class SignUpActivity extends AppCompatActivity {
 
         // confirm password validation
         if (!confirmPassword.equals(password)) {
-            etConfirmPassword.setError(getString(R.string.sign_up_confirm_password_error_no_match));
+            etConfirmPassword.setError(getResources().getString(R.string.sign_up_confirm_password_error_no_match));
             valid = false;
         }else {
             etConfirmPassword.setError(null);
         }
 
         // date validation
-        if (date.equals(getString(R.string.sign_up_date)) || date.isEmpty()) {
-            tvDateOfBirth.setError(getString(R.string.sign_up_date_empty));
+        if (date.equals(getResources().getString(R.string.sign_up_date))) {
+            tvDateOfBirth.setError(getResources().getString(R.string.sign_up_date_empty));
             valid = false;
         }else {
             tvDateOfBirth.setError(null);
         }
 
         return valid;
+    }
+
+    private void initComponents(){
+        etUserName = (EditText) findViewById(R.id.etUserName);
+        etEmail = (EditText) findViewById(R.id.etEmail);
+        etPassword = (EditText) findViewById(R.id.etPassword);
+        etConfirmPassword = (EditText) findViewById(R.id.etConfirmPassword);
+        tvDateOfBirth = (TextView) findViewById(R.id.tvDateOfBirth);
+        btnSignUp = (Button) findViewById(R.id.btnSignUp);
+        tvLoginLink = (TextView) findViewById(R.id.tvLoginLink);
+
     }
 
     // if details validation was successful we sent the new user to the server

@@ -18,7 +18,7 @@ import com.calendar_client.ui.EventsActivity;
  * Created by anael on 30/10/16.
  */
 
-public class NotificationReciever extends BroadcastReceiver {
+public class NotificationReceiver extends BroadcastReceiver {
     private static int MID = 1;
     public static String NOTIFICATION_ID = "notification-id";
     public static String NOTIFICATION = "notification";

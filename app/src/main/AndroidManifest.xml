@@ -29,7 +29,7 @@
         <activity android:name=".ui.EventDetailsActivity" />
         <activity android:name=".ui.EventsActivity" />
 
-        <receiver android:name=".utils.NotificationReciever" />
+        <receiver android:name=".utils.NotificationReceiver" />
     </application>
 
 </manifest>

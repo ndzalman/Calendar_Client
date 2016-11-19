@@ -26,10 +26,12 @@ public class SplashScreenActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
 
+        // link the fields in layout
         tvAppName = (TextView) findViewById(R.id.tvAppName);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         tvStatus = (TextView) findViewById(R.id.tvStatus);
 
+        // if no wifi/data connection was found
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         alertDialogBuilder.setTitle(R.string.alert_dialog_title)
                 .setCancelable(false)
@@ -48,17 +50,12 @@ public class SplashScreenActivity extends AppCompatActivity {
                 });
         alertDialog = alertDialogBuilder.create();
 
+        // task to check connectivity
         new CheckConnectivityTask().execute();
-
     }
 
     private class CheckConnectivityTask extends AsyncTask<Void,Integer,Boolean>{
         Intent intent;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
 
         @Override
         protected Boolean doInBackground(Void... params) {

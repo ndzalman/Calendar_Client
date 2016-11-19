@@ -83,7 +83,6 @@ public class SignUpActivity extends AppCompatActivity {
                     btnSignUp.setEnabled(false);
                     new SignUpTask().execute();
                 }
-
             }
         });
 
@@ -93,8 +92,6 @@ public class SignUpActivity extends AppCompatActivity {
                 finish();
             }
         });
-
-
     }
 
 
@@ -150,7 +147,7 @@ public class SignUpActivity extends AppCompatActivity {
         }
 
         // date validation
-        if (date.equals(getString(R.string.sign_up_date))) {
+        if (date.equals(getString(R.string.sign_up_date)) || date.isEmpty()) {
             tvDateOfBirth.setError(getString(R.string.sign_up_date_empty));
             valid = false;
         }else {
@@ -160,6 +157,7 @@ public class SignUpActivity extends AppCompatActivity {
         return valid;
     }
 
+    // if details validation was successful we sent the new user to the server
     private class SignUpTask extends AsyncTask<String,Void,Boolean>{
         User user = new User();
         boolean result = false;
@@ -174,14 +172,11 @@ public class SignUpActivity extends AppCompatActivity {
             user.setDateOfBirth(dateOfBirth);
             user.setPassword(etPassword.getText().toString());
             user.setUserName(etUserName.getText().toString());
-
         }
 
         @Override
         protected Boolean doInBackground(String... strings) {
-
-
-            // Request - send the customer as json to the server for insertion
+            // Request - send the user as json to the server for insertion
             Gson gson = new Gson();
             String jsonUser = gson.toJson(user, User.class);
             URL url = null;
@@ -233,6 +228,7 @@ public class SignUpActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Boolean aBoolean) {
+            // if insertion was successful
             if (result) {
                 Intent intent = new Intent(SignUpActivity.this, LoginActivity.class);
                 startActivity(intent);

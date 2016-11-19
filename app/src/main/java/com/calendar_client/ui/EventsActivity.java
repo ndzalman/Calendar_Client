@@ -41,6 +41,7 @@ public class EventsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_events);
 
+        // get user from shared preference
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String userJSON = sharedPreferences.getString("user", "");
         Gson gson = new Gson();
@@ -50,6 +51,7 @@ public class EventsActivity extends AppCompatActivity {
         lvEvents = (ListView) findViewById(R.id.lvEvents);
         events = dbHandler.getAllEvents(user.getId());
 
+        // sort the events by date
         Collections.sort(events, new Comparator<Event>() {
             public int compare(Event e1, Event e2) {
                 if (e1.getDateStart() == null || e1.getDateStart() == null)
@@ -61,6 +63,7 @@ public class EventsActivity extends AppCompatActivity {
         eventAdapter = new MyAdapter(this,R.layout.single_event,events);
         lvEvents.setAdapter(eventAdapter);
 
+        // listener on event, on click we pass the event on the intent
         lvEvents.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {

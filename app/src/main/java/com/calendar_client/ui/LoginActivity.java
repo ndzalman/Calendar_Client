@@ -42,19 +42,23 @@ public class LoginActivity extends AppCompatActivity {
 
         ButterKnife.inject(this);
 
+        // get user from shared preference. if doesnt exist return empty string
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String user = sharedPreferences.getString("user", "");
 
+        // if user exist, move on to home screen
         if (user != null && !user.equals("")) {
             finish();
             Intent homeScreen = new Intent(this, CalendarActivity.class);
             startActivity(homeScreen);
         }
 
+        // link layout components
         tvSignUp = (TextView) findViewById(R.id.tvSignUp);
         etEmail = (EditText) findViewById(R.id.etEmail);
         etPassword = (EditText) findViewById(R.id.etPassword);
         btnLogin = (Button) findViewById(R.id.btnLogin);
+
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -69,7 +73,6 @@ public class LoginActivity extends AppCompatActivity {
                     valid = false;
                 } else {
                     etPassword.setError(null);
-                    valid = true;
                 }
 
                 String email = etEmail.getText().toString();
@@ -78,6 +81,7 @@ public class LoginActivity extends AppCompatActivity {
                     valid = false;
                 } else if (email.isEmpty()) {
                     etEmail.setError(getString(R.string.login_email_error_empty));
+                    valid = false;
                 } else {
                     etEmail.setError(null);
                 }
@@ -103,12 +107,15 @@ public class LoginActivity extends AppCompatActivity {
         String email;
         String password;
 
+        // get the email and password - before executing task
         @Override
         protected void onPreExecute() {
             email = etEmail.getText().toString();
             password = etPassword.getText().toString();
         }
 
+        // executing
+        // make http request to the server, send email and password for verification of the user
         @Override
         protected String doInBackground(String... strings) {
             StringBuilder response;
@@ -141,8 +148,11 @@ public class LoginActivity extends AppCompatActivity {
             return responseString.toString();
         }
 
+        // after executing task finished.
         @Override
         protected void onPostExecute(String response) {
+            // if response not null it means user exist and i save it to the shared preference
+            // in order to launch straight to home screen in the next time we open the application
             if (response != null) {
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 Gson gson = new Gson();
@@ -156,7 +166,7 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(intent);
                 LoginActivity.this.finish();
 
-            } else {
+            } else { // if response is null - user doesnt exist
                 btnLogin.setEnabled(true);
                 Toast.makeText(LoginActivity.this, getResources().getString(R.string.login_error)
                         , Toast.LENGTH_LONG).show();

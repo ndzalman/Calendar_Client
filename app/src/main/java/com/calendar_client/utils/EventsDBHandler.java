@@ -75,7 +75,6 @@ public class EventsDBHandler {
         Calendar calendar = Calendar.getInstance();
         Event event = new Event();
 
-
         while(eventsCursor.moveToNext()) {
             int eventId = eventsCursor.getInt(0);
             String eventTitle = eventsCursor.getString(2);
@@ -198,6 +197,7 @@ public class EventsDBHandler {
         columnValues.put(EventsDBConstants.EVENT_START_DATE, sdf.format(date));
         date = event.getDateEnd().getTime();
         columnValues.put(EventsDBConstants.EVENT_END_DATE, sdf.format(date));
+
         long result = db.update(EventsDBConstants.EVENTS_TABLE_NAME, columnValues, strFilter, null);
 
         db.close();

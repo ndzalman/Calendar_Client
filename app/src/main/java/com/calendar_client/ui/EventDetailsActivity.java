@@ -3,17 +3,14 @@ package com.calendar_client.ui;
 import android.app.AlarmManager;
 import android.app.DatePickerDialog;
 import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.NotificationCompat;
@@ -31,7 +28,7 @@ import android.widget.Toast;
 import com.calendar_client.R;
 import com.calendar_client.data.Event;
 import com.calendar_client.data.User;
-import com.calendar_client.utils.NotificationReciever;
+import com.calendar_client.utils.NotificationReceiver;
 import com.calendar_client.utils.ApplicationConstants;
 import com.calendar_client.utils.EventsDBHandler;
 import com.google.gson.Gson;
@@ -54,8 +51,11 @@ public class EventDetailsActivity extends AppCompatActivity {
     private TextView tvTimeStart;
     private TextView tvDateEnd;
     private TextView tvTimeEnd;
+    private TextView tvTitle;
     private EditText etDescription;
     private FloatingActionButton fabDone;
+    private FloatingActionButton fabDelete;
+
     private int yearStart, monthStart, dayStart;
     private int hourStart, minuteStart;
     private int yearEnd, monthEnd, dayEnd;
@@ -63,9 +63,8 @@ public class EventDetailsActivity extends AppCompatActivity {
     private Event event;
     private boolean isNew = true;
     private EventsDBHandler dbHandler;
-    private TextView tvTitle;
-    private FloatingActionButton fabDelete;
     private Calendar selected;
+    private Calendar c;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,16 +76,21 @@ public class EventDetailsActivity extends AppCompatActivity {
         dbHandler = new EventsDBHandler(this);
         event = new Event();
 
+        // if i get selected day on intent - add event of specific day
         if (getIntent().getSerializableExtra("selectedDay") != null) {
             selected = (Calendar) getIntent().getSerializableExtra("selectedDay");
+
+            // if i get event - edit event
         } else if (getIntent().getSerializableExtra("event") != null) {
             event = (Event) getIntent().getSerializableExtra("event");
             isNew = false;
         }
+
+
         if (isNew) {
-            //set deault date start
+            //set selected date start
             event.setDateStart(selected);
-            //set deault date end
+            //set selected date end
             event.setDateEnd(selected);
 
             yearStart = selected.get(Calendar.YEAR);
@@ -94,6 +98,7 @@ public class EventDetailsActivity extends AppCompatActivity {
             dayStart = selected.get(Calendar.DAY_OF_MONTH);
             hourStart = c.get(Calendar.HOUR_OF_DAY);
             minuteStart = c.get(Calendar.MINUTE);
+
             tvDateStart.setText(selected.get(Calendar.DAY_OF_MONTH) + "/" + (selected.get(Calendar.MONTH) + 1) + "/" + selected.get(Calendar.YEAR));
             if (minuteStart < 10) {
                 tvTimeStart.setText(hourStart + ":0" + minuteStart);
@@ -162,6 +167,50 @@ public class EventDetailsActivity extends AppCompatActivity {
 
         }
 
+        initDateAndTimePicker();
+
+        fabDone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                if (isNew) {
+//                    event = new Event();
+//                }
+                boolean isValid = saveEvent();
+                if (isValid) {
+
+                    SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                    String user = sharedPreferences.getString("user", "");
+                    Gson gson = new Gson();
+                    User thisUser = gson.fromJson(user, User.class);
+                    event.setUser(thisUser);
+
+                    // if this is new event execute the add event task (in post execute we update
+                    // the SQLite as well)
+                    if (isNew) {
+                        fabDone.setEnabled(false);
+                        new AddEventTask().execute();
+
+                    } else {
+                        // if we editing existing event we update the SQLite and execute the edit
+                        // event task
+                        fabDone.setEnabled(false);
+                        boolean isSuccessful = dbHandler.updateEvent(event);
+                        if (isSuccessful) {
+                            Log.i(TAG, "Event Edited successfuly");
+                        } else {
+                            Log.e(TAG, "Event Not edited");
+                        }
+
+                        new EditEventTask().execute();
+                    }
+                }
+            }
+        });
+
+
+    }
+
+    private void initDateAndTimePicker() {
 
         tvDateStart.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -263,77 +312,38 @@ public class EventDetailsActivity extends AppCompatActivity {
                 timePickerDialog.show();
             }
         });
-
-        fabDone.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                if (isNew) {
-//                    event = new Event();
-//                }
-                boolean isValid = saveEvent();
-                if (isValid) {
-
-                    SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                    String user = sharedPreferences.getString("user", "");
-                    Gson gson = new Gson();
-                    User thisUser = gson.fromJson(user, User.class);
-                    event.setUser(thisUser);
-
-                    if (isNew) {
-
-                        fabDone.setEnabled(false);
-                        new AddEventTask().execute();
-
-                    } else {
-
-                        fabDone.setEnabled(false);
-                        boolean isSuccessful = dbHandler.updateEvent(event);
-                        if (isSuccessful) {
-                            Log.i(TAG, "Event Edited successfuly");
-                        } else {
-                            Log.e(TAG, "Event Not edited");
-                        }
-
-                        new EditEventTask().execute();
-                    }
-                }
-            }
-        });
-
-
     }
 
     private void scheduleNotification() {
-
-        Intent notificationIntent = new Intent(this, NotificationReciever.class);
-        notificationIntent.putExtra(NotificationReciever.NOTIFICATION_ID, event.getId());
-        notificationIntent.putExtra(NotificationReciever.NOTIFICATION, getNotification());
+        Intent notificationIntent = new Intent(this, NotificationReceiver.class);
+        notificationIntent.putExtra(NotificationReceiver.NOTIFICATION_ID, event.getId());
+        notificationIntent.putExtra(NotificationReceiver.NOTIFICATION, getNotification());
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         alarmManager.set(AlarmManager.RTC_WAKEUP, event.getDateStart().getTimeInMillis(), pendingIntent);
     }
 
-    private void updateNotifcation(){
+    private void updateNotifcation() {
 
     }
 
-    private void deleteNotifcation(){
+    private void deleteNotifcation() {
 
     }
 
     private Notification getNotification() {
-        Uri uri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.drawable.ic_stat_name)
                         .setContentTitle(event.getTitle())
                         .setContentText(event.getDateStart().get(Calendar.HOUR_OF_DAY) + ":" + event.getDateStart().get(Calendar.MINUTE)
-                        + " - " + event.getDateEnd().get(Calendar.HOUR_OF_DAY) + ":" + event.getDateEnd().get(Calendar.MINUTE)
+                                + " - " + event.getDateEnd().get(Calendar.HOUR_OF_DAY) + ":" + event.getDateEnd().get(Calendar.MINUTE)
                         )
-                .setAutoCancel(true)
-                .setSound(uri);
+                        .setAutoCancel(true)
+                        .setSound(uri);
 
 // Creates an explicit intent for an Activity in your app
         Intent resultIntent = new Intent(this, CalendarActivity.class);
@@ -390,6 +400,7 @@ public class EventDetailsActivity extends AppCompatActivity {
         }
     }
 
+    //link ui components
     private void initComponents() {
         etEventTitle = (EditText) findViewById(R.id.etEventTitle);
         tvDateStart = (TextView) findViewById(R.id.tvDateStart);
@@ -402,19 +413,14 @@ public class EventDetailsActivity extends AppCompatActivity {
 
     }
 
+
     private class AddEventTask extends AsyncTask<String, Void, Boolean> {
         boolean result = true;
         int id;
 
         @Override
-        protected void onPreExecute() {
-        }
-
-        @Override
         protected Boolean doInBackground(String... strings) {
-
-
-            // Request - send the customer as json to the server for insertion
+            // Request - send the event as json to the server for insertion
             Gson gson = new Gson();
             String eventJSON = gson.toJson(event, Event.class);
             URL url = null;
@@ -468,6 +474,8 @@ public class EventDetailsActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Boolean aBoolean) {
+            // if result is true - the insertion went well, set the id and add the event
+            // in the SQLite and schedule notfication
             if (result) {
                 event.setId(id);
                 boolean isSuccessful = dbHandler.addEvent(event);
@@ -490,14 +498,8 @@ public class EventDetailsActivity extends AppCompatActivity {
         boolean result = false;
 
         @Override
-        protected void onPreExecute() {
-        }
-
-        @Override
         protected Boolean doInBackground(String... strings) {
-
-
-            // Request - send the customer as json to the server for insertion
+            // Request - send the event as json to the server for insertion
             Gson gson = new Gson();
             String eventJSON = gson.toJson(event, Event.class);
             URL url = null;
@@ -563,12 +565,8 @@ public class EventDetailsActivity extends AppCompatActivity {
         boolean result = false;
 
         @Override
-        protected void onPreExecute() {
-        }
-
-        @Override
         protected Boolean doInBackground(String... strings) {
-            // Request - send the customer as json to the server for insertion
+            // Request - send the event as json to the server for insertion
             Gson gson = new Gson();
             String eventJSON = gson.toJson(event, Event.class);
             URL url = null;

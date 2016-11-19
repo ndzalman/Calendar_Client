@@ -112,10 +112,10 @@ public abstract class DrawerActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         switch (id) {
-            case android.R.id.home:
+            case android.R.id.home: // home button on toolbar
                 drawerLayout.openDrawer(GravityCompat.START);
                 return true;
-            case R.id.item_update:
+            case R.id.item_update: // update button on toolabr - takes to the current day
                 calendar.setCurrentDate(Calendar.getInstance());
                 calendar.setSelectedDate(Calendar.getInstance());
                 return true;

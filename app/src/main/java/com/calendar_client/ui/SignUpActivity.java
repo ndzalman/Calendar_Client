@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -15,6 +16,7 @@ import android.widget.Toast;
 import com.calendar_client.R;
 import com.calendar_client.data.User;
 import com.calendar_client.utils.ApplicationConstants;
+import com.google.firebase.iid.FirebaseInstanceIdService;
 import com.google.gson.Gson;
 
 import java.io.BufferedReader;
@@ -26,6 +28,7 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.util.Calendar;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 public class SignUpActivity extends AppCompatActivity {
 
@@ -179,6 +182,9 @@ public class SignUpActivity extends AppCompatActivity {
         @Override
         protected Boolean doInBackground(String... strings) {
             // Request - send the user as json to the server for insertion
+
+            String token = FirebaseInstanceId.getInstance().getToken();
+            Log.e("TEST", token);
             Gson gson = new Gson();
             String jsonUser = gson.toJson(user, User.class);
             URL url = null;

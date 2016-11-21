@@ -94,7 +94,12 @@ public class CalendarActivity extends DrawerActivity {
         fabAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent newEventIntent = new Intent(CalendarActivity.this, EventDetailsActivity.class);
+//                Intent newEventIntent = new Intent(CalendarActivity.this, EventDetailsActivity.class);
+//                newEventIntent.putExtra("selectedDay", calendar.getSelectedDate().getCalendar());
+//                startActivity(newEventIntent);
+//                finish();
+
+                Intent newEventIntent = new Intent(CalendarActivity.this, MainActivity.class);
                 newEventIntent.putExtra("selectedDay", calendar.getSelectedDate().getCalendar());
                 startActivity(newEventIntent);
                 finish();
@@ -119,7 +124,7 @@ public class CalendarActivity extends DrawerActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 Event event = (Event) adapterView.getItemAtPosition(position);
-                Intent editEvent = new Intent(CalendarActivity.this, EventDetailsActivity.class);
+                Intent editEvent = new Intent(CalendarActivity.this, MainActivity.class);
                 editEvent.putExtra("event", event);
                 startActivity(editEvent);
             }

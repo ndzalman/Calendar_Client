@@ -68,7 +68,7 @@ public class EventsActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 Event event = (Event) adapterView.getItemAtPosition(position);
-                Intent editEvent = new Intent(EventsActivity.this,EventDetailsActivity.class);
+                Intent editEvent = new Intent(EventsActivity.this,MainActivity.class);
                 editEvent.putExtra("event",event);
                 startActivity(editEvent);
             }

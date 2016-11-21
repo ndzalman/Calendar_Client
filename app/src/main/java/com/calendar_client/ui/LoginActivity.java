@@ -202,7 +202,6 @@ public class LoginActivity extends AppCompatActivity {
                 URL url = new URL(ApplicationConstants.REFRESH_TOKEN_URL+"?userid="+user.getId()+"&token="+token);
                 response = new StringBuilder();
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                conn.setConnectTimeout(5000);
                 if (conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
                     return null;
                 }

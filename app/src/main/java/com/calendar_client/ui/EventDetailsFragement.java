@@ -13,12 +13,15 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -28,9 +31,9 @@ import android.widget.Toast;
 import com.calendar_client.R;
 import com.calendar_client.data.Event;
 import com.calendar_client.data.User;
-import com.calendar_client.utils.NotificationReceiver;
 import com.calendar_client.utils.ApplicationConstants;
 import com.calendar_client.utils.EventsDBHandler;
+import com.calendar_client.utils.NotificationReceiver;
 import com.google.gson.Gson;
 
 import java.io.BufferedReader;
@@ -43,8 +46,7 @@ import java.net.ProtocolException;
 import java.net.URL;
 import java.util.Calendar;
 
-public class EventDetailsActivity extends AppCompatActivity {
-
+public class EventDetailsFragement extends Fragment {
     private static final String TAG = "NEW_EVENT";
     private EditText etEventTitle;
     private TextView tvDateStart;
@@ -65,24 +67,27 @@ public class EventDetailsActivity extends AppCompatActivity {
     private EventsDBHandler dbHandler;
     private Calendar selected;
     private Calendar c;
+    private View view;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_event_details);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        //Returning the layout file after inflating
+        //Change R.layout.tab1 in you classes
+        view = inflater.inflate(R.layout.event_details_layout, container, false);
+
 
         initComponents();
         c = Calendar.getInstance();
-        dbHandler = new EventsDBHandler(this);
+        dbHandler = new EventsDBHandler(getContext());
         event = new Event();
 
         // if i get selected day on intent - add event of specific day
-        if (getIntent().getSerializableExtra("selectedDay") != null) {
-            selected = (Calendar) getIntent().getSerializableExtra("selectedDay");
+        if (getActivity().getIntent().getSerializableExtra("selectedDay") != null) {
+            selected = (Calendar) getActivity().getIntent().getSerializableExtra("selectedDay");
 
             // if i get event - edit event
-        } else if (getIntent().getSerializableExtra("event") != null) {
-            event = (Event) getIntent().getSerializableExtra("event");
+        } else if (getActivity().getIntent().getSerializableExtra("event") != null) {
+            event = (Event) getActivity().getIntent().getSerializableExtra("event");
             isNew = false;
         }
 
@@ -146,7 +151,7 @@ public class EventDetailsActivity extends AppCompatActivity {
             tvTimeEnd.setText(timeEnd);
             tvTitle.setText(getResources().getString(R.string.new_event_edit_title));
 
-            fabDelete = (FloatingActionButton) findViewById(R.id.fabDelete);
+            fabDelete = (FloatingActionButton) view.findViewById(R.id.fabDelete);
             fabDelete.setVisibility(View.VISIBLE);
 
             fabDelete.setOnClickListener(new View.OnClickListener() {
@@ -178,7 +183,7 @@ public class EventDetailsActivity extends AppCompatActivity {
                 boolean isValid = saveEvent();
                 if (isValid) {
 
-                    SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                    SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
                     String user = sharedPreferences.getString("user", "");
                     Gson gson = new Gson();
                     User thisUser = gson.fromJson(user, User.class);
@@ -207,7 +212,7 @@ public class EventDetailsActivity extends AppCompatActivity {
             }
         });
 
-
+        return view;
     }
 
     private void initDateAndTimePicker() {
@@ -215,11 +220,11 @@ public class EventDetailsActivity extends AppCompatActivity {
         tvDateStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DatePickerDialog datePickerDialog = new DatePickerDialog(EventDetailsActivity.this, new DatePickerDialog.OnDateSetListener() {
+                DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                         if (c.get(Calendar.YEAR) > year || c.get(Calendar.MONTH) > month || c.get(Calendar.DAY_OF_MONTH) > day) {
-                            Toast.makeText(EventDetailsActivity.this, getResources().getString(R.string.new_event_date_error), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), getResources().getString(R.string.new_event_date_error), Toast.LENGTH_SHORT).show();
                         } else {
                             tvDateStart.setText(day + "/" + (month + 1) + "/" + year);
                             yearStart = year;
@@ -237,12 +242,12 @@ public class EventDetailsActivity extends AppCompatActivity {
         tvDateEnd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DatePickerDialog datePickerDialog = new DatePickerDialog(EventDetailsActivity.this, new DatePickerDialog.OnDateSetListener() {
+                DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                         if (c.get(Calendar.YEAR) > year || c.get(Calendar.YEAR) < yearStart ||
                                 (c.get(Calendar.YEAR) == yearStart && month < monthStart) || (month == monthStart && day < dayStart)) {
-                            Toast.makeText(EventDetailsActivity.this, getResources().getString(R.string.new_event_date_error), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), getResources().getString(R.string.new_event_date_error), Toast.LENGTH_SHORT).show();
                         } else {
                             tvDateEnd.setText(day + "/" + (month + 1) + "/" + year);
                             yearEnd = year;
@@ -261,13 +266,13 @@ public class EventDetailsActivity extends AppCompatActivity {
         tvTimeStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                TimePickerDialog timePickerDialog = new TimePickerDialog(EventDetailsActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                TimePickerDialog timePickerDialog = new TimePickerDialog(getActivity(), new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
                         if ((selectedHour < c.get(Calendar.HOUR_OF_DAY) && c.get(Calendar.DAY_OF_MONTH) == dayStart ||
                                 (selectedMinute < c.get(Calendar.MINUTE)) && selectedHour == c.get(Calendar.HOUR_OF_DAY))
                                 ) {
-                            Toast.makeText(EventDetailsActivity.this, getResources().getString(R.string.new_event_time_error), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), getResources().getString(R.string.new_event_time_error), Toast.LENGTH_SHORT).show();
                         } else {
                             hourStart = selectedHour;
                             minuteStart = selectedMinute;
@@ -289,13 +294,13 @@ public class EventDetailsActivity extends AppCompatActivity {
         tvTimeEnd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                TimePickerDialog timePickerDialog = new TimePickerDialog(EventDetailsActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                TimePickerDialog timePickerDialog = new TimePickerDialog(getActivity(), new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
                         if ((selectedHour < hourStart && dayEnd == dayStart) ||
                                 (selectedMinute < minuteStart && selectedHour == hourStart)
                                 ) {
-                            Toast.makeText(EventDetailsActivity.this, getResources().getString(R.string.new_event_time_error), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), getResources().getString(R.string.new_event_time_error), Toast.LENGTH_SHORT).show();
                         } else {
                             hourEnd = selectedHour;
                             minuteEnd = selectedMinute;
@@ -315,12 +320,12 @@ public class EventDetailsActivity extends AppCompatActivity {
     }
 
     private void scheduleNotification() {
-        Intent notificationIntent = new Intent(this, NotificationReceiver.class);
+        Intent notificationIntent = new Intent(getActivity(), NotificationReceiver.class);
         notificationIntent.putExtra(NotificationReceiver.NOTIFICATION_ID, event.getId());
         notificationIntent.putExtra(NotificationReceiver.NOTIFICATION, getNotification());
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(), 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
         alarmManager.set(AlarmManager.RTC_WAKEUP, event.getDateStart().getTimeInMillis(), pendingIntent);
     }
 
@@ -336,7 +341,7 @@ public class EventDetailsActivity extends AppCompatActivity {
         Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
         NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(this)
+                new NotificationCompat.Builder(getActivity())
                         .setSmallIcon(R.drawable.ic_stat_name)
                         .setContentTitle(event.getTitle())
                         .setContentText(event.getDateStart().get(Calendar.HOUR_OF_DAY) + ":" + event.getDateStart().get(Calendar.MINUTE)
@@ -346,13 +351,13 @@ public class EventDetailsActivity extends AppCompatActivity {
                         .setSound(uri);
 
 // Creates an explicit intent for an Activity in your app
-        Intent resultIntent = new Intent(this, CalendarActivity.class);
+        Intent resultIntent = new Intent(getActivity(), CalendarActivity.class);
 
 // The stack builder object will contain an artificial back stack for the
 // started Activity.
 // This ensures that navigating backward from the Activity leads out of
 // your application to the Home screen.
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(getActivity());
 // Adds the back stack for the Intent (but not the Intent itself)
         stackBuilder.addParentStack(EventsActivity.class);
 // Adds the Intent that starts the Activity to the top of the stack
@@ -376,7 +381,7 @@ public class EventDetailsActivity extends AppCompatActivity {
 
         if (title.isEmpty() || dateStartTxt.isEmpty() || timeStartTxt.isEmpty() ||
                 dateEndTxt.isEmpty() || timeEndTxt.isEmpty() || description.isEmpty()) {
-            Toast.makeText(EventDetailsActivity.this, getResources().getString(R.string.new_event_empty), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), getResources().getString(R.string.new_event_empty), Toast.LENGTH_SHORT).show();
             return false;
         } else {
 
@@ -402,14 +407,14 @@ public class EventDetailsActivity extends AppCompatActivity {
 
     //link ui components
     private void initComponents() {
-        etEventTitle = (EditText) findViewById(R.id.etEventTitle);
-        tvDateStart = (TextView) findViewById(R.id.tvDateStart);
-        tvTimeStart = (TextView) findViewById(R.id.tvTimeStart);
-        tvDateEnd = (TextView) findViewById(R.id.tvDateEnd);
-        tvTimeEnd = (TextView) findViewById(R.id.tvTimeEnd);
-        etDescription = (EditText) findViewById(R.id.etDescription);
-        fabDone = (FloatingActionButton) findViewById(R.id.fabDone);
-        tvTitle = (TextView) findViewById(R.id.tvTitle);
+        etEventTitle = (EditText) view.findViewById(R.id.etEventTitle);
+        tvDateStart = (TextView) view.findViewById(R.id.tvDateStart);
+        tvTimeStart = (TextView) view.findViewById(R.id.tvTimeStart);
+        tvDateEnd = (TextView) view.findViewById(R.id.tvDateEnd);
+        tvTimeEnd = (TextView) view.findViewById(R.id.tvTimeEnd);
+        etDescription = (EditText) view.findViewById(R.id.etDescription);
+        fabDone = (FloatingActionButton) view.findViewById(R.id.fabDone);
+        tvTitle = (TextView) view.findViewById(R.id.tvTitle);
 
     }
 
@@ -485,8 +490,8 @@ public class EventDetailsActivity extends AppCompatActivity {
                 } else {
                     Log.e(TAG, "Event Not added");
                 }
-                finish();
-                Intent events = new Intent(EventDetailsActivity.this, CalendarActivity.class);
+                getActivity().finish();
+                Intent events = new Intent(getActivity(), CalendarActivity.class);
                 startActivity(events);
             } else {
                 fabDone.setEnabled(true);
@@ -552,8 +557,8 @@ public class EventDetailsActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Boolean aBoolean) {
             if (result) {
-                finish();
-                Intent events = new Intent(EventDetailsActivity.this, CalendarActivity.class);
+                getActivity().finish();
+                Intent events = new Intent(getActivity(), CalendarActivity.class);
                 startActivity(events);
             } else {
                 fabDone.setEnabled(true);
@@ -619,9 +624,9 @@ public class EventDetailsActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Boolean aBoolean) {
             if (result) {
-                Toast.makeText(EventDetailsActivity.this, getResources().getString(R.string.event_deleted), Toast.LENGTH_SHORT).show();
-                finish();
-                Intent events = new Intent(EventDetailsActivity.this, CalendarActivity.class);
+                Toast.makeText(getActivity(), getResources().getString(R.string.event_deleted), Toast.LENGTH_SHORT).show();
+                getActivity().finish();
+                Intent events = new Intent(getActivity(), CalendarActivity.class);
                 startActivity(events);
             } else {
                 fabDelete.setEnabled(true);
@@ -629,10 +634,10 @@ public class EventDetailsActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        finish();
-        Intent events = new Intent(EventDetailsActivity.this, CalendarActivity.class);
-        startActivity(events);
-    }
+//    @Override
+//    public void onBackPressed() {
+//        getActivity().finish();
+//        Intent events = new Intent(getActivity(), CalendarActivity.class);
+//        startActivity(events);
+//    }
 }

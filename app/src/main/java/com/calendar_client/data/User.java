@@ -1,5 +1,6 @@
 package com.calendar_client.data;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -10,7 +11,7 @@ import java.util.List;
  * Created by Nadav on 21-Sep-16.
  */
 
-public class User {
+public class User implements Serializable{
 
     /**
      * Id of the user

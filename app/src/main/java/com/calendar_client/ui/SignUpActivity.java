@@ -182,9 +182,6 @@ public class SignUpActivity extends AppCompatActivity {
         @Override
         protected Boolean doInBackground(String... strings) {
             // Request - send the user as json to the server for insertion
-
-            String token = FirebaseInstanceId.getInstance().getToken();
-            Log.e("TEST", token);
             Gson gson = new Gson();
             String jsonUser = gson.toJson(user, User.class);
             URL url = null;

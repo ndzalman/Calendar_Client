@@ -38,6 +38,11 @@ public class User {
     private Calendar dateOfBirth;
 
     /**
+     * token of the user
+     */
+    private String token;
+
+    /**
      * Events of the user, one user can have many events
      */
     private List<Event> events = new ArrayList<>();
@@ -166,6 +171,30 @@ public class User {
      */
     public int getId() {
         return id;
+    }
+
+    /**
+     * Sets the id of the user
+     * @param id the id of the user
+     */
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    /**
+     * Returns the token of the user
+     * @return the token of the user
+     */
+    public String getToken() {
+        return token;
+    }
+
+    /**
+     * Sets the token of the user
+     * @param token the token of the user
+     */
+    public void setToken(String token) {
+        this.token = token;
     }
 
     @Override

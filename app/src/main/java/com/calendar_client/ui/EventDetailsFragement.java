@@ -32,6 +32,7 @@ import com.calendar_client.R;
 import com.calendar_client.data.Event;
 import com.calendar_client.data.User;
 import com.calendar_client.utils.ApplicationConstants;
+import com.calendar_client.utils.Data;
 import com.calendar_client.utils.EventsDBHandler;
 import com.calendar_client.utils.NotificationReceiver;
 import com.google.gson.Gson;
@@ -187,7 +188,9 @@ public class EventDetailsFragement extends Fragment {
                     String user = sharedPreferences.getString("user", "");
                     Gson gson = new Gson();
                     User thisUser = gson.fromJson(user, User.class);
-                    event.setUser(thisUser);
+                    event.addUser(thisUser); //the current user
+                    Data data = Data.getInstance();
+                    event.getUsers().addAll(data.getUsers());
 
                     // if this is new event execute the add event task (in post execute we update
                     // the SQLite as well)
@@ -401,6 +404,7 @@ public class EventDetailsFragement extends Fragment {
             dateEnd.set(Calendar.HOUR_OF_DAY, hourEnd);
             dateEnd.set(Calendar.MINUTE, minuteEnd);
             event.setDateEnd(dateEnd);
+
             return true;
         }
     }
@@ -482,8 +486,15 @@ public class EventDetailsFragement extends Fragment {
             // if result is true - the insertion went well, set the id and add the event
             // in the SQLite and schedule notfication
             if (result) {
+                // get user from shared preference. if doesnt exist return empty string
+                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
+                String userJSON = sharedPreferences.getString("user", "");
+                Gson gson = new Gson();
+                User user = gson.fromJson(userJSON,User.class);
+
+
                 event.setId(id);
-                boolean isSuccessful = dbHandler.addEvent(event);
+                boolean isSuccessful = dbHandler.addEvent(event,user.getId());
                 if (isSuccessful) {
                     Log.i(TAG, "Event added successfuly");
                     scheduleNotification();
@@ -634,10 +645,4 @@ public class EventDetailsFragement extends Fragment {
         }
     }
 
-//    @Override
-//    public void onBackPressed() {
-//        getActivity().finish();
-//        Intent events = new Intent(getActivity(), CalendarActivity.class);
-//        startActivity(events);
-//    }
 }

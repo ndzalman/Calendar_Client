@@ -1,26 +1,28 @@
 package com.calendar_client.ui;
 
 import android.content.Context;
-import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.AppCompatCheckBox;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.calendar_client.R;
-import com.calendar_client.data.Event;
 import com.calendar_client.data.User;
 import com.calendar_client.utils.ApplicationConstants;
-import com.calendar_client.utils.EventsDBConstants;
-import com.google.firebase.iid.FirebaseInstanceId;
+import com.calendar_client.utils.Data;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -29,9 +31,7 @@ import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class ContactFragment extends Fragment {
@@ -46,11 +46,25 @@ public class ContactFragment extends Fragment {
 
         //Returning the layout file after inflating
         //Change R.layout.tab1 in you classes
-        view = inflater.inflate(R.layout.contacts_layout, container, false);
+        view = inflater.inflate(R.layout.fragment_contacts, container, false);
 
         lvUsers = (ListView) view.findViewById(R.id.lvUsers);
 
         new GetUsersTask().execute();
+
+        lvUsers.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                CheckBox c = (CheckBox) view.findViewById(R.id.checkBox);
+                if (c.isChecked()){
+                    c.setChecked(false);
+                }else{
+                    c.setChecked(true);
+                }
+                Data data = Data.getInstance();
+                Log.d("USERS","users size: " + data.getUsers().size());
+            }
+        });
 
         return view;
     }
@@ -87,14 +101,15 @@ public class ContactFragment extends Fragment {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            ViewHolder holder;
-            User user = (User) getItem(position);
+            final ViewHolder holder;
+            final User user = (User) getItem(position);
 
             if (convertView == null) {
                 LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 convertView = inflater.inflate(layout, parent, false);
                 holder = new ViewHolder();
                 holder.tvUserName = (TextView) convertView.findViewById(R.id.tvUserName);
+                holder.checkBox = (AppCompatCheckBox) convertView.findViewById(R.id.checkBox);
 
 
                 convertView.setTag(holder);
@@ -104,7 +119,17 @@ public class ContactFragment extends Fragment {
             }
 
             holder.tvUserName.setText(user.getUserName());
-
+            holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    Data data = Data.getInstance();
+                    if (isChecked){
+                        data.addUser(user);
+                    }else{
+                        data.removeUser(user);
+                    }
+                }
+            });
 
             return convertView;
 
@@ -112,16 +137,32 @@ public class ContactFragment extends Fragment {
 
         private class ViewHolder {
             TextView tvUserName;
+            AppCompatCheckBox checkBox;
+            ImageView imgViewContact;
         }
     }
 
     private class GetUsersTask extends AsyncTask<String, Void, String> {
+        int id;
+
+        @Override
+        protected void onPreExecute() {
+
+            // get user from shared preference. if doesnt exist return empty string
+            SharedPreferences sharedPreferences =
+                    PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
+            String userJSON = sharedPreferences.getString("user", "");
+            Gson gson = new Gson();
+            User user = gson.fromJson(userJSON, User.class);
+            id = user.getId();
+        }
+
         // executing
         @Override
         protected String doInBackground(String... strings) {
             StringBuilder response;
             try {
-                URL url = new URL(ApplicationConstants.GET_ALL_USERS_URL);
+                URL url = new URL(ApplicationConstants.GET_ALL_USERS_URL +"?id=" + id);
                 response = new StringBuilder();
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 Log.e("DEBUG",conn.getResponseCode()+"");

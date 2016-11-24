@@ -9,8 +9,10 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.calendar_client.data.Event;
+import com.calendar_client.data.User;
 import com.calendar_client.utils.EventsDBConstants;
 import com.calendar_client.utils.MySQLiteHelper;
+import com.google.gson.Gson;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 
 import java.text.ParseException;
@@ -35,14 +37,14 @@ public class EventsDBHandler {
     }
 
     // returns true/false if the addition was successful
-    public boolean addEvent(Event newEvent)
+    public boolean addEvent(Event newEvent,int id)
     {
         // this opens the connection to the DB
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         ContentValues columnValues = new ContentValues();
         columnValues.put(EventsDBConstants.EVENTS_ID,newEvent.getId());
-        columnValues.put(EventsDBConstants.EVENTS_USER_ID,newEvent.getUser().getId());
+        columnValues.put(EventsDBConstants.EVENTS_USER_ID,id);
         columnValues.put(EventsDBConstants.EVENT_TITLE, newEvent.getTitle());
         columnValues.put(EventsDBConstants.EVENT_DESCRIPTION, newEvent.getDescription());
         SimpleDateFormat sdf = new SimpleDateFormat(EventsDBConstants.DATE_TIME_FORMAT);
@@ -54,7 +56,7 @@ public class EventsDBHandler {
         long result = db.insert(EventsDBConstants.EVENTS_TABLE_NAME, null, columnValues);
 
         db.close();
-        Log.d("test","new event created to uesr id" + newEvent.getUser().getId());
+        Log.d("test","new event created to uesr id" +id);
 
         // when result is -1 it means the insert has failed, so when NOT -1 it was successful
         return (result != -1);

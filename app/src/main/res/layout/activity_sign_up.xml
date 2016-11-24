@@ -47,8 +47,11 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:textColorHint="@color/colorPrimary"
-            android:textColor="@color/colorPrimary"
-            android:layout_weight="0.5" />
+            android:nextFocusDown="@+id/etEmail"
+            android:nextFocusForward="@+id/etEmail"
+            android:nextFocusRight="@+id/etEmail"
+            android:layout_weight="0.5"
+            android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
     </android.support.design.widget.TextInputLayout>
 
 
@@ -62,43 +65,59 @@
         android:hint="@string/sign_up_email_hint"
         android:inputType="textEmailAddress"
         android:layout_width="match_parent"
+        android:nextFocusDown="@+id/etPassword"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:textColorHint="@color/colorPrimary"
-        android:layout_weight="0.5" />
+        android:layout_weight="0.5"
+        android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
     </android.support.design.widget.TextInputLayout>
 
-    <android.support.design.widget.TextInputLayout
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp">
-    <EditText
-        android:id="@+id/etPassword"
-        android:hint="@string/sign_up_password_hint"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:textColorHint="@color/colorPrimary"
-        android:layout_weight="0.5" />
-    </android.support.design.widget.TextInputLayout>
+        android:layout_weight="1">
 
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="8dp"
+            android:layout_weight="0.25"
+            android:layout_marginTop="8dp">
+            <EditText
+                android:id="@+id/etPassword"
+                android:inputType="textPassword"
+                android:nextFocusDown="@+id/etConfirmPassword"
+                android:hint="@string/sign_up_password_hint"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:textColorHint="@color/colorPrimary"
+                android:layout_weight="0.25"
+                android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+        </android.support.design.widget.TextInputLayout>
 
-    <android.support.design.widget.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp">
-    <EditText
-        android:id="@+id/etConfirmPassword"
-        android:hint="@string/sign_up_confirm_password_hint"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:textColorHint="@color/colorPrimary"
-        android:layout_weight="0.5" />
-    </android.support.design.widget.TextInputLayout>
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.25"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp">
+        <EditText
+            android:id="@+id/etConfirmPassword"
+            android:hint="@string/sign_up_confirm_password_hint"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:nextFocusDown="@+id/tvDateOfBirth"
+            android:layout_gravity="center_vertical"
+            android:textColorHint="@color/colorPrimary"
+            android:layout_weight="0.25"
+            android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+        </android.support.design.widget.TextInputLayout>
 
+    </LinearLayout>
 
 
     <TextView
@@ -108,8 +127,11 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_weight="1"
+        android:background="@drawable/clickable_text_view"
+        android:nextFocusDown="@+id/btnSignUp"
         android:text="@string/sign_up_date"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:gravity="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
 
 
     <android.support.v7.widget.AppCompatButton
@@ -137,7 +159,6 @@
         android:gravity="center"
         android:text="@string/sign_up_link_login"
         android:textAppearance="?android:attr/textAppearanceMedium" />
-
 
 </LinearLayout>
 </ScrollView>

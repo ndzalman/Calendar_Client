@@ -4,8 +4,12 @@ import android.location.Location;
 
 import java.io.Serializable;
 import java.sql.Time;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * This class represent an event object.
@@ -41,9 +45,9 @@ public class Event implements Serializable{
     private String description;
 
     /**
-     * User of this event. many events can be related to one user.
+     * Users of this event.
      */
-    private User user;
+    private Set<User> users = new HashSet<>();
 
     /**
      * Default constructor.initialize an empty event object.
@@ -160,16 +164,24 @@ public class Event implements Serializable{
      * Returns the user of this event
      * @return the user of this event
      */
-    public User getUser() {
-        return user;
+    public Set<User> getUsers() {
+        return users;
     }
 
     /**
      * Sets the user of this event
-     * @param user the user of this event
+     * @param users the user of this event
      */
-    public void setUser(User user) {
-        this.user = user;
+    public void setUsers(Set<User> users) {
+        this.users = users;
+    }
+
+    public void addUser(User user){
+        this.users.add(user);
+    }
+
+    public void removeUser(User user){
+        this.users.remove(user);
     }
 
     @Override

@@ -4,7 +4,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * This class represent a user object.
@@ -46,7 +48,7 @@ public class User implements Serializable{
     /**
      * Events of the user, one user can have many events
      */
-    private List<Event> events = new ArrayList<>();
+    private Set<Event> events = new HashSet<>();
 
     /**
      * Default constructor
@@ -138,7 +140,7 @@ public class User implements Serializable{
      * Returns the events of the user
      * @return the events of the user
      */
-    public List<Event> getEvents() {
+    public Set<Event> getEvents() {
         return events;
     }
 
@@ -146,7 +148,7 @@ public class User implements Serializable{
      * Sets the events of the user
      * @param events the events of the user
      */
-    public void setEvents(List<Event> events) {
+    public void setEvents(Set<Event> events) {
         this.events = events;
     }
 
@@ -196,6 +198,22 @@ public class User implements Serializable{
      */
     public void setToken(String token) {
         this.token = token;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        User user = (User) o;
+
+        return id == user.id;
+
+    }
+
+    @Override
+    public int hashCode() {
+        return id;
     }
 
     @Override

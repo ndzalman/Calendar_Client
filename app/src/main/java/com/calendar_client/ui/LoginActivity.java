@@ -51,6 +51,10 @@ public class LoginActivity extends AppCompatActivity {
         if (userJSON != null && !userJSON.equals("")) {
             Gson gson = new Gson();
             user =  gson.fromJson(userJSON,User.class);
+
+            Log.d("SHARED",userJSON);
+
+
             new RefreshTokenTask().execute();
 
             finish();
@@ -150,7 +154,7 @@ public class LoginActivity extends AppCompatActivity {
             }
 
             String responseString = response.toString();
-            return responseString.toString();
+            return responseString.toString().trim();
         }
 
         // after executing task finished.
@@ -158,7 +162,7 @@ public class LoginActivity extends AppCompatActivity {
         protected void onPostExecute(String response) {
             // if response not null it means user exist and i save it to the shared preference
             // in order to launch straight to home screen in the next time we open the application
-            if (response != null) {
+            if (response != null && !response.equals("null")) {
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 Gson gson = new Gson();
                 user = gson.fromJson(response, User.class);
@@ -166,6 +170,8 @@ public class LoginActivity extends AppCompatActivity {
 
                 editor.putString("user", userJSON);
                 editor.apply();
+
+                Log.d("SHARED",userJSON);
 
                 new RefreshTokenTask().execute();
 
@@ -188,9 +194,10 @@ public class LoginActivity extends AppCompatActivity {
 
         @Override
         protected void onPreExecute() {
-            user.setToken(token);
             token = FirebaseInstanceId.getInstance().getToken();
+            user.setToken(token);
             Log.e("TOKEN", token);
+            Log.d("REFRESH","user id: " + user.getId());
         }
 
         // executing
@@ -199,7 +206,7 @@ public class LoginActivity extends AppCompatActivity {
         protected String doInBackground(String... strings) {
             StringBuilder response;
             try {
-                URL url = new URL(ApplicationConstants.REFRESH_TOKEN_URL+"?userid="+user.getId()+"&token="+token);
+                URL url = new URL(ApplicationConstants.REFRESH_TOKEN_URL+"?id="+user.getId()+"&token="+token);
                 response = new StringBuilder();
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 if (conn.getResponseCode() != HttpURLConnection.HTTP_OK) {

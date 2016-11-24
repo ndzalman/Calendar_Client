@@ -79,5 +79,7 @@
     <string name="exit_dialog_postive">כן</string>
     <string name="exit_dialog_negative">לא</string>
 
+    <!--Contact fragnebt-->
+    <string name="add_contacts">הוסף אנשי קשר לאירוע זה</string>
 
 </resources>

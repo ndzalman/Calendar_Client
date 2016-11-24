@@ -78,5 +78,8 @@
     <string name="exit_dialog_postive">YES</string>
     <string name="exit_dialog_negative">NO</string>
 
+    <!--Contact fragnebt-->
+    <string name="add_contacts">Add contact to this event</string>
+
 
 </resources>

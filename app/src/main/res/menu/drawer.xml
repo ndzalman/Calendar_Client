@@ -35,6 +35,10 @@
             android:icon="@drawable/ic_action_user"
             android:title="@string/menu_item_profile" />
 
+        <item
+            android:id="@+id/navigation_item_about"
+            android:icon="@drawable/ic_action_info"
+            android:title="@string/menu_item_about" />
 
         <item
             android:id="@+id/navigation_item_log_out"

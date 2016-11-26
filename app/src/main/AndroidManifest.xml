@@ -6,6 +6,10 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <!-- permission required to use Alarm Manager -->
     <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+
 
     <!-- Register the Alarm Receiver -->
     <receiver android:name="com.example.alarmmanagernotifcation.AlarmReceiver" />
@@ -56,9 +60,8 @@
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/colorPrimary" />
 
-        <activity android:name=".ui.MainActivity">
-
-        </activity>
+        <activity android:name=".ui.MainActivity"></activity>
+        <activity android:name=".ui.AboutActivity"></activity>
     </application>
 
 </manifest>

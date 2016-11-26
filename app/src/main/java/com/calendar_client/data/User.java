@@ -31,6 +31,11 @@ public class User implements Serializable{
     private String email;
 
     /**
+     * Phone number of the user,
+     */
+    private String phoneNumber;
+
+    /**
      * Password of the user
      */
     private String password;
@@ -209,6 +214,22 @@ public class User implements Serializable{
 
         return id == user.id;
 
+    }
+
+    /**
+     * Returns the phone number of the user
+     * @return the phone number of the user
+     */
+    public String getPhoneNUmber() {
+        return phoneNumber;
+    }
+
+    /**
+     * Sets the phone number of the user
+     * @param phoneNumber the token of the user
+     */
+    public void setPhoneNUmber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
     @Override

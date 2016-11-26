@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -10,19 +11,16 @@
     tools:context="com.calendar_client.ui.SplashScreenActivity"
     android:weightSum="10"
     android:orientation="vertical"
-    android:background="@color/colorPrimaryLight"
+    android:background="@drawable/calendario_background"
     >
 
-    <TextView
+
+    <ImageView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="@string/app_name"
-        android:id="@+id/tvAppName"
-        android:layout_weight="5"
-        android:gravity="center"
-        android:textColor="@color/colorPrimary"
-        />
+        app:srcCompat="@drawable/calendario_icon_transperent"
+        android:id="@+id/imgViewIcon"
+        android:layout_weight="4.64" />
 
     <TextView
         android:layout_width="match_parent"

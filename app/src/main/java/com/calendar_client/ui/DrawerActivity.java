@@ -82,6 +82,10 @@ public abstract class DrawerActivity extends AppCompatActivity {
                         break;
                     case R.id.navigation_item_profile:
                         break;
+                    case R.id.navigation_item_about:
+                        Intent aboutActivity = new Intent(DrawerActivity.this,AboutActivity.class);
+                        startActivity(aboutActivity);
+                        break;
                     case R.id.navigation_item_log_out:
                         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                         SharedPreferences.Editor editor = sharedPreferences.edit();

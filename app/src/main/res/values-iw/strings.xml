@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">לוח אירועים</string>
+    <string name="app_name">Calendario</string>
 
     <!--Alert Dialog - No internet-->
     <string name="alert_dialog_title">אין גישה לאינטרנט</string>
@@ -71,6 +71,7 @@
     <string name="menu_item_profile">פרופיל</string>
     <string name="menu_item_log_out">התנתק</string>
     <string name="menu_item_update">חזור להיום</string>
+    <string name="menu_item_about">אודות</string>
 
 
     <!--Alert Dialog - exit dialog-->

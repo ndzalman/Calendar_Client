@@ -52,6 +52,8 @@ public class ContactFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_contacts, container, false);
 
         lvUsers = (ListView) view.findViewById(R.id.lvUsers);
+        usersAdapter = new MyAdapter(getActivity(), R.layout.single_contant_layout, users);
+        lvUsers.setAdapter(usersAdapter);
 
         new GetUsersTask().execute();
 
@@ -127,7 +129,7 @@ public class ContactFragment extends Fragment {
                 convertView = inflater.inflate(layout, parent, false);
                 holder = new ViewHolder();
                 holder.tvUserName = (TextView) convertView.findViewById(R.id.tvUserName);
-                holder.checkBox = (AppCompatCheckBox) convertView.findViewById(R.id.checkBox);
+                holder.checkBox = (CheckBox) convertView.findViewById(R.id.checkBox);
 
 
                 convertView.setTag(holder);
@@ -148,7 +150,6 @@ public class ContactFragment extends Fragment {
                         User us = (User) getItem(position);
                         data.removeUser(us);
                     }
-                    data = Data.getInstance();
                     Log.d("USERS","users size: " + data.getUsers().size());
                 }
             });
@@ -159,9 +160,10 @@ public class ContactFragment extends Fragment {
 
         private class ViewHolder {
             TextView tvUserName;
-            AppCompatCheckBox checkBox;
+            CheckBox checkBox;
             ImageView imgViewContact;
         }
+
     }
 
     private class GetUsersTask extends AsyncTask<String, Void, String> {
@@ -182,7 +184,7 @@ public class ContactFragment extends Fragment {
         // executing
         @Override
         protected String doInBackground(String... strings) {
-     /*       StringBuilder response;
+            StringBuilder response;
             try {
                 URL url = new URL(ApplicationConstants.GET_ALL_USERS_URL +"?id=" + id);
                 response = new StringBuilder();
@@ -213,19 +215,17 @@ public class ContactFragment extends Fragment {
             } catch (Exception e) {
                 e.printStackTrace();
                 return null;
-            }*/
+            }
 
-            users = getContacts();
-            usersAdapter = new MyAdapter(getActivity(), R.layout.single_contant_layout, users);
+//            users = getContacts();
 
             return null;
         }
 
         @Override
         protected void onPostExecute(String response) {
+            usersAdapter = new MyAdapter(getActivity(), R.layout.single_contant_layout, users);
             lvUsers.setAdapter(usersAdapter);
-            usersAdapter.notifyDataSetChanged();
-
         }
 
     }

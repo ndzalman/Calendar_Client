@@ -194,6 +194,12 @@ public class EventDetailsFragement extends Fragment {
                     Data data = Data.getInstance();
                     event.getUsers().addAll(data.getUsers());
 
+                    data.getUsers().clear();
+
+                    Log.d("USERS",event.getUsers().toString());
+                    Log.d("USERS","size " + event.getUsers().size());
+
+
                     // if this is new event execute the add event task (in post execute we update
                     // the SQLite as well)
                     if (isNew) {
@@ -406,6 +412,9 @@ public class EventDetailsFragement extends Fragment {
             dateEnd.set(Calendar.HOUR_OF_DAY, hourEnd);
             dateEnd.set(Calendar.MINUTE, minuteEnd);
             event.setDateEnd(dateEnd);
+
+
+
 
             return true;
         }

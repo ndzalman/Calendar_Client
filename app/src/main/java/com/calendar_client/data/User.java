@@ -253,6 +253,7 @@ public class User implements Serializable{
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", dateOfBirth=" + dateOfBirth +
+                ", token=" + token +
                 ", events=" + events +
                 '}';
     }

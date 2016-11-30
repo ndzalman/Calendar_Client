@@ -30,7 +30,7 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:id="@+id/tvUserName" />
 
-    <android.support.v7.widget.AppCompatCheckBox
+    <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/checkBox"

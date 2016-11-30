@@ -77,6 +77,14 @@ public class User implements Serializable{
         this.dateOfBirth = dateOfBirth;
     }
 
+    public User(int id,String userName, String email, String password, Calendar dateOfBirth, List<Event> events) {
+        this.id = id;
+        this.userName = userName;
+        this.email = email;
+        this.password = password;
+        this.dateOfBirth = dateOfBirth;
+    }
+
     /**
      * Returns the userName of the user
      * @return the userName of the user

@@ -1,7 +1,12 @@
 package com.calendar_client.utils;
 
+import android.database.Cursor;
+import android.provider.ContactsContract;
+
+import com.calendar_client.data.ContactDetails;
 import com.calendar_client.data.User;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -35,4 +40,6 @@ public class Data {
     public void removeUser(User user){
         this.users.remove(user);
     }
+
+
 }

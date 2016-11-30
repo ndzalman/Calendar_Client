@@ -2,8 +2,10 @@ package com.calendar_client.ui;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
+import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatCheckBox;
@@ -20,6 +22,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.calendar_client.R;
+import com.calendar_client.data.ContactDetails;
 import com.calendar_client.data.User;
 import com.calendar_client.utils.ApplicationConstants;
 import com.calendar_client.utils.Data;
@@ -61,12 +64,27 @@ public class ContactFragment extends Fragment {
                 }else{
                     c.setChecked(true);
                 }
-                Data data = Data.getInstance();
-                Log.d("USERS","users size: " + data.getUsers().size());
+
             }
         });
 
         return view;
+    }
+
+    public ArrayList<User> getContacts()
+    {
+        ArrayList<User> allContacts = new ArrayList();
+        Cursor phones = getActivity().getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,null,null, null);
+        int i = 1;
+        while (phones.moveToNext())
+        {
+            String name=phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
+            String phoneNumber = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+            allContacts.add(new User(i++,name, phoneNumber+"@gmail.com", "123456", null, null));
+        }
+        phones.close();
+
+        return allContacts;
     }
 
     private class MyAdapter extends BaseAdapter {
@@ -100,7 +118,7 @@ public class ContactFragment extends Fragment {
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(final int position, View convertView, ViewGroup parent) {
             final ViewHolder holder;
             final User user = (User) getItem(position);
 
@@ -124,10 +142,14 @@ public class ContactFragment extends Fragment {
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     Data data = Data.getInstance();
                     if (isChecked){
-                        data.addUser(user);
+                        User us = (User) getItem(position);
+                        data.addUser(us);
                     }else{
-                        data.removeUser(user);
+                        User us = (User) getItem(position);
+                        data.removeUser(us);
                     }
+                    data = Data.getInstance();
+                    Log.d("USERS","users size: " + data.getUsers().size());
                 }
             });
 
@@ -160,7 +182,7 @@ public class ContactFragment extends Fragment {
         // executing
         @Override
         protected String doInBackground(String... strings) {
-            StringBuilder response;
+     /*       StringBuilder response;
             try {
                 URL url = new URL(ApplicationConstants.GET_ALL_USERS_URL +"?id=" + id);
                 response = new StringBuilder();
@@ -187,12 +209,14 @@ public class ContactFragment extends Fragment {
                 }.getType();
                 users = new Gson().fromJson(response.toString(), listType);
                 Log.e("users",users.get(0).toString());
-                usersAdapter = new MyAdapter(getActivity(), R.layout.single_contant_layout, users);
 
             } catch (Exception e) {
                 e.printStackTrace();
                 return null;
-            }
+            }*/
+
+            users = getContacts();
+            usersAdapter = new MyAdapter(getActivity(), R.layout.single_contant_layout, users);
 
             return null;
         }
@@ -200,7 +224,7 @@ public class ContactFragment extends Fragment {
         @Override
         protected void onPostExecute(String response) {
             lvUsers.setAdapter(usersAdapter);
-
+            usersAdapter.notifyDataSetChanged();
 
         }
 

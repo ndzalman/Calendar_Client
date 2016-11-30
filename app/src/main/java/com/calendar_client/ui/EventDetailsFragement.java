@@ -82,6 +82,8 @@ public class EventDetailsFragement extends Fragment {
         dbHandler = new EventsDBHandler(getContext());
         event = new Event();
 
+        // TODO - get the extra paratmer event id from intent
+        // usng it - go to server and fetch all details
         // if i get selected day on intent - add event of specific day
         if (getActivity().getIntent().getSerializableExtra("selectedDay") != null) {
             selected = (Calendar) getActivity().getIntent().getSerializableExtra("selectedDay");

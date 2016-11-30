@@ -2,7 +2,7 @@ package com.calendar_client.utils;
 public class ApplicationConstants {
 
 //   public static final String SERVER_IP = "10.0.0.100"; // nadav IP
-   public static final String SERVER_IP = "10.0.0.104"; // anael IP
+   public static final String SERVER_IP = "192.168.1.28"; // anael IP
 //   public static final String SERVER_IP = "localhost";
     public static final String PORT = "8080";
 

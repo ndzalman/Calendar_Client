@@ -172,6 +172,7 @@ public class SignUpActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             user.setEmail(etEmail.getText().toString());
+            user.setPhoneNUmber("0543300999");
             Calendar dateOfBirth = Calendar.getInstance();
             dateOfBirth.set(Calendar.YEAR,year);
             dateOfBirth.set(Calendar.MONTH,month);
@@ -197,6 +198,7 @@ public class SignUpActivity extends AppCompatActivity {
                 con.setRequestProperty("Accept", "text/plain");
                 con.setRequestMethod("POST");
 
+                con.connect();
                 OutputStream os = con.getOutputStream();
                 os.write(jsonUser.getBytes("UTF-8"));
                 os.flush();

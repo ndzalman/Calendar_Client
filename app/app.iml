@@ -115,8 +115,8 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="gson-2.2.4" level="project" />
     <orderEntry type="library" exported="" name="firebase-iid-9.0.0" level="project" />
+    <orderEntry type="library" exported="" name="support-annotations-25.0.1" level="project" />
     <orderEntry type="library" exported="" name="design-23.4.0" level="project" />
-    <orderEntry type="library" exported="" name="support-annotations-23.4.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-basement-9.0.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-tasks-9.0.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-base-9.0.0" level="project" />

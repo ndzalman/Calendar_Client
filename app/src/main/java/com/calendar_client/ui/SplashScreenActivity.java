@@ -25,14 +25,7 @@ public class SplashScreenActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
-//
-//
-//        String strPhone = "0543024454";
-//        String strMessage = "Lorem\nIpsum";
-//
-//
-//        SmsManager sm = SmsManager.getDefault();
-//        sm.sendTextMessage(strPhone, null, strMessage, null, null);
+
 
         // link the fields in layout
         progressBar = (ProgressBar) findViewById(R.id.progressBar);

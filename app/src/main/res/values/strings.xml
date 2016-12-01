@@ -42,6 +42,18 @@
     <string name="sign_up_date_empty">pick your date of birth</string>
     <string name="sign_up_successful">Account Created !</string>
     <string name="sign_up_error">We Could not create your account</string>
+    <string name="sign_up_phone_number_hint">Mobile Phone</string>
+    <string name="sign_up_phone_number_empty">Mobile Phone is empty</string>
+
+    <!--Popup sms verification -->
+    <string name="popup_title">Confirm your mobile phone number</string>
+    <string name="popup_enter_code">Enter verification code</string>
+    <string name="popup_code_hint">Verification code</string>
+    <string name="popup_button">Confirm</string>
+    <string name="popup_key_not_match">Key is not a match!</string>
+
+
+
 
     <!--New/Edit Event Screen -->
     <string name="new_event_title">Add New Event</string>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="350dp"
+    android:background="@drawable/calendario_background"
+    android:id="@+id/popup_layout"
+    >
+
+
+    <TextView
+        android:text="@string/popup_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:id="@+id/tvTitle"
+        android:layout_margin="15dp"
+        android:textColor="@color/colorPrimary"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
+
+    <TextView
+        android:text="@string/popup_enter_code"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvTitle"
+        android:layout_margin="10dp"
+        android:id="@+id/tvEnterCode"
+        android:textColor="@color/colorPrimaryDark"
+        android:textAppearance="@style/TextAppearance.AppCompat.Headline" />
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_below="@+id/tvEnterCode"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:id="@+id/code"
+        >
+        <EditText
+            android:id="@+id/etCode"
+            android:hint="@string/popup_code_hint"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:textColorHint="@color/colorPrimary"
+            android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+    </android.support.design.widget.TextInputLayout>
+
+
+    <android.support.v7.widget.AppCompatButton
+        android:text="@string/popup_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/code"
+        android:layout_margin="10dp"
+        android:background="@color/colorPrimaryDark"
+        android:layout_centerInParent="true"
+        android:id="@+id/btnConfirm" />
+</RelativeLayout>

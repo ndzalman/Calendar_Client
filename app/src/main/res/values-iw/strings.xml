@@ -43,6 +43,15 @@
     <string name="sign_up_date_empty">הכנס תאריך לידה</string>
     <string name="sign_up_successful">החשבון נוצר בהצלחה !</string>
     <string name="sign_up_error">מצטערים, לא הצלחנו ליצור את החשבון</string>
+    <string name="sign_up_phone_number_hint">מספר טלפון נייד</string>
+    <string name="sign_up_phone_number_empty">מספר טלפון נייד ריק</string>
+
+    <!--Popup sms verification -->
+    <string name="popup_title">אשר את מספר הטלפון שלך</string>
+    <string name="popup_enter_code">הכנס קוד מזהה</string>
+    <string name="popup_code_hint">קוד מזהה</string>
+    <string name="popup_button">אשר</string>
+    <string name="popup_key_not_match">הקוד אינו זהה לקוד שנשלח!</string>
 
     <!--New/Edit Event Screen -->
     <string name="new_event_title">הוסף אירוע חדש</string>

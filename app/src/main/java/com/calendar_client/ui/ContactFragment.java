@@ -42,6 +42,7 @@ public class ContactFragment extends Fragment {
     private MyAdapter usersAdapter;
     private List<User> users = new ArrayList<>();
     ListView lvUsers;
+    List<String> usersNames = new ArrayList<>();
 
     //Overriden method onCreateView
     @Override
@@ -52,8 +53,8 @@ public class ContactFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_contacts, container, false);
 
         lvUsers = (ListView) view.findViewById(R.id.lvUsers);
-        usersAdapter = new MyAdapter(getActivity(), R.layout.single_contant_layout, users);
-        lvUsers.setAdapter(usersAdapter);
+//        usersAdapter = new MyAdapter(getActivity(), R.layout.single_contant_layout, users);
+//        lvUsers.setAdapter(usersAdapter);
 
         new GetUsersTask().execute();
 
@@ -73,16 +74,38 @@ public class ContactFragment extends Fragment {
         return view;
     }
 
-    public ArrayList<User> getContacts()
+    public ArrayList<User> getContacts(List<User> existingUsers)
     {
         ArrayList<User> allContacts = new ArrayList();
         Cursor phones = getActivity().getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,null,null, null);
-        int i = 1;
         while (phones.moveToNext())
         {
-            String name=phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
-            String phoneNumber = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-            allContacts.add(new User(i++,name, phoneNumber+"@gmail.com", "123456", null, null));
+            // first, remove all non digits from phone number, next if the number starts with 972 replace with zero
+            // if number length is below 10 its not a valid phone number
+            String name = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
+            String phoneNumberBefore = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+            phoneNumberBefore = phoneNumberBefore.replaceAll("[^\\d.]", "");
+            String phoneNumber = "";
+
+            if (phoneNumberBefore.startsWith("972")){
+                phoneNumberBefore = phoneNumberBefore.substring(3);
+                phoneNumber = "0" + phoneNumberBefore;
+            } else{
+                phoneNumber = phoneNumberBefore;
+            }
+
+            if (phoneNumber.length() != 10){
+               continue;
+            }
+
+            for(int i=0; i<existingUsers.size(); i++) {
+                if (existingUsers.get(i).getPhoneNUmber().equals(phoneNumber)){
+                    usersNames.add(name);
+                    allContacts.add(existingUsers.get(i));
+                    existingUsers.remove(existingUsers.get(i));
+                    break;
+                }
+            }
         }
         phones.close();
 
@@ -138,7 +161,7 @@ public class ContactFragment extends Fragment {
                 holder = (ViewHolder) convertView.getTag();
             }
 
-            holder.tvUserName.setText(user.getUserName());
+            holder.tvUserName.setText(usersNames.get(position));
             holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -168,6 +191,7 @@ public class ContactFragment extends Fragment {
 
     private class GetUsersTask extends AsyncTask<String, Void, String> {
         int id;
+        List<User> contactsUsers;
 
         @Override
         protected void onPreExecute() {
@@ -210,7 +234,7 @@ public class ContactFragment extends Fragment {
                 Type listType = new TypeToken<ArrayList<User>>() {
                 }.getType();
                 users = new Gson().fromJson(response.toString(), listType);
-                Log.e("users",users.get(0).toString());
+
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -224,7 +248,11 @@ public class ContactFragment extends Fragment {
 
         @Override
         protected void onPostExecute(String response) {
-            usersAdapter = new MyAdapter(getActivity(), R.layout.single_contant_layout, users);
+            contactsUsers = getContacts(users);
+            if (contactsUsers.size() > 0) {
+                Log.e("users", "users size: " + contactsUsers.size());
+            }
+            usersAdapter = new MyAdapter(getActivity(), R.layout.single_contant_layout, contactsUsers);
             lvUsers.setAdapter(usersAdapter);
         }
 

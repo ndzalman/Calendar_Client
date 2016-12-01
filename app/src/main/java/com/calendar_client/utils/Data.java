@@ -6,8 +6,11 @@ import android.provider.ContactsContract;
 import com.calendar_client.data.ContactDetails;
 import com.calendar_client.data.User;
 
+import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Random;
 import java.util.Set;
 
 /**
@@ -23,6 +26,20 @@ public class Data {
     }
 
     private Data() {
+    }
+
+
+    public String generateKey()
+    {
+        SecureRandom random = new SecureRandom();
+        String characters = "0123456879ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        int length = 5;
+        char[] text = new char[length];
+        for (int i = 0; i < length; i++)
+        {
+            text[i] = characters.charAt(random.nextInt(characters.length()));
+        }
+        return new String(text);
     }
 
     public Set<User> getUsers() {

@@ -1,23 +1,42 @@
 package com.calendar_client.ui;
 
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.AsyncTask;
+import android.os.Build;
+import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.telephony.SmsManager;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.calendar_client.R;
 import com.calendar_client.data.User;
 import com.calendar_client.utils.ApplicationConstants;
+import com.calendar_client.utils.Data;
 import com.google.firebase.iid.FirebaseInstanceIdService;
 import com.google.gson.Gson;
 
@@ -36,18 +55,27 @@ public class SignUpActivity extends AppCompatActivity {
 
     private int year, month, day;
 
-    EditText etUserName;
-    EditText etEmail;
-    EditText etPassword;
-    EditText etConfirmPassword;
-    TextView tvDateOfBirth;
-    Button btnSignUp;
-    TextView tvLoginLink;
+    private EditText etUserName;
+    private EditText etEmail;
+    private EditText etPassword;
+    private EditText etConfirmPassword;
+    private TextView tvDateOfBirth;
+    private Button btnSignUp;
+    private TextView tvLoginLink;
+    private EditText etPhoneNumber;
+    private User user;
+    private PopupWindow popupWindow;
+    private ScrollView layout;
+    private boolean numberValidate = false;
+    private LinearLayout progressLayout;
+    private LinearLayout formLayout;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
+        layout = (ScrollView) findViewById(R.id.layout_sign_up);
 
         initComponents();
 
@@ -75,9 +103,10 @@ public class SignUpActivity extends AppCompatActivity {
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 if (validate()){
+                    initDialog();
                     btnSignUp.setEnabled(false);
-                    new SignUpTask().execute();
                 }
             }
         });
@@ -90,6 +119,53 @@ public class SignUpActivity extends AppCompatActivity {
         });
     }
 
+    private void initDialog(){
+        String strPhone = etPhoneNumber.getText().toString();
+        Data data = Data.getInstance();
+        final String key = data.generateKey();
+        String strMessage = "Your verification code is: " + key;
+
+        SmsManager sm = SmsManager.getDefault();
+        sm.sendTextMessage(strPhone, null, strMessage, null, null);
+
+        final Dialog dialog = new Dialog(SignUpActivity.this);
+//        dialog.setTitle("Title");
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.setContentView(R.layout.sms_verification_popup);
+        dialog.setCancelable(true);
+
+
+        Button btnConfirm = (Button) dialog.findViewById(R.id.btnConfirm);
+        btnConfirm.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                EditText etCode =(EditText)dialog.findViewById(R.id.etCode);
+
+                Log.d("key", "input is: " + etCode.getText().toString() + " key is: " + key);
+
+                if (key.equals(etCode.getText().toString())) {
+                    dialog.dismiss();
+                    progressLayout = (LinearLayout) findViewById(R.id.progress_layout);
+                    formLayout = (LinearLayout) findViewById(R.id.form_layout);
+                    formLayout.setVisibility(View.GONE);
+                    progressLayout.setVisibility(View.VISIBLE);
+
+                    new SignUpTask().execute();
+                } else{
+                    etCode.setError(getResources().getString(R.string.popup_key_not_match));
+                }
+            }
+        });
+        dialog.show();
+
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(dialog.getWindow().getAttributes());
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+        lp.height =  WindowManager.LayoutParams.WRAP_CONTENT;
+        dialog.getWindow().setAttributes(lp);
+    }
+
 
     public boolean validate() {
         boolean valid = true;
@@ -99,6 +175,7 @@ public class SignUpActivity extends AppCompatActivity {
         String password = etPassword.getText().toString();
         String confirmPassword = etConfirmPassword.getText().toString();
         String date = tvDateOfBirth.getText().toString();
+        String phoneNumber = etPhoneNumber.getText().toString();
 
 
         // user name validation
@@ -150,6 +227,14 @@ public class SignUpActivity extends AppCompatActivity {
             tvDateOfBirth.setError(null);
         }
 
+        // phone number validation
+        if (phoneNumber.isEmpty()) {
+            etPhoneNumber.setError(getResources().getString(R.string.sign_up_phone_number_empty));
+            valid = false;
+        }else {
+            etPhoneNumber.setError(null);
+        }
+
         return valid;
     }
 
@@ -161,18 +246,19 @@ public class SignUpActivity extends AppCompatActivity {
         tvDateOfBirth = (TextView) findViewById(R.id.tvDateOfBirth);
         btnSignUp = (Button) findViewById(R.id.btnSignUp);
         tvLoginLink = (TextView) findViewById(R.id.tvLoginLink);
+        etPhoneNumber = (EditText) findViewById(R.id.etPhoneNumber);
 
     }
 
     // if details validation was successful we sent the new user to the server
     private class SignUpTask extends AsyncTask<String,Void,Boolean>{
-        User user = new User();
         boolean result = false;
 
         @Override
         protected void onPreExecute() {
+            user = new User();
             user.setEmail(etEmail.getText().toString());
-            user.setPhoneNUmber("0543300999");
+            user.setPhoneNUmber(etPhoneNumber.getText().toString());
             Calendar dateOfBirth = Calendar.getInstance();
             dateOfBirth.set(Calendar.YEAR,year);
             dateOfBirth.set(Calendar.MONTH,month);
@@ -238,8 +324,20 @@ public class SignUpActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Boolean aBoolean) {
+
             // if insertion was successful
             if (result) {
+                progressLayout.setVisibility(View.GONE);
+                formLayout.setVisibility(View.VISIBLE);
+                Snackbar snackbar = Snackbar
+                        .make(formLayout, getString(R.string.sign_up_successful), Snackbar.LENGTH_LONG);
+                snackbar.setActionTextColor(getResources().getColor(R.color.colorPrimary));
+                View sbView = snackbar.getView();
+                sbView.setBackgroundColor(ContextCompat.getColor(SignUpActivity.this, android.R.color.white));
+                TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
+                textView.setTextColor(getResources().getColor(R.color.colorPrimary));
+                snackbar.show();
+
                 Intent intent = new Intent(SignUpActivity.this, LoginActivity.class);
                 startActivity(intent);
                 SignUpActivity.this.finish();

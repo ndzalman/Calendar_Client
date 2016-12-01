@@ -50,6 +50,11 @@ public class Event implements Serializable{
     private Set<User> users = new HashSet<>();
 
     /**
+     * User id of the owner of this event
+     */
+    private int ownerId;
+
+    /**
      * Default constructor.initialize an empty event object.
      */
     public Event(){
@@ -193,6 +198,14 @@ public class Event implements Serializable{
 
         return id == event.id;
 
+    }
+
+    public int getOwnerId() {
+        return ownerId;
+    }
+
+    public void setOwnerId(int ownerId) {
+        this.ownerId = ownerId;
     }
 
     @Override

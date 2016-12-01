@@ -193,7 +193,7 @@ public class EventDetailsFragement extends Fragment {
                     event.addUser(thisUser); //the current user
                     Data data = Data.getInstance();
                     event.getUsers().addAll(data.getUsers());
-
+                    event.setOwnerId(thisUser.getId());
                     data.getUsers().clear();
 
                     Log.d("USERS",event.getUsers().toString());

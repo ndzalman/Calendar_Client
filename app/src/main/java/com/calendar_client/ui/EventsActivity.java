@@ -118,6 +118,7 @@ public class EventsActivity extends AppCompatActivity {
                 holder.tvTitle = (TextView) convertView.findViewById(R.id.tvTitle);
                 holder.tvDescription = (TextView) convertView.findViewById(R.id.tvDescription);
                 holder.tvTime = (TextView) convertView.findViewById(R.id.tvTime);
+                holder.tvLocation = (TextView) convertView.findViewById(R.id.tvLocation);
 
 
                 convertView.setTag(holder);
@@ -128,6 +129,7 @@ public class EventsActivity extends AppCompatActivity {
 
             holder.tvTitle.setText(event.getTitle());
             holder.tvDescription.setText(event.getDescription());
+            holder.tvLocation.setText(event.getLocation());
 
             SimpleDateFormat sdf = new SimpleDateFormat(EventsDBConstants.TIME_FORMAT);
             Date date = event.getDateStart().getTime();
@@ -145,6 +147,7 @@ public class EventsActivity extends AppCompatActivity {
             TextView tvTitle;
             TextView tvDescription;
             TextView tvTime;
+            TextView tvLocation;
         }
     }
 }

@@ -69,10 +69,10 @@ public class EventDetailsFragement extends Fragment implements GoogleApiClient.O
     private TextView tvDateEnd;
     private TextView tvTimeEnd;
     private TextView tvTitle;
-    private EditText etLocation;
     private EditText etDescription;
     private FloatingActionButton fabDone;
     private FloatingActionButton fabDelete;
+    private PlaceAutocompleteFragment autocompleteFragment;
 
     private int yearStart, monthStart, dayStart;
     private int hourStart, minuteStart;
@@ -84,6 +84,7 @@ public class EventDetailsFragement extends Fragment implements GoogleApiClient.O
     private Calendar selected;
     private Calendar c;
     private View view;
+    private String location = "";
 
     private GoogleApiClient mGoogleApiClient;
 
@@ -93,7 +94,7 @@ public class EventDetailsFragement extends Fragment implements GoogleApiClient.O
         //Returning the layout file after inflating
         //Change R.layout.tab1 in you classes
         view = inflater.inflate(R.layout.event_details_layout, container, false);
-
+        initComponents();
 
         mGoogleApiClient = new GoogleApiClient
                 .Builder(getActivity())
@@ -101,25 +102,21 @@ public class EventDetailsFragement extends Fragment implements GoogleApiClient.O
                 .addApi(Places.PLACE_DETECTION_API)
                 .enableAutoManage(getActivity(), this)
                 .build();
-        PlaceAutocompleteFragment autocompleteFragment =
-                (PlaceAutocompleteFragment) getActivity().getFragmentManager()
-                        .findFragmentById(R.id.place_autocomplete_fragment);
+
 
         autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(Place place) {
-                // TODO: Get info about the selected place.
-                Log.i(TAG, "Place: " + place.getName());
+                location = place.getName().toString();
+                Log.i(TAG, "Place: " + place.getAddress());
             }
 
             @Override
             public void onError(Status status) {
-                // TODO: Handle the error.
                 Log.i(TAG, "An error occurred: " + status);
             }
         });
 
-        initComponents();
         c = Calendar.getInstance();
         dbHandler = new EventsDBHandler(getContext());
         event = new Event();
@@ -192,6 +189,8 @@ public class EventDetailsFragement extends Fragment implements GoogleApiClient.O
             String timeStart = hourStart + ":" + minuteStart;
             tvTimeStart.setText(timeStart);
             String timeEnd = hourEnd + ":" + minuteEnd;
+
+            autocompleteFragment.setText(event.getLocation());
 
             tvTimeEnd.setText(timeEnd);
             tvTitle.setText(getResources().getString(R.string.new_event_edit_title));
@@ -461,8 +460,7 @@ public class EventDetailsFragement extends Fragment implements GoogleApiClient.O
             dateEnd.set(Calendar.HOUR_OF_DAY, hourEnd);
             dateEnd.set(Calendar.MINUTE, minuteEnd);
             event.setDateEnd(dateEnd);
-
-
+            event.setLocation(location);
 
 
             return true;
@@ -479,7 +477,9 @@ public class EventDetailsFragement extends Fragment implements GoogleApiClient.O
         etDescription = (EditText) view.findViewById(R.id.etDescription);
         fabDone = (FloatingActionButton) view.findViewById(R.id.fabDone);
         tvTitle = (TextView) view.findViewById(R.id.tvTitle);
-        etLocation = (EditText) view.findViewById(R.id.etLocation);
+        autocompleteFragment =
+                (PlaceAutocompleteFragment) getActivity().getFragmentManager()
+                        .findFragmentById(R.id.place_autocomplete_fragment);
 
     }
 

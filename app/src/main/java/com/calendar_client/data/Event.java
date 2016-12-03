@@ -55,6 +55,10 @@ public class Event implements Serializable{
     private int ownerId;
 
     /**
+     * Location of this event
+     */
+    private String location;
+    /**
      * Default constructor.initialize an empty event object.
      */
     public Event(){
@@ -208,6 +212,14 @@ public class Event implements Serializable{
         this.ownerId = ownerId;
     }
 
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
     @Override
     public int hashCode() {
         return id;
@@ -224,4 +236,5 @@ public class Event implements Serializable{
                 ", description='" + description + '\'' +
                 '}';
     }
+
 }

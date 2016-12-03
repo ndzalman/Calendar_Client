@@ -50,13 +50,13 @@ public class SplashScreenActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
 
-//        Typeface typeface = Typeface.createFromAsset(getAssets(), "BreeSerif-Regular.ttf");
+        Typeface typeface = Typeface.createFromAsset(getAssets(), "BreeSerif-Regular.ttf");
 
         // link the fields in layout
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         tvStatus = (TextView) findViewById(R.id.tvStatus);
 
-//        tvStatus.setTypeface(typeface);
+        tvStatus.setTypeface(typeface);
 
         // if no wifi/data connection was found
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);

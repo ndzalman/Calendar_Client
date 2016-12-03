@@ -2,6 +2,7 @@ package com.calendar_client.ui;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
@@ -25,23 +26,31 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class LoginActivity extends AppCompatActivity {
+
     private EditText etPassword;
     private EditText etEmail;
-    private User user;
-
-    private SharedPreferences sharedPreferences;
     private Button btnLogin;
     private TextView tvSignUp;
+    private User user;
+    private SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        Typeface typeface = Typeface.createFromAsset(getAssets(), "BreeSerif-Regular.ttf");
 
-        etPassword = (EditText) findViewById(R.id.etPassword);
+        // link layout components
         etEmail = (EditText) findViewById(R.id.etEmail);
+        etPassword = (EditText) findViewById(R.id.etPassword);
+        btnLogin = (Button) findViewById(R.id.btnLogin);
+        tvSignUp = (TextView) findViewById(R.id.tvSignUp);
 
+        etEmail.setTypeface(typeface);
+        etPassword.setTypeface(typeface);
+        btnLogin.setTypeface(typeface);
+        tvSignUp.setTypeface(typeface);
 
         // get user from shared preference. if doesnt exist return empty string
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
@@ -61,12 +70,6 @@ public class LoginActivity extends AppCompatActivity {
             Intent homeScreen = new Intent(this, CalendarActivity.class);
             startActivity(homeScreen);
         }
-
-        // link layout components
-        tvSignUp = (TextView) findViewById(R.id.tvSignUp);
-        etEmail = (EditText) findViewById(R.id.etEmail);
-        etPassword = (EditText) findViewById(R.id.etPassword);
-        btnLogin = (Button) findViewById(R.id.btnLogin);
 
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override

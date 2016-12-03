@@ -25,38 +25,40 @@
     >
 
     <ImageView
-        android:layout_width="150dp"
+        android:layout_width="260dp"
         android:layout_height="150dp"
         android:id="@+id/imageView"
         android:src="@drawable/calendario_icon_transperent"
         android:layout_gravity="center_horizontal"
-        android:layout_weight="10"
+        android:layout_weight="24.00"
         />
 
-    <TextView
-        android:layout_margin="18dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="@color/colorPrimary"
-        android:text="@string/login_title"
-        android:id="@+id/tvTitle"
-        android:gravity="center"
-        android:layout_gravity="center_horizontal"
-        android:layout_weight="20"
-        />
+    <!--<TextView-->
+        <!--android:layout_margin="18dp"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:textAppearance="?android:attr/textAppearanceLarge"-->
+        <!--android:textColor="@color/colorPrimary"-->
+        <!--android:text="@string/login_title"-->
+        <!--android:id="@+id/tvTitle"-->
+        <!--android:gravity="center"-->
+        <!--android:layout_gravity="center_horizontal"-->
+        <!--android:layout_weight="20"-->
+        <!--/>-->
 
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
+        android:textColorHint="@color/colorPrimaryLight"
         >
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/etEmail"
         android:gravity="start"
+        android:textColor="@color/colorPrimaryLight"
         android:textColorHint="@color/colorPrimary"
         android:inputType="textEmailAddress"
         android:hint="@string/login_email_hint"
@@ -72,12 +74,14 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
+        android:textColorHint="@color/colorPrimaryLight"
         >
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="start"
         android:inputType="textVisiblePassword"
+        android:textColor="@color/colorPrimaryLight"
         android:textColorHint="@color/colorPrimary"
         android:hint="@string/login_password_hint"
         android:ems="10"
@@ -88,16 +92,17 @@
 
 
     <android.support.v7.widget.AppCompatButton
-        android:layout_margin="18dp"
-        android:layout_width="match_parent"
+        android:layout_margin="20dp"
+        android:layout_width="350dp"
         android:layout_height="wrap_content"
         android:text="@string/login_button"
         android:id="@+id/btnLogin"
         android:gravity="center"
+        android:background="@color/colorPrimaryDark"
+        android:textColor="@color/white"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:layout_gravity="center_horizontal"
-        android:layout_weight="10"
-        />
+        android:layout_weight="6.58" />
 
     <TextView
         android:layout_width="match_parent"
@@ -107,6 +112,7 @@
         android:text="@string/login_sign_up"
         android:id="@+id/tvSignUp"
         android:clickable="true"
+        android:textColor="@color/colorAccent"
         android:layout_gravity="center_horizontal"
         android:layout_weight="10"
         />

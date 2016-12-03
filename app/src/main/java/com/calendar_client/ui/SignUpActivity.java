@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.design.widget.Snackbar;
@@ -248,6 +249,12 @@ public class SignUpActivity extends AppCompatActivity {
         tvLoginLink = (TextView) findViewById(R.id.tvLoginLink);
         etPhoneNumber = (EditText) findViewById(R.id.etPhoneNumber);
 
+        Typeface typeface = Typeface.createFromAsset(getAssets(), "BreeSerif-Regular.ttf");
+
+        etUserName.setTypeface(typeface);
+        tvDateOfBirth.setTypeface(typeface);
+        btnSignUp.setTypeface(typeface);
+        tvLoginLink.setTypeface(typeface);
     }
 
     // if details validation was successful we sent the new user to the server

@@ -20,7 +20,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    >
+    android:weightSum="1">
 
 
     <LinearLayout
@@ -49,18 +49,18 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:weightSum="10.5"
-        >
+        android:layout_weight="1.12">
 
-    <TextView
-        android:layout_marginTop="10dp"
-        android:id="@+id/tvTitle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/colorPrimary"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="@string/sign_up_title"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+    <!--<TextView-->
+        <!--android:layout_marginTop="10dp"-->
+        <!--android:id="@+id/tvTitle"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:textColor="@color/colorPrimary"-->
+        <!--android:layout_weight="1"-->
+        <!--android:gravity="center"-->
+        <!--android:text="@string/sign_up_title"-->
+        <!--android:textAppearance="?android:attr/textAppearanceLarge" />-->
 
 
 
@@ -68,7 +68,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp">
+        android:layout_marginTop="8dp"
+        android:textColorHint="@color/colorPrimaryLight">
         <EditText
             android:id="@+id/etEmail"
             android:hint="@string/sign_up_email_hint"
@@ -86,7 +87,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp">
+        android:layout_marginTop="8dp"
+        android:textColorHint="@color/colorPrimaryLight">
         <EditText
             android:id="@+id/etPhoneNumber"
             android:hint="@string/sign_up_phone_number_hint"
@@ -104,8 +106,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp">
-
+        android:layout_marginTop="8dp"
+        android:textColorHint="@color/colorPrimaryLight">
         <EditText
             android:id="@+id/etUserName"
             android:hint="@string/sign_up_username_hint"
@@ -130,7 +132,8 @@
             android:layout_height="match_parent"
             android:layout_marginBottom="8dp"
             android:layout_weight="0.25"
-            android:layout_marginTop="8dp">
+            android:layout_marginTop="8dp"
+            android:textColorHint="@color/colorPrimaryLight">
             <EditText
                 android:id="@+id/etPassword"
                 android:inputType="textPassword"
@@ -149,18 +152,19 @@
             android:layout_height="match_parent"
             android:layout_weight="0.25"
             android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp">
-        <EditText
-            android:id="@+id/etConfirmPassword"
-            android:hint="@string/sign_up_confirm_password_hint"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textPassword"
-            android:nextFocusDown="@+id/tvDateOfBirth"
-            android:layout_gravity="center_vertical"
-            android:textColorHint="@color/colorPrimary"
-            android:layout_weight="0.25"
-            android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+            android:layout_marginTop="8dp"
+            android:textColorHint="@color/colorPrimaryLight">
+            <EditText
+                android:id="@+id/etConfirmPassword"
+                android:hint="@string/sign_up_confirm_password_hint"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                android:nextFocusDown="@+id/tvDateOfBirth"
+                android:layout_gravity="center_vertical"
+                android:textColorHint="@color/colorPrimary"
+                android:layout_weight="0.25"
+                android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
         </android.support.design.widget.TextInputLayout>
 
     </LinearLayout>
@@ -183,16 +187,16 @@
 
 
     <android.support.v7.widget.AppCompatButton
-        android:layout_margin="18dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:layout_width="350dp"
+        android:layout_height="64dp"
         android:text="@string/sign_up_btn_sign_up"
         android:id="@+id/btnSignUp"
         android:gravity="center"
+        android:background="@color/colorPrimaryDark"
+        android:textColor="@color/white"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:layout_gravity="center_horizontal"
-        android:layout_weight="2"
-        />
+        android:layout_gravity="center_horizontal" />
 
 
     <TextView
@@ -200,7 +204,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:textColor="@color/colorPrimaryDark"
+        android:textColor="@color/colorAccent"
         android:layout_weight="1"
         android:gravity="center"
         android:text="@string/sign_up_link_login"

@@ -12,6 +12,7 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NotificationCompat;
@@ -35,6 +36,14 @@ import com.calendar_client.utils.ApplicationConstants;
 import com.calendar_client.utils.Data;
 import com.calendar_client.utils.EventsDBHandler;
 import com.calendar_client.utils.NotificationReceiver;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+//import com.google.android.gms.location.places.Places;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.Places;
+import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
+import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -51,7 +60,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class EventDetailsFragement extends Fragment {
+
+public class EventDetailsFragement extends Fragment implements GoogleApiClient.OnConnectionFailedListener {
     private static final String TAG = "NEW_EVENT";
     private EditText etEventTitle;
     private TextView tvDateStart;
@@ -59,6 +69,7 @@ public class EventDetailsFragement extends Fragment {
     private TextView tvDateEnd;
     private TextView tvTimeEnd;
     private TextView tvTitle;
+    private EditText etLocation;
     private EditText etDescription;
     private FloatingActionButton fabDone;
     private FloatingActionButton fabDelete;
@@ -74,12 +85,39 @@ public class EventDetailsFragement extends Fragment {
     private Calendar c;
     private View view;
 
+    private GoogleApiClient mGoogleApiClient;
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         //Returning the layout file after inflating
         //Change R.layout.tab1 in you classes
         view = inflater.inflate(R.layout.event_details_layout, container, false);
 
+
+        mGoogleApiClient = new GoogleApiClient
+                .Builder(getActivity())
+                .addApi(Places.GEO_DATA_API)
+                .addApi(Places.PLACE_DETECTION_API)
+                .enableAutoManage(getActivity(), this)
+                .build();
+        PlaceAutocompleteFragment autocompleteFragment =
+                (PlaceAutocompleteFragment) getActivity().getFragmentManager()
+                        .findFragmentById(R.id.place_autocomplete_fragment);
+
+        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(Place place) {
+                // TODO: Get info about the selected place.
+                Log.i(TAG, "Place: " + place.getName());
+            }
+
+            @Override
+            public void onError(Status status) {
+                // TODO: Handle the error.
+                Log.i(TAG, "An error occurred: " + status);
+            }
+        });
 
         initComponents();
         c = Calendar.getInstance();
@@ -441,6 +479,12 @@ public class EventDetailsFragement extends Fragment {
         etDescription = (EditText) view.findViewById(R.id.etDescription);
         fabDone = (FloatingActionButton) view.findViewById(R.id.fabDone);
         tvTitle = (TextView) view.findViewById(R.id.tvTitle);
+        etLocation = (EditText) view.findViewById(R.id.etLocation);
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
     }
 

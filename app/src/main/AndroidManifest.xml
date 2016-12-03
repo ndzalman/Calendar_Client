@@ -60,8 +60,15 @@
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/colorPrimary" />
 
-        <activity android:name=".ui.MainActivity" />
-        <activity android:name=".ui.AboutActivity" />
+        <activity android:name=".ui.MainActivity"></activity>
+        <activity android:name=".ui.AboutActivity"></activity>
+
+
+
+            <meta-data
+                android:name="com.google.android.geo.API_KEY"
+                android:value="AIzaSyCCE8BydNul-MJ85Oq9duxJU-QRIKIRe8I"/>
+
         <activity android:name=".ui.NotificationEventActivity"></activity>
     </application>
 

@@ -3,8 +3,11 @@
 
     <!--Alert Dialog - No internet-->
     <string name="alert_dialog_title">No Internet Connection</string>
-    <string name="alert_dialog_positive">Try Again</string>
+    <string name="alert_dialog_message">You can still see all the events that you\'ve created</string>
+    <string name="alert_dialog_positive">Go Offline</string>
+    <string name="alert_dialog_neutral">Try Again</string>
     <string name="alert_dialog_negative">Exit</string>
+    <string name="exit_alert_dialog_title">User is not logged</string>
 
     <!--SplashScreen status-->
     <string name="splash_screen_status_start">Please Wait..</string>
@@ -51,8 +54,6 @@
     <string name="popup_code_hint">Verification code</string>
     <string name="popup_button">Confirm</string>
     <string name="popup_key_not_match">Key is not a match!</string>
-
-
 
 
     <!--New/Edit Event Screen -->

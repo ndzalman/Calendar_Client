@@ -36,16 +36,20 @@ import com.calendar_client.utils.Data;
 import com.calendar_client.utils.EventsDBHandler;
 import com.calendar_client.utils.NotificationReceiver;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 public class EventDetailsFragement extends Fragment {
     private static final String TAG = "NEW_EVENT";
@@ -175,8 +179,6 @@ public class EventDetailsFragement extends Fragment {
 
         }
 
-        initDateAndTimePicker();
-
         fabDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -194,6 +196,7 @@ public class EventDetailsFragement extends Fragment {
                     Data data = Data.getInstance();
                     event.getUsers().addAll(data.getUsers());
                     event.setOwnerId(thisUser.getId());
+
                     data.getUsers().clear();
 
                     Log.d("USERS",event.getUsers().toString());
@@ -222,6 +225,14 @@ public class EventDetailsFragement extends Fragment {
                 }
             }
         });
+        Data data = Data.getInstance();
+        if (data.isOnline() == false){
+            fabDelete.setVisibility(View.GONE);
+            fabDone.setVisibility(View.GONE);
+            tvTitle.setText("Event Details");
+        } else{
+            initDateAndTimePicker();
+        }
 
         return view;
     }
@@ -391,7 +402,7 @@ public class EventDetailsFragement extends Fragment {
         String description = etDescription.getText().toString();
 
         if (title.isEmpty() || dateStartTxt.isEmpty() || timeStartTxt.isEmpty() ||
-                dateEndTxt.isEmpty() || timeEndTxt.isEmpty() || description.isEmpty()) {
+                dateEndTxt.isEmpty() || timeEndTxt.isEmpty() ){
             Toast.makeText(getActivity(), getResources().getString(R.string.new_event_empty), Toast.LENGTH_SHORT).show();
             return false;
         } else {
@@ -512,6 +523,10 @@ public class EventDetailsFragement extends Fragment {
                 } else {
                     Log.e(TAG, "Event Not added");
                 }
+
+                Data data = Data.getInstance();
+                data.getSharedEvents().add(event);
+
                 getActivity().finish();
                 Intent events = new Intent(getActivity(), CalendarActivity.class);
                 startActivity(events);
@@ -520,6 +535,68 @@ public class EventDetailsFragement extends Fragment {
             }
         }
     }
+
+//    private class GetSharedEventsTask extends AsyncTask<String, Void, String> {
+//        // executing
+//        @Override
+//        protected String doInBackground(String... strings) {
+//            Log.e("SharedEvents","In Shared Events task");
+//            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
+//            String userJSON = sharedPreferences.getString("user", "");
+//            Gson gson = new Gson();
+//            User user = gson.fromJson(userJSON,User.class);
+//
+//            StringBuilder response;
+//            try {
+//                URL url = new URL(ApplicationConstants.GET_ALL_SHARED_EVENTS + "?id=" + user.getId());
+//                response = new StringBuilder();
+//                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+//                Log.e("DEBUG", conn.getResponseCode() + "");
+//                if (conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
+//                    Log.e("DEBUG", conn.getResponseMessage());
+//                    return null;
+//                }
+//
+//                BufferedReader input = new BufferedReader(
+//                        new InputStreamReader(conn.getInputStream()));
+//
+//                String line;
+//                while ((line = input.readLine()) != null) {
+//                    response.append(line + "\n");
+//                }
+//
+//                input.close();
+//
+//                conn.disconnect();
+//
+//                Type listType = new TypeToken<ArrayList<Event>>() {
+//                }.getType();
+//                List<Event> sharedEvents = new Gson().fromJson(response.toString(), listType);
+//                Data data = Data.getInstance();
+//                data.setSharedEvents(sharedEvents);
+//
+//
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//                return null;
+//            }
+//
+//            return null;
+//        }
+//
+//        @Override
+//        protected void onPostExecute(String response) {
+//            Data data = Data.getInstance();
+//            Log.d("EVENT-SIZE", "events size: " + data.getSharedEvents().size());
+//            if (data.getSharedEvents().size() > 0) {
+//                Log.d("EVENT-SIZE", "event: " + data.getSharedEvents().get(0).toString());
+//                Log.d("EVENT-SIZE", "event: " + data.getSharedEvents().get(0).getUsers().toString());
+//            }
+//
+//        }
+//
+//    }
+
 
     private class EditEventTask extends AsyncTask<String, Void, Boolean> {
         boolean result = false;

@@ -63,6 +63,7 @@ public class EventsDBHandler {
 
     }
 
+
     public ArrayList<Event> getAllEvents(int userId)
     {
         ArrayList<Event> eventsList = new ArrayList<Event>();
@@ -154,7 +155,6 @@ public class EventsDBHandler {
                     eventsList.add(event);
                 } else if (calendar.after(startCalendar) && calendar.before(endCalendar)){
                     eventsList.add(event);
-
                 }
             }
         }

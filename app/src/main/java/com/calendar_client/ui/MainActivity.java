@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.calendar_client.R;
+import com.calendar_client.utils.Data;
 import com.calendar_client.utils.Pager;
 
 public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSelectedListener{
@@ -26,7 +27,10 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
 
         //Adding the tabs using addTab() method
         tabLayout.addTab(tabLayout.newTab().setText("Event Details"));
-        tabLayout.addTab(tabLayout.newTab().setText("Add Contact"));
+        Data data = Data.getInstance();
+        if (data.isOnline()){
+            tabLayout.addTab(tabLayout.newTab().setText("Add Contact"));
+        }
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         //Initializing viewPager

@@ -135,7 +135,6 @@ public class SignUpActivity extends AppCompatActivity {
         dialog.setCancelable(false);
         dialog.setCanceledOnTouchOutside(false);
         dialog.setContentView(R.layout.sms_verification_popup);
-        dialog.setCancelable(true);
 
 
         Button btnConfirm = (Button) dialog.findViewById(R.id.btnConfirm);

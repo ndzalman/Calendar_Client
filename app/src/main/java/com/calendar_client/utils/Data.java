@@ -4,12 +4,14 @@ import android.database.Cursor;
 import android.provider.ContactsContract;
 
 import com.calendar_client.data.ContactDetails;
+import com.calendar_client.data.Event;
 import com.calendar_client.data.User;
 
 import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
@@ -20,6 +22,8 @@ public class Data {
 
     private static Data ourInstance = new Data();
     private Set<User> users = new HashSet<>();
+    private List<Event> sharedEvents = new ArrayList<>();
+    private boolean isOnline = false;
 
     public static Data getInstance() {
         return ourInstance;
@@ -27,7 +31,6 @@ public class Data {
 
     private Data() {
     }
-
 
     public String generateKey()
     {
@@ -58,5 +61,27 @@ public class Data {
         this.users.remove(user);
     }
 
+    public List<Event> getSharedEvents() {
+        return sharedEvents;
+    }
 
+    public void setSharedEvents(List<Event> sharedEvents) {
+        this.sharedEvents = sharedEvents;
+    }
+
+    public void addEvent(Event sharedEvent){
+        this.sharedEvents.add(sharedEvent);
+    }
+
+    public void removeEvent(Event sharedEvents){
+        this.sharedEvents.remove(sharedEvents);
+    }
+
+    public boolean isOnline() {
+        return isOnline;
+    }
+
+    public void setOnline(boolean online) {
+        isOnline = online;
+    }
 }

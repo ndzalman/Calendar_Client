@@ -19,6 +19,7 @@ import com.calendar_client.data.Event;
 import com.calendar_client.data.User;
 import com.calendar_client.ui.CalendarActivity;
 import com.calendar_client.ui.EventsActivity;
+import com.calendar_client.ui.NotificationEventActivity;
 import com.calendar_client.utils.EventsDBHandler;
 import com.google.firebase.messaging.*;
 import com.google.gson.Gson;
@@ -40,6 +41,7 @@ public class MyFirebaseMessagingService extends  FirebaseMessagingService {
             Log.d("TEST", "Message data payload: " + remoteMessage.getData());
             Event e = new Gson().fromJson(remoteMessage.getData().toString(),Event.class);
             Log.d("event","event recived: " +e);
+
             // get user from shared preference. if doesnt exist return empty string
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
             String userJSON = sharedPreferences.getString("user", "");
@@ -50,46 +52,34 @@ public class MyFirebaseMessagingService extends  FirebaseMessagingService {
 
             NotificationManager notificationManager = (NotificationManager)getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
 
-            int date = e.getDateStart().get(Calendar.DAY_OF_MONTH);
-            String message = String.valueOf(date);
-            if (date < 10){
-                message = "0" + date;
-            }
-            message += "/";
-            date = + e.getDateStart().get(Calendar.MONTH);
-            if (date < 10){
-                message += "0" + date;
-            }
-            message += " ";
 
-            date =e.getDateStart().get(Calendar.HOUR_OF_DAY);
-            if (date < 10){
-                message += "0" + date;
-            }
-            message += ":";
-            date =e.getDateStart().get(Calendar.MINUTE);
-            if (date < 10){
-                message += "0" + date;
-            }
-
+            Notification notification = getNotification(e);
+//            Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 //
-//            String message = e.getDateStart().get(Calendar.DAY_OF_MONTH) + "/" + e.getDateStart().get(Calendar.MONTH)
-//                    + " " + e.getDateStart().get(Calendar.HOUR_OF_DAY) + ":" + e.getDateStart().get(Calendar.MINUTE);
-            Notification notification = getNotification(message);
-            Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-
-            NotificationCompat.Builder mBuilder =
-                    new NotificationCompat.Builder(this)
-                            .setSmallIcon(R.drawable.ic_stat_name)
-                            .setContentTitle( e.getTitle())
-                            .setContentInfo("New event created by")
-                            .setContentText(message)
-                            .setAutoCancel(true)
-                            .setSound(uri);
+//            NotificationCompat.Builder mBuilder =
+//                    new NotificationCompat.Builder(this)
+//                            .setSmallIcon(R.drawable.ic_stat_name)
+//                            .setContentTitle( e.getTitle())
+//                            .setContentInfo("New event created by")
+//                            .setContentText(message)
+//                            .setAutoCancel(true)
+//                            .setSound(uri);
+//
+//            Intent resultIntent = new Intent(getApplicationContext(), EventsActivity.class);
+//
+//            TaskStackBuilder stackBuilder = TaskStackBuilder.create(getApplicationContext());
+//            stackBuilder.addParentStack(EventsActivity.class);
+//            stackBuilder.addNextIntent(resultIntent);
+//            PendingIntent resultPendingIntent =
+//                    stackBuilder.getPendingIntent(
+//                            0,
+//                            PendingIntent.FLAG_UPDATE_CURRENT
+//                    );
+//            mBuilder.setContentIntent(resultPendingIntent);
 
 
             // int id = intent.getIntExtra(NOTIFICATION_ID, 0);
-            notificationManager.notify(1, mBuilder.build());
+            notificationManager.notify(1, notification);
             Log.d("TEST", "finished notifiation");
 
         }
@@ -105,38 +95,70 @@ public class MyFirebaseMessagingService extends  FirebaseMessagingService {
 
     }
 
-    private Notification getNotification(String eventTitle) {
-        Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+    private Notification getNotification(Event e) {
+
+        String message = e.getDateStart().get(Calendar.DAY_OF_MONTH) + "/" + e.getDateStart().get(Calendar.MONTH)
+                + " " + e.getDateStart().get(Calendar.HOUR_OF_DAY) + ":" + e.getDateStart().get(Calendar.MINUTE);
 
         NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(getApplicationContext())
-                        .setSmallIcon(R.drawable.ic_stat_name)
-                        .setContentTitle(eventTitle)
-                        .setAutoCancel(true)
-                        .setSound(uri);
+                new NotificationCompat.Builder(this)
+        .setDefaults(Notification.DEFAULT_ALL)
 
-// Creates an explicit intent for an Activity in your app
-        Intent resultIntent = new Intent(getApplicationContext(), CalendarActivity.class);
+                // Set required fields, including the small icon, the
+                // notification title, and text.
+                .setSmallIcon(R.drawable.ic_stat_name)
+                .setContentTitle(e.getTitle())
+                .setContentText(message)
 
-        // TODO - change from CalendarActivity to EventDetailsAct
-        // add extra paramter on the intent
-        //resultIntent.put
+                // All fields below this line are optional.
 
-// The stack builder object will contain an artificial back stack for the
-// started Activity.
-// This ensures that navigating backward from the Activity leads out of
-// your application to the Home screen.
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(getApplicationContext());
-// Adds the back stack for the Intent (but not the Intent itself)
-        stackBuilder.addParentStack(EventsActivity.class);
-// Adds the Intent that starts the Activity to the top of the stack
-        stackBuilder.addNextIntent(resultIntent);
-        PendingIntent resultPendingIntent =
-                stackBuilder.getPendingIntent(
-                        0,
-                        PendingIntent.FLAG_UPDATE_CURRENT
-                );
-        mBuilder.setContentIntent(resultPendingIntent);
+                // Use a default priority (recognized on devices running Android
+                // 4.1 or later)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+
+                // Provide a large icon, shown with the notification in the
+                // notification drawer on devices running Android 3.0 or later.
+//                .setLargeIcon(R.drawable.ic_stat_name)
+
+                // Set ticker text (preview) information for this notification.
+                .setTicker(e.getTitle())
+
+                // Set the pending intent to be initiated when the user touches
+                // the notification.
+                .setContentIntent(
+                        PendingIntent.getActivity(
+                                this,
+                                0,
+                                new Intent(getApplicationContext(), NotificationEventActivity.class).putExtra("event",e),
+                                PendingIntent.FLAG_UPDATE_CURRENT))
+
+                // Show expanded text content on devices running Android 4.1 or
+                // later.
+                .setStyle(new NotificationCompat.BigTextStyle()
+                        .bigText(e.getDescription())
+                        .setBigContentTitle(e.getTitle())
+                        .setSummaryText(message))
+
+
+//                .addAction(
+//                        R.drawable.ic_action_stat_share,
+//                        res.getString(R.string.action_share),
+//                        PendingIntent.getActivity(
+//                                context,
+//                                0,
+//                                Intent.createChooser(new Intent(Intent.ACTION_SEND)
+//                                        .setType("text/plain")
+//                                        .putExtra(Intent.EXTRA_TEXT, "Dummy text"), "Dummy title"),
+//                                PendingIntent.FLAG_UPDATE_CURRENT))
+//                .addAction(
+//                        R.drawable.ic_action_stat_reply,
+//                        res.getString(R.string.action_reply),
+//                        null)
+
+                // Automatically dismiss the notification when it is touched.
+                .setAutoCancel(true);
+
         return mBuilder.build();
+
     }
 }

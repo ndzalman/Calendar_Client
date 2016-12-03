@@ -4,7 +4,8 @@
 
     <!--Alert Dialog - No internet-->
     <string name="alert_dialog_title">אין גישה לאינטרנט</string>
-    <string name="alert_dialog_positive">נסה שוב</string>
+    <string name="alert_dialog_message">ניתן לצפות בכל האירועים שיצרת</string>
+    <string name="alert_dialog_positive">המשך לאפליקציה כלא מקוון</string>
     <string name="alert_dialog_negative">יציאה</string>
 
     <!--SplashScreen status-->

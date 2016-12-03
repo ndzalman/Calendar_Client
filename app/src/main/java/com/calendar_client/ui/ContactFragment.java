@@ -23,6 +23,7 @@ import android.widget.TextView;
 
 import com.calendar_client.R;
 import com.calendar_client.data.ContactDetails;
+import com.calendar_client.data.Event;
 import com.calendar_client.data.User;
 import com.calendar_client.utils.ApplicationConstants;
 import com.calendar_client.utils.Data;
@@ -41,8 +42,11 @@ public class ContactFragment extends Fragment {
     private View view;
     private MyAdapter usersAdapter;
     private List<User> users = new ArrayList<>();
-    ListView lvUsers;
-    List<String> usersNames = new ArrayList<>();
+    private ListView lvUsers;
+    private List<String> usersNames = new ArrayList<>();
+    private Event event;
+    private boolean inEdit = false;
+
 
     //Overriden method onCreateView
     @Override
@@ -51,12 +55,26 @@ public class ContactFragment extends Fragment {
         //Returning the layout file after inflating
         //Change R.layout.tab1 in you classes
         view = inflater.inflate(R.layout.fragment_contacts, container, false);
+        Data data = Data.getInstance();
 
         lvUsers = (ListView) view.findViewById(R.id.lvUsers);
-//        usersAdapter = new MyAdapter(getActivity(), R.layout.single_contant_layout, users);
-//        lvUsers.setAdapter(usersAdapter);
 
-        new GetUsersTask().execute();
+        // if we are in edit event
+        if (getActivity().getIntent().getSerializableExtra("event") != null) {
+            event = (Event) getActivity().getIntent().getSerializableExtra("event");
+            inEdit = true;
+            List<User> existingUser = new ArrayList<>(event.getUsers()); //set to array list
+            users = getContacts(existingUser);
+            usersAdapter = new MyAdapter(getActivity(), R.layout.single_contant_layout, users);
+            lvUsers.setAdapter(usersAdapter);
+        } else{
+            if (data.isOnline() == false){
+
+            } else{
+                new GetUsersTask().execute();
+            }
+        }
+
 
         lvUsers.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -70,6 +88,7 @@ public class ContactFragment extends Fragment {
 
             }
         });
+
 
         return view;
     }
@@ -169,6 +188,7 @@ public class ContactFragment extends Fragment {
                     if (isChecked){
                         User us = (User) getItem(position);
                         data.addUser(us);
+
                     }else{
                         User us = (User) getItem(position);
                         data.removeUser(us);
@@ -176,6 +196,10 @@ public class ContactFragment extends Fragment {
                     Log.d("USERS","users size: " + data.getUsers().size());
                 }
             });
+
+            if (inEdit){
+                holder.checkBox.setChecked(true);
+            }
 
             return convertView;
 

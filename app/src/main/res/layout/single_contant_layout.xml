@@ -4,7 +4,6 @@
     android:layout_height="match_parent"
     android:orientation="horizontal"
     android:weightSum="10"
-    android:layout_margin="10dp"
     android:padding="10dp"
     android:background="@drawable/contact"
     android:clickable="false"
@@ -14,15 +13,16 @@
     >
 
 
-    <ImageView
+    <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/imgViewContact"
-        android:src="@drawable/ic_perm_contact_calendar"
+        android:id="@+id/checkBox"
         android:layout_weight="2"
+        android:layout_gravity="start|center"
         />
 
     <TextView
+        android:layout_gravity="start|center"
         android:text="to be changed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -30,13 +30,15 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:id="@+id/tvUserName" />
 
-    <CheckBox
+    <ImageView
+        android:layout_gravity="start|center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/checkBox"
+        android:id="@+id/imgViewContact"
+        android:src="@drawable/ic_perm_contact_calendar"
         android:layout_weight="2"
-        android:gravity="end"
-        android:layout_gravity="end"
         />
+
+
 
     </LinearLayout>

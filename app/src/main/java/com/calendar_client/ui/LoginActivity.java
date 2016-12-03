@@ -15,15 +15,21 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.calendar_client.R;
+import com.calendar_client.data.Event;
 import com.calendar_client.data.User;
 import com.calendar_client.utils.ApplicationConstants;
+import com.calendar_client.utils.Data;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -34,12 +40,14 @@ public class LoginActivity extends AppCompatActivity {
     private User user;
     private SharedPreferences sharedPreferences;
 
+    private Data data;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        Typeface typeface = Typeface.createFromAsset(getAssets(), "BreeSerif-Regular.ttf");
+//        Typeface typeface = Typeface.createFromAsset(getAssets(), "BreeSerif-Regular.ttf");
 
         // link layout components
         etEmail = (EditText) findViewById(R.id.etEmail);
@@ -47,10 +55,11 @@ public class LoginActivity extends AppCompatActivity {
         btnLogin = (Button) findViewById(R.id.btnLogin);
         tvSignUp = (TextView) findViewById(R.id.tvSignUp);
 
-        etEmail.setTypeface(typeface);
-        etPassword.setTypeface(typeface);
-        btnLogin.setTypeface(typeface);
-        tvSignUp.setTypeface(typeface);
+        data = Data.getInstance();
+//        etEmail.setTypeface(typeface);
+//        etPassword.setTypeface(typeface);
+//        btnLogin.setTypeface(typeface);
+//        tvSignUp.setTypeface(typeface);
 
         // get user from shared preference. if doesnt exist return empty string
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
@@ -59,61 +68,75 @@ public class LoginActivity extends AppCompatActivity {
         // if user exist, move on to home screen
         if (userJSON != null && !userJSON.equals("")) {
             Gson gson = new Gson();
-            user =  gson.fromJson(userJSON,User.class);
+            user = gson.fromJson(userJSON, User.class);
 
-            Log.d("SHARED",userJSON);
+            Log.d("SHARED", userJSON);
 
-
-            new RefreshTokenTask().execute();
+            if (data.isOnline()) {
+                new RefreshTokenTask().execute();
+            }
 
             finish();
-            Intent homeScreen = new Intent(this, CalendarActivity.class);
-            startActivity(homeScreen);
+            Intent intent = new Intent(LoginActivity.this, CalendarActivity.class);
+            startActivity(intent);
+        } else {
+
+            // link layout components
+            tvSignUp = (TextView) findViewById(R.id.tvSignUp);
+            etEmail = (EditText) findViewById(R.id.etEmail);
+            etPassword = (EditText) findViewById(R.id.etPassword);
+            btnLogin = (Button) findViewById(R.id.btnLogin);
+
+            btnLogin.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    boolean valid = true;
+                    btnLogin.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            boolean valid = true;
+
+                            String password = etPassword.getText().toString();
+                            if (password.isEmpty()) {
+                                etPassword.setError(getString(R.string.login_password_error_empty));
+                                valid = false;
+                            } else if (password.length() < 5) {
+                                etPassword.setError(getString(R.string.login_password_error_length));
+                                valid = false;
+                            } else {
+                                etPassword.setError(null);
+                            }
+
+                            String email = etEmail.getText().toString();
+                            if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                                etEmail.setError(getString(R.string.login_email_error_invalid));
+                                valid = false;
+                            } else if (email.isEmpty()) {
+                                etEmail.setError(getString(R.string.login_email_error_empty));
+                                valid = false;
+                            } else {
+                                etEmail.setError(null);
+                            }
+
+                            if (valid) {
+                                btnLogin.setEnabled(false);
+                                new LoginTask().execute();
+                            }
+                        }
+                    });
+
+                    tvSignUp.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent signUpIntent = new Intent(LoginActivity.this, SignUpActivity.class);
+                            startActivity(signUpIntent);
+                        }
+                    });
+                }
+            });
         }
-
-        btnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                boolean valid = true;
-
-                String password = etPassword.getText().toString();
-                if (password.isEmpty()) {
-                    etPassword.setError(getString(R.string.login_password_error_empty));
-                    valid = false;
-                } else if (password.length() < 5) {
-                    etPassword.setError(getString(R.string.login_password_error_length));
-                    valid = false;
-                } else {
-                    etPassword.setError(null);
-                }
-
-                String email = etEmail.getText().toString();
-                if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-                    etEmail.setError(getString(R.string.login_email_error_invalid));
-                    valid = false;
-                } else if (email.isEmpty()) {
-                    etEmail.setError(getString(R.string.login_email_error_empty));
-                    valid = false;
-                } else {
-                    etEmail.setError(null);
-                }
-
-                if (valid) {
-                    btnLogin.setEnabled(false);
-                    new LoginTask().execute();
-                }
-            }
-        });
-
-        tvSignUp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent signUpIntent = new Intent(LoginActivity.this, SignUpActivity.class);
-                startActivity(signUpIntent);
-            }
-        });
-
     }
+
 
     private class LoginTask extends AsyncTask<String, Void, String> {
         String email;
@@ -178,9 +201,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 new RefreshTokenTask().execute();
 
-                Intent intent = new Intent(LoginActivity.this, CalendarActivity.class);
-                startActivity(intent);
-                LoginActivity.this.finish();
+                new GetSharedEventsTask().execute();
 
             } else { // if response is null - user doesnt exist
                 btnLogin.setEnabled(true);
@@ -190,6 +211,73 @@ public class LoginActivity extends AppCompatActivity {
         }
 
     }
+
+    private class GetSharedEventsTask extends AsyncTask<String, Void, String> {
+        List<Event> events;
+
+        @Override
+        protected void onPreExecute() {
+            setContentView(R.layout.progress_bar_layout);
+
+        }
+
+        // executing
+        @Override
+        protected String doInBackground(String... strings) {
+            Log.e("SharedEvents","In Shared Events task");
+            StringBuilder response;
+            try {
+                URL url = new URL(ApplicationConstants.GET_ALL_SHARED_EVENTS + "?id=" + user.getId());
+                response = new StringBuilder();
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                Log.e("DEBUG", conn.getResponseCode() + "");
+                if (conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
+                    Log.e("DEBUG", conn.getResponseMessage());
+                    return null;
+                }
+
+                BufferedReader input = new BufferedReader(
+                        new InputStreamReader(conn.getInputStream()));
+
+                String line;
+                while ((line = input.readLine()) != null) {
+                    response.append(line + "\n");
+                }
+
+                input.close();
+
+                conn.disconnect();
+
+                Type listType = new TypeToken<ArrayList<Event>>() {
+                }.getType();
+                List<Event> sharedEvents = new Gson().fromJson(response.toString(), listType);
+                data.setSharedEvents(sharedEvents);
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String response) {
+            Log.d("EVENT-SIZE", "events size: " + data.getSharedEvents().size());
+            if (data.getSharedEvents().size() > 0) {
+                Log.d("EVENT-SIZE", "event: " + data.getSharedEvents().get(0).toString());
+                Log.d("EVENT-SIZE", "event: " + data.getSharedEvents().get(0).getUsers().toString());
+            }
+
+            finish();
+            Intent intent = new Intent(LoginActivity.this, CalendarActivity.class);
+            startActivity(intent);
+
+        }
+
+    }
+
 
     private class RefreshTokenTask extends AsyncTask<String, Void, String> {
         // get the email and password - before executing task

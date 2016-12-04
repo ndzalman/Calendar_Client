@@ -1,17 +1,21 @@
 package com.calendar_client.ui;
 
+import android.Manifest;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.PermissionChecker;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -70,6 +74,7 @@ public class SignUpActivity extends AppCompatActivity {
     private boolean numberValidate = false;
     private LinearLayout progressLayout;
     private LinearLayout formLayout;
+    private boolean permissionGranted = false;
 
 
     @Override
@@ -106,7 +111,10 @@ public class SignUpActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 if (validate()){
-                    initDialog();
+                    checkPermission();
+                    if (permissionGranted) {
+                        initDialog();
+                    }
                     btnSignUp.setEnabled(false);
                 }
             }
@@ -118,6 +126,51 @@ public class SignUpActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    private void checkPermission() {
+        int permission;
+        if (Build.VERSION.SDK_INT < 23) {
+            permission = PermissionChecker.checkSelfPermission(SignUpActivity.this, Manifest.permission.SEND_SMS);
+            if (permission == PermissionChecker.PERMISSION_GRANTED) {
+                permissionGranted = true;
+            } else {
+                ActivityCompat.requestPermissions(SignUpActivity.this, new String[]{Manifest.permission.SEND_SMS
+                }, 1);
+            }
+        } else { //api 23 and above
+            permission = checkSelfPermission(Manifest.permission.SEND_SMS);
+            if (permission != PackageManager.PERMISSION_GRANTED) {
+                // We don't have permission so prompt the user
+                requestPermissions(
+                        new String[]{Manifest.permission.SEND_SMS},
+                        1);
+            } else {
+                permissionGranted = true;
+            }
+        }
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case 1: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    initDialog();
+
+                } else{
+                    // Permission Denied
+                    Toast.makeText(SignUpActivity.this,
+                            "We couldn't confirm your phone number. please approve sending sms",
+                            Toast.LENGTH_SHORT)
+                            .show();
+                }
+                return;
+            }
+
+        }
     }
 
     private void initDialog(){
@@ -264,7 +317,7 @@ public class SignUpActivity extends AppCompatActivity {
         protected void onPreExecute() {
             user = new User();
             user.setEmail(etEmail.getText().toString());
-            user.setPhoneNUmber(etPhoneNumber.getText().toString());
+            user.setPhoneNumber(etPhoneNumber.getText().toString());
             Calendar dateOfBirth = Calendar.getInstance();
             dateOfBirth.set(Calendar.YEAR,year);
             dateOfBirth.set(Calendar.MONTH,month);
@@ -337,11 +390,13 @@ public class SignUpActivity extends AppCompatActivity {
                 formLayout.setVisibility(View.VISIBLE);
                 Snackbar snackbar = Snackbar
                         .make(formLayout, getString(R.string.sign_up_successful), Snackbar.LENGTH_LONG);
-                snackbar.setActionTextColor(getResources().getColor(R.color.colorPrimary));
+                snackbar.setActionTextColor(ContextCompat.getColor(SignUpActivity.this,R.color.colorPrimary));
+//                snackbar.setActionTextColor(getResources().getColor(R.color.colorPrimary));
                 View sbView = snackbar.getView();
                 sbView.setBackgroundColor(ContextCompat.getColor(SignUpActivity.this, android.R.color.white));
                 TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
-                textView.setTextColor(getResources().getColor(R.color.colorPrimary));
+                textView.setTextColor(ContextCompat.getColor(SignUpActivity.this,R.color.colorPrimary));
+//                textView.setTextColor(getResources().getColor(R.color.colorPrimary));
                 snackbar.show();
 
                 Intent intent = new Intent(SignUpActivity.this, LoginActivity.class);

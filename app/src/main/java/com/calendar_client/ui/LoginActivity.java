@@ -66,75 +66,73 @@ public class LoginActivity extends AppCompatActivity {
         String userJSON = sharedPreferences.getString("user", "");
 
         // if user exist, move on to home screen
-        if (userJSON != null && !userJSON.equals("")) {
+        if (!userJSON.equals("")) {
             Gson gson = new Gson();
             user = gson.fromJson(userJSON, User.class);
 
             Log.d("SHARED", userJSON);
 
             if (data.isOnline()) {
-                new RefreshTokenTask().execute();
+                new LoginTask().execute();
+
             }
 
             finish();
             Intent intent = new Intent(LoginActivity.this, CalendarActivity.class);
             startActivity(intent);
-        } else {
-
-            // link layout components
-            tvSignUp = (TextView) findViewById(R.id.tvSignUp);
-            etEmail = (EditText) findViewById(R.id.etEmail);
-            etPassword = (EditText) findViewById(R.id.etPassword);
-            btnLogin = (Button) findViewById(R.id.btnLogin);
-
-            btnLogin.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    boolean valid = true;
-                    btnLogin.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            boolean valid = true;
-
-                            String password = etPassword.getText().toString();
-                            if (password.isEmpty()) {
-                                etPassword.setError(getString(R.string.login_password_error_empty));
-                                valid = false;
-                            } else if (password.length() < 5) {
-                                etPassword.setError(getString(R.string.login_password_error_length));
-                                valid = false;
-                            } else {
-                                etPassword.setError(null);
-                            }
-
-                            String email = etEmail.getText().toString();
-                            if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-                                etEmail.setError(getString(R.string.login_email_error_invalid));
-                                valid = false;
-                            } else if (email.isEmpty()) {
-                                etEmail.setError(getString(R.string.login_email_error_empty));
-                                valid = false;
-                            } else {
-                                etEmail.setError(null);
-                            }
-
-                            if (valid) {
-                                btnLogin.setEnabled(false);
-                                new LoginTask().execute();
-                            }
-                        }
-                    });
-
-                    tvSignUp.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Intent signUpIntent = new Intent(LoginActivity.this, SignUpActivity.class);
-                            startActivity(signUpIntent);
-                        }
-                    });
-                }
-            });
         }
+
+        // link layout components
+        tvSignUp = (TextView) findViewById(R.id.tvSignUp);
+        etEmail = (EditText) findViewById(R.id.etEmail);
+        etPassword = (EditText) findViewById(R.id.etPassword);
+        btnLogin = (Button) findViewById(R.id.btnLogin);
+
+
+        tvSignUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent signUpIntent = new Intent(LoginActivity.this, SignUpActivity.class);
+                startActivity(signUpIntent);
+            }
+        });
+
+        btnLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                boolean valid = true;
+
+                String password = etPassword.getText().toString();
+                if (password.isEmpty()) {
+                    etPassword.setError(getString(R.string.login_password_error_empty));
+                    valid = false;
+                } else if (password.length() < 5) {
+                    etPassword.setError(getString(R.string.login_password_error_length));
+                    valid = false;
+                } else {
+                    etPassword.setError(null);
+                }
+
+                String email = etEmail.getText().toString();
+                if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                    etEmail.setError(getString(R.string.login_email_error_invalid));
+                    valid = false;
+                } else if (email.isEmpty()) {
+                    etEmail.setError(getString(R.string.login_email_error_empty));
+                    valid = false;
+                } else {
+                    etEmail.setError(null);
+                }
+
+                if (valid) {
+                    btnLogin.setEnabled(false);
+                    user = new User();
+                    user.setEmail(etEmail.getText().toString());
+                    user.setPassword(etPassword.getText().toString());
+                    new LoginTask().execute();
+                }
+            }
+        });
     }
 
 
@@ -145,8 +143,8 @@ public class LoginActivity extends AppCompatActivity {
         // get the email and password - before executing task
         @Override
         protected void onPreExecute() {
-            email = etEmail.getText().toString();
-            password = etPassword.getText().toString();
+            email = user.getEmail();
+            password = user.getPassword();
         }
 
         // executing
@@ -192,12 +190,17 @@ public class LoginActivity extends AppCompatActivity {
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 Gson gson = new Gson();
                 user = gson.fromJson(response, User.class);
+                if (user.getImage() != null) {
+                    Data data = Data.getInstance();
+                    data.setImgByte(user.getImage());
+                    user.setImage(null);
+                }
                 String userJSON = gson.toJson(user);
 
                 editor.putString("user", userJSON);
                 editor.apply();
 
-                Log.d("SHARED",userJSON);
+                Log.d("SHARED", userJSON);
 
                 new RefreshTokenTask().execute();
 
@@ -224,7 +227,7 @@ public class LoginActivity extends AppCompatActivity {
         // executing
         @Override
         protected String doInBackground(String... strings) {
-            Log.e("SharedEvents","In Shared Events task");
+            Log.e("SharedEvents", "In Shared Events task");
             StringBuilder response;
             try {
                 URL url = new URL(ApplicationConstants.GET_ALL_SHARED_EVENTS + "?id=" + user.getId());
@@ -288,7 +291,7 @@ public class LoginActivity extends AppCompatActivity {
             token = FirebaseInstanceId.getInstance().getToken();
             user.setToken(token);
             Log.e("TOKEN", token);
-            Log.d("REFRESH","user id: " + user.getId());
+            Log.d("REFRESH", "user id: " + user.getId());
         }
 
         // executing
@@ -297,7 +300,7 @@ public class LoginActivity extends AppCompatActivity {
         protected String doInBackground(String... strings) {
             StringBuilder response;
             try {
-                URL url = new URL(ApplicationConstants.REFRESH_TOKEN_URL+"?id="+user.getId()+"&token="+token);
+                URL url = new URL(ApplicationConstants.REFRESH_TOKEN_URL + "?id=" + user.getId() + "&token=" + token);
                 response = new StringBuilder();
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 if (conn.getResponseCode() != HttpURLConnection.HTTP_OK) {

@@ -1,5 +1,6 @@
 package com.calendar_client.ui;
 
+import android.Manifest;
 import android.app.AlarmManager;
 import android.app.DatePickerDialog;
 import android.app.Notification;
@@ -8,15 +9,19 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
+import android.support.v4.content.PermissionChecker;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -85,6 +90,7 @@ public class EventDetailsFragement extends Fragment implements GoogleApiClient.O
     private Calendar c;
     private View view;
     private String location = "";
+    private boolean permissionGranted = false;
 
     private GoogleApiClient mGoogleApiClient;
 
@@ -263,10 +269,10 @@ public class EventDetailsFragement extends Fragment implements GoogleApiClient.O
             }
         });
         Data data = Data.getInstance();
-        if (data.isOnline() == false){
+        if (!data.isOnline()){
             fabDelete.setVisibility(View.GONE);
             fabDone.setVisibility(View.GONE);
-            tvTitle.setText("Event Details");
+            tvTitle.setText(getString(R.string.edit_event_title));
         } else{
             initDateAndTimePicker();
         }
@@ -480,7 +486,7 @@ public class EventDetailsFragement extends Fragment implements GoogleApiClient.O
         autocompleteFragment =
                 (PlaceAutocompleteFragment) getActivity().getFragmentManager()
                         .findFragmentById(R.id.place_autocomplete_fragment);
-
+        autocompleteFragment.setHint(getString(R.string.new_event_location_hint));
     }
 
     @Override
@@ -563,7 +569,10 @@ public class EventDetailsFragement extends Fragment implements GoogleApiClient.O
                 boolean isSuccessful = dbHandler.addEvent(event,user.getId());
                 if (isSuccessful) {
                     Log.i(TAG, "Event added successfuly");
-                    scheduleNotification();
+                    checkPermission();
+                    if (permissionGranted) {
+                        scheduleNotification();
+                    }
                 } else {
                     Log.e(TAG, "Event Not added");
                 }
@@ -577,6 +586,53 @@ public class EventDetailsFragement extends Fragment implements GoogleApiClient.O
             } else {
                 fabDone.setEnabled(true);
             }
+        }
+    }
+
+
+    private void checkPermission() {
+        int permission;
+        if (Build.VERSION.SDK_INT < 23) {
+            permission = PermissionChecker.checkSelfPermission(getActivity(), Manifest.permission.SET_ALARM);
+            if (permission == PermissionChecker.PERMISSION_GRANTED) {
+                permissionGranted = true;
+            } else {
+                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.SET_ALARM
+                }, 1);
+            }
+        } else { //api 23 and above
+            permission = getActivity().checkSelfPermission(Manifest.permission.SET_ALARM);
+            if (permission != PackageManager.PERMISSION_GRANTED) {
+                // We don't have permission so prompt the user
+                requestPermissions(
+                        new String[]{Manifest.permission.SET_ALARM},
+                        1);
+            } else {
+                permissionGranted = true;
+            }
+        }
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case 1: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    scheduleNotification();
+
+                } else{
+                    // Permission Denied
+                    Toast.makeText(getActivity(),
+                            "We couldn't schedule notifcation for your event. please approve set alram",
+                            Toast.LENGTH_SHORT)
+                            .show();
+                }
+                return;
+            }
+
         }
     }
 

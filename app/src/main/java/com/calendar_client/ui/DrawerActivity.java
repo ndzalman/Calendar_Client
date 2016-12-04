@@ -2,6 +2,7 @@ package com.calendar_client.ui;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -14,10 +15,12 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.calendar_client.R;
 import com.calendar_client.data.User;
+import com.calendar_client.utils.Data;
 import com.google.gson.Gson;
 import com.prolificinteractive.materialcalendarview.CalendarMode;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
@@ -57,6 +60,14 @@ public abstract class DrawerActivity extends AppCompatActivity {
             tvHeaderTitle.setText(u.getUserName());
         }
 
+        ImageView imgviewHeaderImage = (ImageView) headerView.findViewById(R.id.imgviewHeaderImage);
+        Data data = Data.getInstance();
+        Bitmap b = data.getBitmap();
+        if (b != null) {
+            imgviewHeaderImage.setImageBitmap(b);
+        }
+
+
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem) {
@@ -81,6 +92,8 @@ public abstract class DrawerActivity extends AppCompatActivity {
                         startActivity(eventsActivity);
                         break;
                     case R.id.navigation_item_profile:
+                        Intent profileActivity = new Intent(DrawerActivity.this,ProfileActivity.class);
+                        startActivity(profileActivity);
                         break;
                     case R.id.navigation_item_about:
                         Intent aboutActivity = new Intent(DrawerActivity.this,AboutActivity.class);

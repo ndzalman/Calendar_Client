@@ -1,13 +1,18 @@
 package com.calendar_client.ui;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.content.PermissionChecker;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,6 +25,7 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.calendar_client.R;
 import com.calendar_client.data.ContactDetails;
@@ -46,6 +52,8 @@ public class ContactFragment extends Fragment {
     private List<String> usersNames = new ArrayList<>();
     private Event event;
     private boolean inEdit = false;
+    private boolean permissionGranted = false;
+    private List<User> existingUsers = new ArrayList<>();
 
 
     //Overriden method onCreateView
@@ -63,14 +71,15 @@ public class ContactFragment extends Fragment {
         if (getActivity().getIntent().getSerializableExtra("event") != null) {
             event = (Event) getActivity().getIntent().getSerializableExtra("event");
             inEdit = true;
-            List<User> existingUser = new ArrayList<>(event.getUsers()); //set to array list
-            users = getContacts(existingUser);
+            existingUsers = new ArrayList<>(event.getUsers()); //set to array list
+            checkPermission();
+            if (permissionGranted) {
+                users = getContacts(existingUsers);
+            }
             usersAdapter = new MyAdapter(getActivity(), R.layout.single_contant_layout, users);
             lvUsers.setAdapter(usersAdapter);
         } else{
-            if (data.isOnline() == false){
-
-            } else{
+            if (data.isOnline()){
                 new GetUsersTask().execute();
             }
         }
@@ -93,9 +102,9 @@ public class ContactFragment extends Fragment {
         return view;
     }
 
-    public ArrayList<User> getContacts(List<User> existingUsers)
+    public List<User> getContacts(List<User> existingUsers)
     {
-        ArrayList<User> allContacts = new ArrayList();
+        List<User> allContacts = new ArrayList<>();
         Cursor phones = getActivity().getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,null,null, null);
         while (phones.moveToNext())
         {
@@ -118,7 +127,7 @@ public class ContactFragment extends Fragment {
             }
 
             for(int i=0; i<existingUsers.size(); i++) {
-                if (existingUsers.get(i).getPhoneNUmber().equals(phoneNumber)){
+                if (existingUsers.get(i).getPhoneNumber().equals(phoneNumber)){
                     usersNames.add(name);
                     allContacts.add(existingUsers.get(i));
                     existingUsers.remove(existingUsers.get(i));
@@ -257,7 +266,7 @@ public class ContactFragment extends Fragment {
 
                 Type listType = new TypeToken<ArrayList<User>>() {
                 }.getType();
-                users = new Gson().fromJson(response.toString(), listType);
+                existingUsers = new Gson().fromJson(response.toString(), listType);
 
 
             } catch (Exception e) {
@@ -265,20 +274,77 @@ public class ContactFragment extends Fragment {
                 return null;
             }
 
-//            users = getContacts();
-
             return null;
         }
 
         @Override
         protected void onPostExecute(String response) {
-            contactsUsers = getContacts(users);
-            if (contactsUsers.size() > 0) {
-                Log.e("users", "users size: " + contactsUsers.size());
+            checkPermission();
+            if (permissionGranted) {
+                users = getContacts(existingUsers);
+                if (users.size() > 0) {
+                    Log.e("users", "users size: " + users.size());
+                }
+                usersAdapter = new MyAdapter(getActivity(), R.layout.single_contant_layout, users);
+                lvUsers.setAdapter(usersAdapter);
             }
-            usersAdapter = new MyAdapter(getActivity(), R.layout.single_contant_layout, contactsUsers);
-            lvUsers.setAdapter(usersAdapter);
         }
 
+    }
+
+    private void checkPermission() {
+        int permission1;
+        int permission2;
+
+        if (Build.VERSION.SDK_INT < 23) {
+            permission1 = PermissionChecker.checkSelfPermission(getActivity(), Manifest.permission.READ_CONTACTS);
+            permission2 = PermissionChecker.checkSelfPermission(getActivity(), Manifest.permission.READ_PHONE_STATE);
+
+            if (permission1 == PermissionChecker.PERMISSION_GRANTED && permission2 == PermissionChecker.PERMISSION_GRANTED) {
+                permissionGranted = true;
+            } else {
+                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_CONTACTS,Manifest.permission.READ_PHONE_STATE},
+                        1);
+            }
+        } else { //api 23 and above
+            permission1 = getActivity().checkSelfPermission(Manifest.permission.READ_CONTACTS);
+            permission2 = getActivity().checkSelfPermission(Manifest.permission.READ_PHONE_STATE);
+
+            if (permission1 != PackageManager.PERMISSION_GRANTED || permission2 != PackageManager.PERMISSION_GRANTED) {
+                // We don't have permission so prompt the user
+                requestPermissions(
+                        new String[]{Manifest.permission.READ_CONTACTS,Manifest.permission.READ_PHONE_STATE},
+                        1);
+            } else {
+                permissionGranted = true;
+            }
+        }
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case 1: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    users = getContacts(existingUsers);
+                    if (users.size() > 0) {
+                        Log.e("users", "users size: " + users.size());
+                    }
+                    usersAdapter = new MyAdapter(getActivity(), R.layout.single_contant_layout, users);
+                    lvUsers.setAdapter(usersAdapter);
+
+                } else{
+                    // Permission Denied
+                    Toast.makeText(getActivity(),
+                            "We couldn't get your contacts for your event. please approve this permission",
+                            Toast.LENGTH_SHORT)
+                            .show();
+                }
+                break;
+            }
+
+        }
     }
 }

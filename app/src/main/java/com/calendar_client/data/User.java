@@ -51,6 +51,11 @@ public class User implements Serializable{
     private String token;
 
     /**
+     * image of the user
+     */
+    private byte[] image;
+
+    /**
      * Events of the user, one user can have many events
      */
     private Set<Event> events = new HashSet<>();
@@ -228,7 +233,7 @@ public class User implements Serializable{
      * Returns the phone number of the user
      * @return the phone number of the user
      */
-    public String getPhoneNUmber() {
+    public String getPhoneNumber() {
         return phoneNumber;
     }
 
@@ -236,8 +241,24 @@ public class User implements Serializable{
      * Sets the phone number of the user
      * @param phoneNumber the token of the user
      */
-    public void setPhoneNUmber(String phoneNumber) {
+    public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    /**
+     * Returns the image of the user
+     * @return the image of the user
+     */
+    public byte[] getImage() {
+        return image;
+    }
+
+    /**
+     * Sets the image of the user
+     * @param image the image of the user
+     */
+    public void setImage(byte[] image) {
+        this.image = image;
     }
 
     @Override

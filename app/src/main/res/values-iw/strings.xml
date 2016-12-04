@@ -56,6 +56,7 @@
 
     <!--New/Edit Event Screen -->
     <string name="new_event_title">הוסף אירוע חדש</string>
+    <string name="edit_event_title">פרטי האירוע</string>
     <string name="new_event_edit_title">ערוך אירוע</string>
     <string name="new_event_title_hint">שם האירוע</string>
     <string name="new_event_description_hint">תיאור</string>
@@ -92,5 +93,28 @@
 
     <!--Contact fragnebt-->
     <string name="add_contacts">הוסף אנשי קשר לאירוע זה</string>
+
+    <!-- Events -->
+    <string name="events_title">אירועים קרובים</string>
+    <string name="no_events_title">אין לך אירועים</string>
+
+    <!-- Profile -->
+    <string name="profile_password">שנה סיסמא</string>
+    <string name="profile_phone">טלפון נייד</string>
+    <string name="profile_user_name">שם משתמש</string>
+    <string name="profile_email">דואר אלקטרוני</string>
+    <string name="profile_btn_update">עדכן פרטים</string>
+
+
+    <!-- Change Password Dialog -->
+    <string name="dialog_old_password">סיסמא קודמת</string>
+    <string name="dialog_new_password">סיסמא חדשה</string>
+    <string name="dialog_confirm_password">אמת סיסמא חדשה</string>
+    <string name="dialog_success">הסיסמא שונתה בהצלחה</string>
+    <string name="dialog_fail">הסיסמאות לא תואמות!</string>
+    <string name="dialog_old_fail">הסיסמא הישנה איננה נכונה</string>
+    <string name="dialog_update_success">הפרטים שונו בהצלחה</string>
+    <string name="dialog_update_fail">לא הצלחנו לשנות את הפרטים</string>
+
 
 </resources>

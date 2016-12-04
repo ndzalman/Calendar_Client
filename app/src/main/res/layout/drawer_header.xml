@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="150dp"
     android:background="?attr/colorPrimaryDark"
@@ -9,34 +9,28 @@
     android:gravity="bottom">
 
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="10dp"
-        />
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <TextView
-            android:id="@+id/tvHeaderTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="ישראל ישראלי"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:paddingTop="10dp"/>
-
-        <ImageView
-            android:id="@+id/header_image"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_action_user"
-            android:layout_above="@id/tvHeaderTitle" />
-
-    </RelativeLayout>
+   <TextView
+       android:padding="10dp"
+       android:id="@+id/tvHeaderTitle"
+       android:text="נדב זלמן"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:layout_alignParentEnd="true"
+       android:paddingTop="10dp"
+       android:textAppearance="@style/TextAppearance.AppCompat.Large"
+       android:layout_alignParentBottom="true" />
 
 
-</LinearLayout>
+   <de.hdodenhof.circleimageview.CircleImageView
+       android:layout_width="150dp"
+       android:layout_height="350dp"
+       android:id="@+id/imgviewHeaderImage"
+       android:src="@drawable/ic_action_user"
+       android:layout_alignParentStart="true"
+       app:civ_border_width="0.5dp"
+       app:civ_border_color="#FF000000"
+       android:layout_toStartOf="@+id/tvHeaderTitle" />
+
+
+
+</RelativeLayout>

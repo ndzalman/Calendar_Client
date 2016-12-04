@@ -1,20 +1,27 @@
 package com.calendar_client.ui;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Typeface;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.preference.PreferenceManager;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.content.PermissionChecker;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.telephony.SmsManager;
 import android.util.Log;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.calendar_client.R;
 import com.calendar_client.data.Event;
@@ -44,6 +51,7 @@ public class SplashScreenActivity extends AppCompatActivity {
     private Data data;
     private User user;
     private GetSharedEventsTask getSharedEventsTask;
+    private boolean permissionGranted = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +81,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                         String userJSON = sharedPreferences.getString("user", "");
-                        if (userJSON != null && !userJSON.equals("")) {
+                        if (!userJSON.equals("")) {
                             NextActivity();
                         } else{
                             dialog.cancel();
@@ -118,11 +126,14 @@ public class SplashScreenActivity extends AppCompatActivity {
     }
 
     private void checkConnectivityAndUserLogged(){
-        data.setOnline(isOnline());
+        checkPermission();
+        if (permissionGranted) {
+            data.setOnline(isOnline());
+        }
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String userJSON = sharedPreferences.getString("user", "");
-        if (userJSON != null && !userJSON.equals("")){
+        if (!userJSON.equals("")){
             user = new Gson().fromJson(userJSON, User.class);
             if (data.isOnline()){
                 getSharedEventsTask = new GetSharedEventsTask();
@@ -203,6 +214,60 @@ public class SplashScreenActivity extends AppCompatActivity {
     public boolean isOnline() {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         return cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnectedOrConnecting();
+    }
+
+    private void checkPermission() {
+        int permission1;
+        int permission2;
+
+        if (Build.VERSION.SDK_INT < 23) {
+            permission1 = PermissionChecker.checkSelfPermission(SplashScreenActivity.this, Manifest.permission.INTERNET);
+            permission2 = PermissionChecker.checkSelfPermission(SplashScreenActivity.this, Manifest.permission.ACCESS_NETWORK_STATE);
+
+            if (permission1 == PermissionChecker.PERMISSION_GRANTED && permission2 == PermissionChecker.PERMISSION_GRANTED) {
+                permissionGranted = true;
+            } else {
+                ActivityCompat.requestPermissions(SplashScreenActivity.this, new String[]{Manifest.permission.INTERNET,
+                        Manifest.permission.ACCESS_NETWORK_STATE
+                }, 1);
+            }
+        } else { //api 23 and above
+            permission1 = checkSelfPermission(Manifest.permission.INTERNET);
+            permission2 = checkSelfPermission(Manifest.permission.ACCESS_NETWORK_STATE);
+
+            if (permission1 != PackageManager.PERMISSION_GRANTED || permission2 != PackageManager.PERMISSION_GRANTED ) {
+                // We don't have permission so prompt the user
+                requestPermissions(
+                        new String[]{Manifest.permission.INTERNET,
+                                Manifest.permission.ACCESS_NETWORK_STATE},
+                        1);
+            } else {
+                permissionGranted = true;
+            }
+        }
+
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case 1: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    permissionGranted = true;
+                } else{
+                    // Permission Denied
+                    Toast.makeText(SplashScreenActivity.this,
+                            "We couldn't determine if you hava internet connection," +
+                                    " please approve this permission", Toast.LENGTH_SHORT)
+                            .show();
+                }
+            }
+            break;
+
+        }
     }
 
     private class GetSharedEventsTask extends AsyncTask<String, Void, String> {

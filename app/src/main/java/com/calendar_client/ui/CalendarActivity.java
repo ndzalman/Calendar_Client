@@ -63,6 +63,7 @@ public class CalendarActivity extends DrawerActivity {
     private HashSet<CalendarDay> dates;
     private EventDecorator eventDecorator;
     private Data data;
+    private static List<Event> eventsStatic;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,7 +94,7 @@ public class CalendarActivity extends DrawerActivity {
 
         //get user events by his id from SQLite
         data = Data.getInstance();
-        if (data.isOnline() == false) {
+        if (!data.isOnline()) {
             events = dbHandler.getEventByDay(calendar.getSelectedDate().getCalendar(), user.getId());
             dates = dbHandler.getEventByMonth
                     (calendar.getSelectedDate().getCalendar(), user.getId());
@@ -126,7 +127,7 @@ public class CalendarActivity extends DrawerActivity {
             @Override
             public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
                 Log.e("DayChange","before events size: " + events.size());
-                if (data.isOnline() == false) {
+                if (!data.isOnline()) {
                     events = dbHandler.getEventByDay(date.getCalendar(), user.getId());
                 } else{
                     events = filterEventsByDay(calendar.getSelectedDate().getCalendar());
@@ -159,7 +160,7 @@ public class CalendarActivity extends DrawerActivity {
             @Override
             public void onMonthChanged(MaterialCalendarView widget, CalendarDay date) {
                 Log.e("monthChanged", "before dates size " + dates.size());
-                if (data.isOnline() == false) {
+                if (!data.isOnline()) {
                     dates = dbHandler.getEventByMonth(date.getCalendar(), user.getId());
                 } else{
                     dates = filterEventsByMonth(date.getCalendar());
@@ -173,12 +174,13 @@ public class CalendarActivity extends DrawerActivity {
             }
         });
 
-        if (data.isOnline() == false){
+        if (!data.isOnline()){
             fabAdd.setVisibility(View.GONE);
 
         }
 
     }
+
 
     //events adapter
     private class MyAdapter extends BaseAdapter {
@@ -292,13 +294,15 @@ public class CalendarActivity extends DrawerActivity {
     }
 
     private HashSet<CalendarDay> filterEventsByMonth(Calendar d){
+        // TODO: change on month listener when changing to week mode
         Calendar between = Calendar.getInstance();
         CalendarDay day;
-        HashSet<CalendarDay> dates = new HashSet<CalendarDay>();
+        HashSet<CalendarDay> dates = new HashSet<>();
 
         List<Event> eventOfToday = new ArrayList<>();
         for (Event e: data.getSharedEvents()){
             Log.d("EVENTS","today: " + d.get(Calendar.MONTH) + " == " + e.getDateStart().get(Calendar.MONTH));
+            Log.d("EVENTS","today: " + d.get(Calendar.DAY_OF_MONTH) + " == " + e.getDateStart().get(Calendar.DAY_OF_MONTH));
             if (e.getDateStart().get(Calendar.MONTH) == d.get(Calendar.MONTH)
                     && e.getDateStart().get(Calendar.YEAR) == d.get(Calendar.YEAR)){
                 day = CalendarDay.from(e.getDateStart());

@@ -58,6 +58,7 @@
 
     <!--New/Edit Event Screen -->
     <string name="new_event_title">Add New Event</string>
+    <string name="edit_event_title">Event Details</string>
     <string name="new_event_title_hint">Event Title</string>
     <string name="new_event_edit_title">Edit Event</string>
     <string name="new_event_date_start_hint">Date Start</string>
@@ -94,6 +95,28 @@
 
     <!--Contact fragnebt-->
     <string name="add_contacts">Add contact to this event</string>
+
+    <!-- Events -->
+    <string name="events_title">Upcoming events</string>
+    <string name="no_events_title">You don\'t have any events!</string>
+
+    <!-- Profile -->
+    <string name="profile_password">Change Password</string>
+    <string name="profile_phone">Mobile Phone</string>
+    <string name="profile_user_name">User Name</string>
+    <string name="profile_email">Email</string>
+    <string name="profile_btn_update">Update</string>
+
+    <!-- Change Password Dialog -->
+    <string name="dialog_old_password">Old Password</string>
+    <string name="dialog_new_password">New Password</string>
+    <string name="dialog_confirm_password">Confirm Password</string>
+    <string name="dialog_success">Password Changed successfully</string>
+    <string name="dialog_fail">Password doenst match!</string>
+    <string name="dialog_old_fail">Old Password is not a match</string>
+    <string name="dialog_update_success">Details Updated successfully</string>
+    <string name="dialog_update_fail">Something went wrong while trying to update your details</string>
+
 
 
 </resources>

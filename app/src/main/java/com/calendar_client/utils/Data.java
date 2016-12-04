@@ -1,7 +1,10 @@
 package com.calendar_client.utils;
 
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.provider.ContactsContract;
+import android.util.Log;
 
 import com.calendar_client.data.ContactDetails;
 import com.calendar_client.data.Event;
@@ -24,7 +27,22 @@ public class Data {
     private Set<User> users = new HashSet<>();
     private List<Event> sharedEvents = new ArrayList<>();
     private boolean isOnline = false;
+    private Bitmap bitmap;
 
+    public Bitmap getBitmap() {
+        Log.d("DATAHOLDER-getbitmap","bitmap: " + bitmap);
+        return bitmap;
+    }
+
+    public void setBitmap(Bitmap bitmap) {
+        this.bitmap = bitmap;
+    }
+
+    public void setImgByte(byte[] imgByte){
+        Bitmap b = BitmapFactory.decodeByteArray(imgByte,0,imgByte.length);
+        this.bitmap = Bitmap.createScaledBitmap(b,350,350,false);
+        Log.d("DATAHOLDER-setbyte","bitmap: " + bitmap);
+    }
     public static Data getInstance() {
         return ourInstance;
     }

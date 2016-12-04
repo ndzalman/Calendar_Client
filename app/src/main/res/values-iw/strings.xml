@@ -15,8 +15,8 @@
 
     <!--LoginScreen -->
     <string name="login_title">התחברות</string>
-    <string name="login_email_hint">הכנס דוא"ל</string>
-    <string name="login_password_hint">הכנס סיסמה</string>
+    <string name="login_email_hint">הכנס דואר אלקטרוני</string>
+    <string name="login_password_hint">הכנס סיסמא</string>
     <string name="login_button">התחבר</string>
     <string name="login_sign_up">אין לך חשבון עדין? צור חשבון</string>
     <string name="login_password_error_length">מינמום 5 אותיות</string>
@@ -75,9 +75,9 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="openDrawer">open_drawer</string>
     <string name="closeDrawer">close_drawer</string>
-    <string name="menu_item_month">חודש</string>
-    <string name="menu_item_week">שבוע</string>
-    <string name="menu_item_day">יום</string>
+    <string name="menu_item_month">תצוגה חודשית</string>
+    <string name="menu_item_week">תצוגה שבועית</string>
+    <string name="menu_item_day">תצוגה יומית</string>
     <string name="menu_item_schedule">לוח זמנים</string>
     <string name="menu_item_profile">פרופיל</string>
     <string name="menu_item_log_out">התנתק</string>
@@ -116,5 +116,13 @@
     <string name="dialog_update_success">הפרטים שונו בהצלחה</string>
     <string name="dialog_update_fail">לא הצלחנו לשנות את הפרטים</string>
 
+    <!-- About Activity -->
+    <string name="about_developers">מפתחים: נדב ועידן זלמן</string>
+    <string name="about_app_version">גרסה: 1.0</string>
+    <string name="about_credits">קרדיטים:\nאייקונים - Freepik\nתודה לאנאל שומראי</string>
+
+    <!-- Tab Layout -->
+    <string name="tab_event_details">פרטי האירוע</string>
+    <string name="tav_event_contacts">הוסף אנשי קשר</string>
 
 </resources>

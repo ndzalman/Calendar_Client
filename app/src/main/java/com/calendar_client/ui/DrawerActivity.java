@@ -85,8 +85,8 @@ public abstract class DrawerActivity extends AppCompatActivity {
                                 .setCalendarDisplayMode(CalendarMode.WEEKS)
                                 .commit();
                         break;
-                    case R.id.navigation_item_day:
-                        break;
+//                    case R.id.navigation_item_day:
+//                        break;
                     case R.id.navigation_item_schedule:
                         Intent eventsActivity = new Intent(DrawerActivity.this,EventsActivity.class);
                         startActivity(eventsActivity);

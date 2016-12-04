@@ -52,16 +52,16 @@
         android:weightSum="10.5"
         android:layout_weight="1.12">
 
-    <!--<TextView-->
-        <!--android:layout_marginTop="10dp"-->
-        <!--android:id="@+id/tvTitle"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:textColor="@color/colorPrimary"-->
-        <!--android:layout_weight="1"-->
-        <!--android:gravity="center"-->
-        <!--android:text="@string/sign_up_title"-->
-        <!--android:textAppearance="?android:attr/textAppearanceLarge" />-->
+    <TextView
+        android:layout_marginTop="10dp"
+        android:id="@+id/tvTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textColor="@color/colorPrimary"
+        android:gravity="center"
+        android:text="@string/sign_up_title"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
 
 
 
@@ -185,7 +185,9 @@
         android:nextFocusDown="@+id/btnSignUp"
         android:text="@string/sign_up_date"
         android:gravity="center"
-        android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+        android:visibility="gone"
+        />
 
 
     <android.support.v7.widget.AppCompatButton

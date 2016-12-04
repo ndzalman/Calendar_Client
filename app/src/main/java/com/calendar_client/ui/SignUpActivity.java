@@ -272,13 +272,13 @@ public class SignUpActivity extends AppCompatActivity {
             etConfirmPassword.setError(null);
         }
 
-        // date validation
-        if (date.equals(getResources().getString(R.string.sign_up_date))) {
-            tvDateOfBirth.setError(getResources().getString(R.string.sign_up_date_empty));
-            valid = false;
-        }else {
-            tvDateOfBirth.setError(null);
-        }
+//        // date validation
+//        if (date.equals(getResources().getString(R.string.sign_up_date))) {
+//            tvDateOfBirth.setError(getResources().getString(R.string.sign_up_date_empty));
+//            valid = false;
+//        }else {
+//            tvDateOfBirth.setError(null);
+//        }
 
         // phone number validation
         if (phoneNumber.isEmpty()) {

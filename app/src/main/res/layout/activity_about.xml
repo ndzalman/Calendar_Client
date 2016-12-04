@@ -26,7 +26,7 @@
 
     <TextView
         android:layout_below="@id/imgViewIcon"
-        android:text="שמות מפתחים"
+        android:text="@string/about_developers"
         android:gravity="start"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -36,7 +36,7 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
     <TextView
-        android:text="גרסת אפליקציה"
+        android:text="@string/about_app_version"
         android:gravity="start"
         android:layout_below="@id/tvNames"
         android:layout_width="wrap_content"
@@ -45,7 +45,7 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
     <TextView
-        android:text="קרדיטים"
+        android:text="@string/about_credits"
         android:gravity="start"
         android:layout_below="@id/tvVersion"
         android:layout_width="wrap_content"

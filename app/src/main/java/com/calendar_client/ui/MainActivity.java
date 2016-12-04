@@ -26,10 +26,10 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
         tabLayout = (TabLayout) findViewById(R.id.tabLayout);
 
         //Adding the tabs using addTab() method
-        tabLayout.addTab(tabLayout.newTab().setText("Event Details"));
+        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.tab_event_details)));
         Data data = Data.getInstance();
         if (data.isOnline()){
-            tabLayout.addTab(tabLayout.newTab().setText("Add Contact"));
+            tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.tav_event_contacts)));
         }
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 

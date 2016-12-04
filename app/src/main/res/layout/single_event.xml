@@ -7,6 +7,8 @@
     android:weightSum="9"
     android:orientation="vertical"
     android:id="@+id/layout"
+    android:layout_gravity="start"
+    android:layoutDirection="rtl"
     >
 
 
@@ -16,6 +18,7 @@
         android:orientation="horizontal"
         android:weightSum="3"
         android:layout_margin="5dp"
+        android:layout_gravity="start"
         >
 
     <ImageView
@@ -29,6 +32,7 @@
 
     <TextView
         android:layout_marginEnd="8dp"
+        android:layout_gravity="start"
         android:gravity="start"
         android:text="Time"
         android:layout_width="0dp"
@@ -40,10 +44,10 @@
         />
 
         <TextView
-            android:gravity="end"
+            android:gravity="start"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="start|center_vertical"
+            android:layout_gravity="start"
             android:layout_weight="1" />
 
 
@@ -56,7 +60,7 @@
         android:orientation="horizontal"
         android:layout_weight="3"
         android:layout_margin="5dp"
-
+        android:layout_gravity="start"
         >
         <ImageView
             android:layout_gravity="start"
@@ -68,6 +72,7 @@
             />
 
         <TextView
+            android:layout_gravity="start"
             android:gravity="start"
             android:text="Title"
             android:layout_marginEnd="8dp"
@@ -82,6 +87,7 @@
             android:layout_marginEnd="8dp"
             android:text="Description"
             android:gravity="start"
+            android:layout_gravity="start"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
@@ -98,7 +104,7 @@
         android:orientation="horizontal"
         android:layout_weight="3"
         android:layout_margin="5dp"
-
+        android:layout_gravity="start"
         >
         <ImageView
             android:layout_gravity="start"
@@ -110,6 +116,7 @@
             />
 
         <TextView
+            android:layout_gravity="start"
             android:layout_marginEnd="8dp"
             android:gravity="start"
             android:text="Location"
@@ -121,7 +128,8 @@
             android:layout_weight="1.5" />
 
         <TextView
-            android:gravity="end"
+            android:gravity="start"
+            android:layout_gravity="start"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"

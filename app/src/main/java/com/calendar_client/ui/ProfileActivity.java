@@ -332,6 +332,7 @@ public class ProfileActivity extends AppCompatActivity {
                     byte[] byteArray = null;
                     ByteArrayOutputStream stream = new ByteArrayOutputStream();
                     Log.e("DEBUG", "Bitmap is :" + bit);
+                    bit = Bitmap.createScaledBitmap(bit,350,350,false);
                     if( bit != null ) {
                         bit.compress(Bitmap.CompressFormat.JPEG, 50, stream);
                         byteArray = stream.toByteArray();

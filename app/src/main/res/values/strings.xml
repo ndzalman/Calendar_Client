@@ -3,11 +3,11 @@
 
     <!--Alert Dialog - No internet-->
     <string name="alert_dialog_title">No Internet Connection</string>
-    <string name="alert_dialog_message">You can still see all the events that you\'ve created</string>
+    <string name="alert_dialog_message">If you continue as offline not all functionality will be available</string>
     <string name="alert_dialog_positive">Go Offline</string>
     <string name="alert_dialog_neutral">Try Again</string>
     <string name="alert_dialog_negative">Exit</string>
-    <string name="exit_alert_dialog_title">User is not logged</string>
+    <string name="exit_alert_dialog_title">You are not logged</string>
 
     <!--SplashScreen status-->
     <string name="splash_screen_status_start">Please Wait..</string>
@@ -128,6 +128,18 @@
 
     <!--Event Details -->
     <string name="event_title">Event Details</string>
+    <string name="event_btn_show_more">Show more</string>
+    <string name="event_btn_show_less">Show less</string>
+    <string name="event_contacts">Participants at the event:</string>
+
+    <!-- Image View content description -->
+    <string name="contact">Contact</string>
+    <string name="title">Title</string>
+    <string name="date">Date</string>
+    <string name="description">Description</string>
+    <string name="location">Location</string>
+    <string name="arrow_left">Left Arrow</string>
+    <string name="arrow_right">Right Arrow</string>
 
 
 </resources>

@@ -22,25 +22,33 @@
                 >
 
                 <LinearLayout
+                    android:paddingBottom="8dp"
+                    android:paddingTop="8dp"
                     android:gravity="center"
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
                     <android.support.design.widget.FloatingActionButton
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginRight="8dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginLeft="8dp"
                         android:id="@+id/fabEventEdit"
-                        android:layout_margin="10dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@drawable/ic_edit_white"
                         />
 
                     <android.support.design.widget.FloatingActionButton
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginRight="8dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginLeft="8dp"
                         android:id="@+id/fabEventDelete"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@drawable/ic_delete_forever"
-                        android:layout_margin="10dp"
                         />
                 </LinearLayout>
             </android.support.v7.widget.CardView>
@@ -63,11 +71,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_weight="3"
             android:layout_margin="5dp"
             android:layout_gravity="start"
             >
             <ImageView
+                android:contentDescription="@string/title"
                 android:layout_gravity="start"
                 android:src="@drawable/ic_details"
                 android:layout_width="0dp"
@@ -81,6 +89,7 @@
                 android:gravity="start"
                 android:text="Title"
                 android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
@@ -110,6 +119,7 @@
             >
 
             <ImageView
+                android:contentDescription="@string/date"
                 android:layout_gravity="start"
                 android:id="@+id/imgViewTime"
                 android:src="@drawable/ic_access_time"
@@ -119,6 +129,7 @@
                 />
 
             <TextView
+                android:layout_marginRight="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_gravity="start"
                 android:gravity="start"
@@ -161,6 +172,7 @@
 
         <TextView
             android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
             android:layout_gravity="start"
             android:gravity="start"
             android:text="Date"
@@ -193,6 +205,7 @@
             >
 
             <ImageView
+                android:contentDescription="@string/description"
                 android:layout_gravity="start"
                 android:id="@+id/imgViewDescription"
                 android:src="@drawable/ic_description"
@@ -204,6 +217,7 @@
 
             <TextView
                 android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
                 android:text="Description"
                 android:gravity="start"
                 android:layout_gravity="start"
@@ -212,14 +226,16 @@
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@color/colorPrimaryDark"
                 android:id="@+id/tvEventDescription"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                />
 
             <TextView
                 android:gravity="start"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                />
 
 
         </LinearLayout>
@@ -235,6 +251,7 @@
             android:layout_gravity="start"
             >
             <ImageView
+                android:contentDescription="@string/location"
                 android:layout_gravity="start"
                 android:src="@drawable/ic_location_on"
                 android:layout_width="0dp"
@@ -246,6 +263,7 @@
             <TextView
                 android:layout_gravity="start"
                 android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
                 android:gravity="start"
                 android:text="Location"
                 android:layout_width="0dp"
@@ -273,9 +291,10 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/locationLayout"
             android:id="@+id/btnShowMore"
-            android:text="Show More"
+            android:text="@string/event_btn_show_more"
             android:background="@color/colorPrimary"
             android:textColor="@color/white"
+            android:padding="10dp"
             />
 
 
@@ -283,18 +302,19 @@
             android:layout_margin="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Contacts"
+            android:text="@string/event_contacts"
             android:layout_below="@+id/btnShowMore"
             android:id="@+id/tvContacts"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:visibility="gone"
+            />
 
         <ListView
-            android:layout_margin="10dp"
             android:layout_below="@+id/tvContacts"
             android:id="@+id/listContacts"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="visible"
+            android:visibility="gone"
             >
 
         </ListView>

@@ -46,7 +46,7 @@
         <activity android:name=".ui.LoginActivity" />
         <activity android:name=".ui.CalendarActivity" />
         <activity android:name=".ui.SignUpActivity" />
-        <activity android:name=".ui.EventsActivity" />
+        <activity android:name=".ui.UpComingEventsActivity" />
 
         <receiver android:name=".utils.NotificationReceiver" />
 
@@ -83,7 +83,6 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyCCE8BydNul-MJ85Oq9duxJU-QRIKIRe8I" />
 
-        <activity android:name=".ui.NotificationEventActivity" />
         <activity android:name=".ui.ProfileActivity" />
         <activity android:name=".ui.DayEventsActivity" />
         <activity android:name=".ui.EventActivity"></activity>

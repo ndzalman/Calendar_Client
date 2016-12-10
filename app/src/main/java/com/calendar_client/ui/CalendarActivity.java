@@ -50,6 +50,8 @@ import com.prolificinteractive.materialcalendarview.OnMonthChangedListener;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -112,14 +114,8 @@ public class CalendarActivity extends DrawerActivity {
 
         //get user events by his id from SQLite
         data = Data.getInstance();
-        if (!data.isOnline()) {
-            events = dbHandler.getEventByDay(calendar.getSelectedDate().getCalendar(), user.getId());
-            dates = dbHandler.getEventByMonth
-                    (calendar.getSelectedDate().getCalendar(), user.getId());
-        } else {
-            events = filterEventsByDay(calendar.getSelectedDate().getCalendar());
-            dates = filterEventsByMonth(calendar.getSelectedDate().getCalendar());
-        }
+        events = filterEventsByDay(calendar.getSelectedDate().getCalendar());
+        dates = filterEventsByMonth(calendar.getSelectedDate().getCalendar());
 
         eventAdapter = new MyAdapter(this, R.layout.single_event, events);
         lvEvents.setAdapter(eventAdapter);
@@ -145,11 +141,7 @@ public class CalendarActivity extends DrawerActivity {
             @Override
             public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
                 Log.e("DayChange", "before events size: " + events.size());
-                if (!data.isOnline()) {
-                    events = dbHandler.getEventByDay(date.getCalendar(), user.getId());
-                } else {
-                    events = filterEventsByDay(calendar.getSelectedDate().getCalendar());
-                }
+                events = filterEventsByDay(calendar.getSelectedDate().getCalendar());
                 Log.e("DayChange", "after events size: " + events.size());
                 eventAdapter.getData().clear();
                 eventAdapter.getData().addAll(events);
@@ -181,11 +173,7 @@ public class CalendarActivity extends DrawerActivity {
                 tvMonthYear.setText(monthName + " " + calendar.getCurrentDate().getYear());
 
                 Log.e("monthChanged", "before dates size " + dates.size());
-                if (!data.isOnline()) {
-                    dates = dbHandler.getEventByMonth(date.getCalendar(), user.getId());
-                } else {
-                    dates = filterEventsByMonth(date.getCalendar());
-                }
+                dates = filterEventsByMonth(date.getCalendar());
 
                 Log.e("monthChanged", "after dates size " + dates.size());
                 calendar.removeDecorator(eventDecorator);
@@ -357,6 +345,22 @@ public class CalendarActivity extends DrawerActivity {
             Log.e("EVENT-USRE", "users in event: " + eventOfToday.get(0).getUsers().toString());
         }
         Log.d("EVENTS", "size of events : " + eventOfToday.size());
+
+        Collections.sort(eventOfToday, new Comparator<Event>() {
+            public int compare(Event e1, Event e2) {
+                if (e1.getDateStart() == null || e1.getDateStart() == null)
+                    return 0;
+
+                if (e1.getDateStart().after(e2.getDateStart())){
+                    return 1;
+                } else if (e1.getDateStart().before(e2.getDateStart())){
+                    return -1;
+
+                } else {
+                    return 0;
+                }
+            }
+        });
         return eventOfToday;
     }
 
@@ -382,6 +386,7 @@ public class CalendarActivity extends DrawerActivity {
                 between = Calendar.getInstance();
                 long diff = (event.getDateEnd().getTimeInMillis()) - (event.getDateStart().getTimeInMillis());
                 long days = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
+                Log.e("MONTH","days between " + days);
                 between.setTimeInMillis(event.getDateStart().getTimeInMillis());
                 Log.e("events", "days: " + days);
                 while (days > 0) {

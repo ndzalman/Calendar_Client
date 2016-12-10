@@ -10,9 +10,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,7 +19,6 @@ import android.widget.TextView;
 
 import com.calendar_client.R;
 import com.calendar_client.data.User;
-import com.calendar_client.utils.Data;
 import com.google.gson.Gson;
 import com.prolificinteractive.materialcalendarview.CalendarMode;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
@@ -89,7 +86,7 @@ public abstract class DrawerActivity extends AppCompatActivity {
                         startActivity(dayEventsActivity);
                         break;
                     case R.id.navigation_item_schedule:
-                        Intent eventsActivity = new Intent(DrawerActivity.this,EventsActivity.class);
+                        Intent eventsActivity = new Intent(DrawerActivity.this,UpComingEventsActivity.class);
                         startActivity(eventsActivity);
                         break;
                     case R.id.navigation_item_profile:

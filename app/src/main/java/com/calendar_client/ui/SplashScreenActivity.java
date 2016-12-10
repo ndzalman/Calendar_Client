@@ -28,6 +28,7 @@ import com.calendar_client.data.Event;
 import com.calendar_client.data.User;
 import com.calendar_client.utils.ApplicationConstants;
 import com.calendar_client.utils.Data;
+import com.calendar_client.utils.EventsDBHandler;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -55,6 +56,7 @@ public class SplashScreenActivity extends AppCompatActivity {
     private RefreshTokenTask refreshTokenTask;
     private boolean permissionGranted = false;
     private boolean logged = false;
+    private EventsDBHandler eventsDBHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +64,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash_screen);
 
         Typeface typeface = Typeface.createFromAsset(getAssets(), "BreeSerif-Regular.ttf");
+        eventsDBHandler = new EventsDBHandler(this);
 
         // link the fields in layout
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
@@ -146,6 +149,8 @@ public class SplashScreenActivity extends AppCompatActivity {
             if (data.isOnline()){
                 getSharedEventsTask = new GetSharedEventsTask();
                 getSharedEventsTask.execute();
+            } else{
+                data.setSharedEvents(eventsDBHandler.getAllEvents(user.getId()));
             }
         }
         new ProgressBarTask().execute();

@@ -42,8 +42,10 @@
                         >
 
                         <ImageView
+                            android:contentDescription="@string/arrow_left"
                             android:layout_gravity="start"
                             android:layout_marginStart="5dp"
+                            android:layout_marginLeft="5dp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             app:srcCompat="@drawable/ic_keyboard_arrow_left"
@@ -61,8 +63,10 @@
                             android:textAppearance="@style/TextAppearance.MaterialCalendarWidget.Header" />
 
                         <ImageView
+                            android:contentDescription="@string/arrow_right"
                             android:layout_gravity="start"
                             android:layout_marginStart="5dp"
+                            android:layout_marginLeft="5dp"
                             android:clickable="true"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -116,6 +120,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
             android:clickable="true"
+            app:fabSize="mini"
             android:src="@drawable/ic_action_add" />
 
     </FrameLayout>

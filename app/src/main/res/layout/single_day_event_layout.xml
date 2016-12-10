@@ -2,13 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="16dp"
-    android:paddingTop="16dp"
-    android:weightSum="6"
+    android:paddingBottom="8dp"
+    android:paddingTop="8dp"
+    android:weightSum="9"
     android:orientation="vertical"
     android:id="@+id/layout"
-    android:layout_gravity="start"
-    android:layoutDirection="rtl"
     >
 
 
@@ -16,12 +14,50 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_weight="3"
-        android:layout_margin="5dp"
-        android:layout_gravity="start"
+        android:weightSum="3"
+        android:paddingBottom="5dp"
+        >
+
+        <ImageView
+            android:contentDescription="@string/date"
+            android:layout_gravity="center"
+            android:id="@+id/imgViewTime"
+            android:src="@drawable/ic_access_time"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            />
+
+
+        <TextView
+            android:gravity="start|center_vertical"
+            android:text="20/01/2016 - 20/01/2016"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:id="@+id/tvTime"
+            android:textColor="@color/colorPrimary"
+            android:layout_weight="1.5"  />
+
+        <TextView
+            android:gravity="end"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/colorPrimaryDark"
+            android:layout_weight="1" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingBottom="5dp"
         >
         <ImageView
-            android:layout_gravity="start"
+            android:contentDescription="@string/title"
+            android:layout_gravity="center"
             android:src="@drawable/ic_details"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -30,10 +66,8 @@
             />
 
         <TextView
-            android:layout_gravity="start"
             android:gravity="start"
             android:text="Title"
-            android:layout_marginEnd="8dp"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
@@ -42,30 +76,63 @@
             android:layout_weight="1.5" />
 
         <TextView
-            android:layout_marginEnd="8dp"
-            android:text="Description"
-            android:gravity="start"
-            android:layout_gravity="start"
+            android:gravity="end"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@color/colorPrimaryDark"
-            android:id="@+id/tvDescription"
             android:layout_weight="1" />
 
     </LinearLayout>
-
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_weight="3"
-        android:layout_margin="5dp"
-        android:layout_gravity="start"
+        android:paddingBottom="5dp"
+        android:id="@+id/descriptionLayout"
         >
         <ImageView
-            android:layout_gravity="start"
+            android:contentDescription="@string/description"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_description"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:id="@+id/imgViewDescription"
+            />
+
+        <TextView
+            android:text="Description"
+            android:gravity="start"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/colorPrimaryDark"
+            android:id="@+id/tvDescription"
+            android:layout_weight="1.5" />
+
+
+        <TextView
+            android:gravity="end"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/colorPrimaryDark"
+            android:layout_weight="1" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:id="@+id/locationLayout"
+        android:paddingBottom="5dp"
+        >
+        <ImageView
+            android:contentDescription="@string/location"
+            android:layout_gravity="center"
             android:src="@drawable/ic_location_on"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -74,8 +141,6 @@
             />
 
         <TextView
-            android:layout_gravity="start"
-            android:layout_marginEnd="8dp"
             android:gravity="start"
             android:text="Location"
             android:layout_width="0dp"
@@ -86,13 +151,13 @@
             android:layout_weight="1.5" />
 
         <TextView
-            android:gravity="start"
-            android:layout_gravity="start"
+            android:gravity="end"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@color/colorPrimaryDark"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            />
 
     </LinearLayout>
 

@@ -22,6 +22,8 @@ public class ApplicationConstants {
     public static final String GET_UPCOMING_EVENTS = "http://"  + SERVER_IP +":"+ PORT + "/CalendarServer/rest/events/getUpcomingEvents";
     public static final String GET_EVENTS_OF_TODAY = "http://"  + SERVER_IP +":"+ PORT + "/CalendarServer/rest/events/getEventsByDay";
 
+    public static final String REMOVE_USER_FROM_EVENT = "http://"  + SERVER_IP +":"+ PORT + "/CalendarServer/rest/users/removeUserFromEvent";
+
     public static final String UPDATE_USER = "http://" + SERVER_IP +":" + PORT + "/CalendarServer/rest/users/updateUser";
 
 

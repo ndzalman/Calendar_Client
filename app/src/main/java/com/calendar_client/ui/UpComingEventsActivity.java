@@ -3,14 +3,12 @@ package com.calendar_client.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,26 +23,20 @@ import android.widget.TextView;
 import com.calendar_client.R;
 import com.calendar_client.data.Event;
 import com.calendar_client.data.User;
-import com.calendar_client.utils.ApplicationConstants;
 import com.calendar_client.utils.Data;
 import com.calendar_client.utils.EventsDBConstants;
 import com.calendar_client.utils.EventsDBHandler;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.lang.reflect.Type;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
-public class EventsActivity extends AppCompatActivity {
+public class UpComingEventsActivity extends AppCompatActivity {
     private List<Event> events;
     private ListView lvEvents;
     private EventsDBHandler dbHandler;
@@ -56,7 +48,7 @@ public class EventsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_events);
+        setContentView(R.layout.activity_upcoming_events);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -71,14 +63,39 @@ public class EventsActivity extends AppCompatActivity {
         user = gson.fromJson(userJSON, User.class);
 
         lvEvents = (ListView) findViewById(R.id.lvEvents);
+        events = new ArrayList<>();
 
         data = Data.getInstance();
-        if (data.isOnline() == false) {
+        if (!data.isOnline()) {
             dbHandler = new EventsDBHandler(this);
-            events = dbHandler.getAllEvents(user.getId());
+//            events = dbHandler.getAllEvents(user.getId());
+            events = dbHandler.getUpComingEvents(user.getId());
             initList();
         }else{
-            new GetUpcomingEvents().execute();
+            int size = 0;
+            Calendar calendar = Calendar.getInstance();
+            List<Event> sortedEvents = new ArrayList<>();
+            sortedEvents.addAll(Data.getInstance().getSharedEvents());
+            Collections.sort(sortedEvents, new Comparator<Event>() {
+                public int compare(Event e1, Event e2) {
+                    if (e1.getDateStart() == null || e1.getDateStart() == null)
+                        return 0;
+                    return e1.getDateStart().compareTo(e2.getDateStart());
+                }
+            });
+
+            for (Event event: sortedEvents){
+                if (size < 10) {
+                    if (event.getDateStart().after(calendar) ||
+                            (event.getDateEnd().after(calendar) && !events.contains(event))) {
+                        events.add(event);
+                        size++;
+                    }
+                }else{
+                    break;
+                }
+            }
+            initList();
         }
 
 
@@ -88,9 +105,9 @@ public class EventsActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 Event event = (Event) adapterView.getItemAtPosition(position);
-                Intent editEvent = new Intent(EventsActivity.this,EditEventActivity.class);
-                editEvent.putExtra("event",event);
-                startActivity(editEvent);
+                Intent eventActivity = new Intent(UpComingEventsActivity.this,EventActivity.class);
+                eventActivity.putExtra("event",event);
+                startActivity(eventActivity);
             }
         });
 
@@ -121,7 +138,7 @@ public class EventsActivity extends AppCompatActivity {
         Context context;
         int layout;
 
-        public MyAdapter(Context context, int layout, List<Event> events){
+         MyAdapter(Context context, int layout, List<Event> events){
             this.context = context;
             this.events = events;
             this.layout = layout;
@@ -161,6 +178,7 @@ public class EventsActivity extends AppCompatActivity {
                 holder.tvLocation = (TextView) convertView.findViewById(R.id.tvLocation);
                 holder.tvDate = (TextView) convertView.findViewById(R.id.tvDate);
                 holder.locationLayout = (LinearLayout) convertView.findViewById(R.id.locationLayout);
+                holder.descriptionLayout = (LinearLayout) convertView.findViewById(R.id.descriptionLayout);
 
                 convertView.setTag(holder);
 
@@ -169,14 +187,18 @@ public class EventsActivity extends AppCompatActivity {
             }
 
             holder.tvTitle.setText(event.getTitle());
-            holder.tvDescription.setText(event.getDescription());
 
-            if (event.getLocation() == null || event.getLocation().isEmpty()) {
+            if (event.getLocation().isEmpty()) {
                 holder.locationLayout.setVisibility(View.GONE);
             }else{
                 holder.tvLocation.setText(event.getLocation());
             }
 
+            if (event.getDescription().isEmpty()){
+                holder.descriptionLayout.setVisibility(View.GONE);
+            }else{
+                holder.tvDescription.setText(event.getDescription());
+            }
 
             SimpleDateFormat sdf = new SimpleDateFormat(EventsDBConstants.TIME_FORMAT);
             Date date = event.getDateStart().getTime();
@@ -203,57 +225,58 @@ public class EventsActivity extends AppCompatActivity {
             TextView tvDate;
             TextView tvLocation;
             LinearLayout locationLayout;
+            LinearLayout descriptionLayout;
         }
     }
 
-    private class GetUpcomingEvents extends AsyncTask<String, Void, String> {
-        // executing
-        @Override
-        protected String doInBackground(String... strings) {
-            StringBuilder response;
-            try {
-                URL url = new URL(ApplicationConstants.GET_UPCOMING_EVENTS + "?id=" + user.getId());
-                response = new StringBuilder();
-                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                Log.e("DEBUG", conn.getResponseCode() + "");
-                if (conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
-                    Log.e("DEBUG", conn.getResponseMessage());
-                    return null;
-                }
-
-                BufferedReader input = new BufferedReader(
-                        new InputStreamReader(conn.getInputStream()));
-
-                String line;
-                while ((line = input.readLine()) != null) {
-                    response.append(line + "\n");
-                }
-
-                input.close();
-
-                conn.disconnect();
-
-                Type listType = new TypeToken<ArrayList<Event>>() {
-                }.getType();
-                List<Event> upcomingEvents = new Gson().fromJson(response.toString(), listType);
-                events = upcomingEvents;
-
-
-            } catch (Exception e) {
-                e.printStackTrace();
-                return null;
-            }
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String response) {
-            initList();
-
-        }
-
-    }
+//    private class GetUpcomingEvents extends AsyncTask<String, Void, String> {
+//        // executing
+//        @Override
+//        protected String doInBackground(String... strings) {
+//            StringBuilder response;
+//            try {
+//                URL url = new URL(ApplicationConstants.GET_UPCOMING_EVENTS + "?id=" + user.getId());
+//                response = new StringBuilder();
+//                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+//                Log.e("DEBUG", conn.getResponseCode() + "");
+//                if (conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
+//                    Log.e("DEBUG", conn.getResponseMessage());
+//                    return null;
+//                }
+//
+//                BufferedReader input = new BufferedReader(
+//                        new InputStreamReader(conn.getInputStream()));
+//
+//                String line;
+//                while ((line = input.readLine()) != null) {
+//                    response.append(line + "\n");
+//                }
+//
+//                input.close();
+//
+//                conn.disconnect();
+//
+//                Type listType = new TypeToken<ArrayList<Event>>() {
+//                }.getType();
+//                List<Event> upcomingEvents = new Gson().fromJson(response.toString(), listType);
+//                events = upcomingEvents;
+//
+//
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//                return null;
+//            }
+//
+//            return null;
+//        }
+//
+//        @Override
+//        protected void onPostExecute(String response) {
+//            initList();
+//
+//        }
+//
+//    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -261,7 +284,7 @@ public class EventsActivity extends AppCompatActivity {
             // Respond to the action bar's Up/Home button
             case android.R.id.home:
                 finish();
-                Intent intent = new Intent(EventsActivity.this, CalendarActivity.class);
+                Intent intent = new Intent(UpComingEventsActivity.this, CalendarActivity.class);
                 startActivity(intent);
                 return true;
         }

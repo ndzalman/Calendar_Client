@@ -23,10 +23,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 
-/**
- * Created by Nadav on 26-Sep-16.
- */
-
 public class EventsDBHandler {
 
     private MySQLiteHelper dbHelper;
@@ -66,7 +62,7 @@ public class EventsDBHandler {
 
     public ArrayList<Event> getAllEvents(int userId)
     {
-        ArrayList<Event> eventsList = new ArrayList<Event>();
+        ArrayList<Event> eventsList = new ArrayList<>();
         // this opens the connection to the DB
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         String selectQuery = "SELECT  * FROM " + EventsDBConstants.EVENTS_TABLE_NAME + " WHERE "
@@ -101,6 +97,7 @@ public class EventsDBHandler {
             }
             eventsList.add(event);
         }
+        eventsCursor.close();
         db.close();
 
         return eventsList;
@@ -109,7 +106,7 @@ public class EventsDBHandler {
 
     public ArrayList<Event> getEventByDay(Calendar calendar,int userId)
     {
-        ArrayList<Event> eventsList = new ArrayList<Event>();
+        ArrayList<Event> eventsList = new ArrayList<>();
         Event event = new Event();
         SimpleDateFormat sdf = new SimpleDateFormat(EventsDBConstants.YEAR_MONTH_FORMAT);
         Date date = calendar.getTime();
@@ -158,7 +155,7 @@ public class EventsDBHandler {
                 }
             }
         }
-
+        eventsCursor.close();
         db.close();
 
         return eventsList;
@@ -210,7 +207,7 @@ public class EventsDBHandler {
 
     public  HashSet<CalendarDay> getEventByMonth(Calendar calendar, int id) {
 
-        HashSet<CalendarDay> dates = new HashSet<CalendarDay>();
+        HashSet<CalendarDay> dates = new HashSet<>();
         Event event = new Event();
         SimpleDateFormat sdf = new SimpleDateFormat(EventsDBConstants.YEAR_MONTH_FORMAT);
         Date date = calendar.getTime();
@@ -255,10 +252,58 @@ public class EventsDBHandler {
                 }
             }
         }
+        dateCursor.close();
         db.close();
 
         return dates;
 
+
+    }
+
+    public ArrayList<Event> getUpComingEvents(int userId)
+    {
+        Calendar today = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat(EventsDBConstants.DATE_FORMAT);
+        String dateTxt = sdf.format(today.getTime());
+
+        ArrayList<Event> eventsList = new ArrayList<>();
+        // this opens the connection to the DB
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        String selectQuery = "SELECT  * FROM " + EventsDBConstants.EVENTS_TABLE_NAME + " WHERE "
+                + EventsDBConstants.EVENTS_USER_ID +"=" + userId + " AND " + EventsDBConstants.EVENT_START_DATE + " >= " + dateTxt;
+        Cursor eventsCursor = db.rawQuery(selectQuery, null);
+
+        // each round in the loop is a record in the DB
+        sdf = new SimpleDateFormat(EventsDBConstants.DATE_TIME_FORMAT);
+        Calendar calendar = Calendar.getInstance();
+        Event event = new Event();
+
+        while(eventsCursor.moveToNext()) {
+            int eventId = eventsCursor.getInt(0);
+            String eventTitle = eventsCursor.getString(2);
+            String eventDescription = eventsCursor.getString(3);
+            String eventStartDate = eventsCursor.getString(4);
+            String eventEndDate = eventsCursor.getString(5);
+
+            event = new Event();
+            event.setId(eventId);
+            event.setTitle(eventTitle);
+            event.setDescription(eventDescription);
+            try {
+                calendar = Calendar.getInstance();
+                calendar.setTime(sdf.parse(eventStartDate));
+                event.setDateStart(calendar);
+                calendar = Calendar.getInstance();
+                calendar.setTime(sdf.parse(eventEndDate));
+                event.setDateEnd(calendar);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            eventsList.add(event);
+        }
+        eventsCursor.close();
+        db.close();
+        return eventsList;
 
     }
 }

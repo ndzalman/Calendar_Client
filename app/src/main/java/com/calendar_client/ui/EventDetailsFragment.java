@@ -27,12 +27,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -143,10 +139,10 @@ public class EventDetailsFragment extends Fragment implements GoogleApiClient.On
         initEditLayoutComponents();
         initEventDetails();
         Data data = Data.getInstance();
-        if (!data.isOnline()){
+        if (!data.isOnline()) {
             fabDone.setVisibility(View.GONE);
             tvTitle.setText(getString(R.string.edit_event_title));
-        } else{
+        } else {
             initDateAndTimePicker();
         }
     }
@@ -210,7 +206,9 @@ public class EventDetailsFragment extends Fragment implements GoogleApiClient.On
             String timeEnd = hourEnd + ":" + minuteEnd;
 
 //            autocompleteFragment.setText(event.getLocation());
-            tvPickLocation.setText(event.getLocation());
+            if (!tvPickLocation.getText().equals(getString(R.string.new_event_location_hint))) {
+                tvPickLocation.setText(event.getLocation());
+            }
 
             tvTimeEnd.setText(timeEnd);
             tvTitle.setText(getResources().getString(R.string.new_event_edit_title));
@@ -240,15 +238,19 @@ public class EventDetailsFragment extends Fragment implements GoogleApiClient.On
 //                        if (c.get(Calendar.YEAR) > year || c.get(Calendar.MONTH) > month || c.get(Calendar.DAY_OF_MONTH) > day) {
 //                            Toast.makeText(getActivity(), getResources().getString(R.string.new_event_date_error), Toast.LENGTH_SHORT).show();
 //                        } else {
-                            tvDateStart.setText(day + "/" + (month + 1) + "/" + year);
-                            yearStart = year;
-                            monthStart = month;
-                            dayStart = day;
+                        tvDateStart.setText(day + "/" + (month + 1) + "/" + year);
+                        yearStart = year;
+                        monthStart = month;
+                        dayStart = day;
 //                        }
                     }
                 }, yearStart, monthStart, dayStart);
 
-                datePickerDialog.getDatePicker().setFirstDayOfWeek(Calendar.SUNDAY);
+                if (Build.VERSION.SDK_INT < 21) {
+                    datePickerDialog.getDatePicker().getCalendarView().setFirstDayOfWeek(Calendar.SUNDAY);
+                } else {
+                    datePickerDialog.getDatePicker().setFirstDayOfWeek(Calendar.SUNDAY);
+                }
                 datePickerDialog.show();
             }
         });
@@ -271,7 +273,11 @@ public class EventDetailsFragment extends Fragment implements GoogleApiClient.On
                     }
                 }, yearEnd, monthEnd, dayEnd);
 
-                datePickerDialog.getDatePicker().setFirstDayOfWeek(Calendar.SUNDAY);
+                if (Build.VERSION.SDK_INT < 21) {
+                    datePickerDialog.getDatePicker().getCalendarView().setFirstDayOfWeek(Calendar.SUNDAY);
+                } else {
+                    datePickerDialog.getDatePicker().setFirstDayOfWeek(Calendar.SUNDAY);
+                }
                 datePickerDialog.show();
             }
         });
@@ -373,7 +379,7 @@ public class EventDetailsFragment extends Fragment implements GoogleApiClient.On
 // your application to the Home screen.
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(getActivity());
 // Adds the back stack for the Intent (but not the Intent itself)
-        stackBuilder.addParentStack(EventsActivity.class);
+        stackBuilder.addParentStack(UpComingEventsActivity.class);
 // Adds the Intent that starts the Activity to the top of the stack
         stackBuilder.addNextIntent(resultIntent);
         PendingIntent resultPendingIntent =
@@ -394,7 +400,7 @@ public class EventDetailsFragment extends Fragment implements GoogleApiClient.On
         String description = etDescription.getText().toString();
 
         if (title.isEmpty() || dateStartTxt.isEmpty() || timeStartTxt.isEmpty() ||
-                dateEndTxt.isEmpty() || timeEndTxt.isEmpty() ){
+                dateEndTxt.isEmpty() || timeEndTxt.isEmpty()) {
             Toast.makeText(getActivity(), getResources().getString(R.string.new_event_empty), Toast.LENGTH_SHORT).show();
             return false;
         } else {
@@ -415,7 +421,12 @@ public class EventDetailsFragment extends Fragment implements GoogleApiClient.On
             dateEnd.set(Calendar.HOUR_OF_DAY, hourEnd);
             dateEnd.set(Calendar.MINUTE, minuteEnd);
             event.setDateEnd(dateEnd);
-            event.setLocation(tvPickLocation.getText().toString());
+
+            if (!tvPickLocation.getText().equals(getString(R.string.new_event_location_hint))) {
+                event.setLocation(tvPickLocation.getText().toString());
+            } else{
+                event.setLocation("");
+            }
 
 
             return true;
@@ -476,8 +487,8 @@ public class EventDetailsFragment extends Fragment implements GoogleApiClient.On
 
                     data.getUsers().clear();
 
-                    Log.d("USERS",event.getUsers().toString());
-                    Log.d("USERS","size " + event.getUsers().size());
+                    Log.d("USERS", event.getUsers().toString());
+                    Log.d("USERS", "size " + event.getUsers().size());
 
 
                     // if this is new event execute the add event task (in post execute we update
@@ -577,11 +588,11 @@ public class EventDetailsFragment extends Fragment implements GoogleApiClient.On
                 SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
                 String userJSON = sharedPreferences.getString("user", "");
                 Gson gson = new Gson();
-                User user = gson.fromJson(userJSON,User.class);
+                User user = gson.fromJson(userJSON, User.class);
 
 
                 event.setId(id);
-                boolean isSuccessful = dbHandler.addEvent(event,user.getId());
+                boolean isSuccessful = dbHandler.addEvent(event, user.getId());
                 if (isSuccessful) {
                     Log.i(TAG, "Event added successfuly");
                     checkSetAlaramPermission();
@@ -660,7 +671,7 @@ public class EventDetailsFragment extends Fragment implements GoogleApiClient.On
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     scheduleNotification();
 
-                } else{
+                } else {
                     // Permission Denied
                     Toast.makeText(getActivity(),
                             "We couldn't schedule notifcation for your event. please approve set alram",
@@ -674,7 +685,7 @@ public class EventDetailsFragment extends Fragment implements GoogleApiClient.On
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     locationPermissionGranted = true;
 
-                } else{
+                } else {
                     // Permission Denied
                     Toast.makeText(getActivity(),
                             "We couldn't add location for your event. please approve location permission",

@@ -14,6 +14,7 @@ import android.os.Build;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -164,6 +165,7 @@ public class ProfileActivity extends AppCompatActivity {
                 }
 
                 imgViewUser.setOnClickListener(new View.OnClickListener() {
+                    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
                     @Override
                     public void onClick(View view) {
                         int permission;
@@ -371,7 +373,6 @@ public class ProfileActivity extends AppCompatActivity {
         Snackbar snackbar = Snackbar
                 .make(view, text, Snackbar.LENGTH_LONG);
         snackbar.setActionTextColor(ContextCompat.getColor(this,R.color.colorPrimary));
-//        snackbar.setActionTextColor(getResources().getColor(R.color.colorPrimary));
         View sbView = snackbar.getView();
         sbView.setBackgroundColor(ContextCompat.getColor(ProfileActivity.this, android.R.color.white));
         TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);

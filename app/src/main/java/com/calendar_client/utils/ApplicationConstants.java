@@ -2,7 +2,7 @@ package com.calendar_client.utils;
 public class ApplicationConstants {
 
    //public static final String SERVER_IP = "10.0.2.2"; // nadav IP
-    private static final String SERVER_IP = "192.168.43.189"; // anael IP
+    private static final String SERVER_IP = "192.168.1.11"; // anael IP
 //   public static final String SERVER_IP = "localhost";
     private static final String PORT = "8080";
 
@@ -20,7 +20,9 @@ public class ApplicationConstants {
 
     public static final String GET_ALL_SHARED_EVENTS = "http://"  + SERVER_IP +":"+ PORT + "/CalendarServer/rest/events/getAllSharedEvents";
     public static final String GET_UPCOMING_EVENTS = "http://"  + SERVER_IP +":"+ PORT + "/CalendarServer/rest/events/getUpcomingEvents";
+    public static final String GET_EVENTS_OF_TODAY = "http://"  + SERVER_IP +":"+ PORT + "/CalendarServer/rest/events/getEventsByDay";
 
     public static final String UPDATE_USER = "http://" + SERVER_IP +":" + PORT + "/CalendarServer/rest/users/updateUser";
+
 
 }

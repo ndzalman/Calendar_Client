@@ -66,21 +66,20 @@ public class LoginActivity extends AppCompatActivity {
         String userJSON = sharedPreferences.getString("user", "");
 
         // if user exist, move on to home screen
-        if (!userJSON.equals("")) {
-            Gson gson = new Gson();
-            user = gson.fromJson(userJSON, User.class);
-
-            Log.d("SHARED", userJSON);
-
-            if (data.isOnline()) {
-                new LoginTask().execute();
-
-            }
-
-            finish();
-            Intent intent = new Intent(LoginActivity.this, CalendarActivity.class);
-            startActivity(intent);
-        }
+//        if (!userJSON.equals("")) {
+//            Gson gson = new Gson();
+//            user = gson.fromJson(userJSON, User.class);
+//
+//            Log.d("SHARED", userJSON);
+//
+//            if (data.isOnline()) {
+//                new LoginTask().execute();
+//            }
+//
+//            finish();
+//            Intent intent = new Intent(LoginActivity.this, CalendarActivity.class);
+//            startActivity(intent);
+//        }
 
         // link layout components
         tvSignUp = (TextView) findViewById(R.id.tvSignUp);
@@ -190,11 +189,6 @@ public class LoginActivity extends AppCompatActivity {
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 Gson gson = new Gson();
                 user = gson.fromJson(response, User.class);
-                if (user.getImage() != null) {
-                    Data data = Data.getInstance();
-                    data.setImgByte(user.getImage());
-                    user.setImage(null);
-                }
                 String userJSON = gson.toJson(user);
 
                 editor.putString("user", userJSON);

@@ -126,5 +126,8 @@
     <string name="tab_event_details">Event Details</string>
     <string name="tav_event_contacts">Add Contacts</string>
 
+    <!--Event Details -->
+    <string name="event_title">Event Details</string>
+
 
 </resources>

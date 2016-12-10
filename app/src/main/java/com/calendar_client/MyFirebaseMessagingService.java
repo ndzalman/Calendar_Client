@@ -30,8 +30,6 @@ public class MyFirebaseMessagingService extends  FirebaseMessagingService {
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-        // ...
-
         // TODO(developer): Handle FCM messages here.
         // Not getting messages here? See why this may be: https://goo.gl/39bRNJ
         Log.d("TEST", "From: " + remoteMessage.getFrom());
@@ -41,7 +39,6 @@ public class MyFirebaseMessagingService extends  FirebaseMessagingService {
             Log.d("TEST", "Message data payload: " + remoteMessage.getData());
             Event e = new Gson().fromJson(remoteMessage.getData().toString(),Event.class);
             Log.d("event","event recived: " +e);
-
             // get user from shared preference. if doesnt exist return empty string
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
             String userJSON = sharedPreferences.getString("user", "");
@@ -50,37 +47,7 @@ public class MyFirebaseMessagingService extends  FirebaseMessagingService {
             EventsDBHandler eventsDBHandler = new EventsDBHandler(this);
             eventsDBHandler.addEvent(e,u.getId());
 
-            NotificationManager notificationManager = (NotificationManager)getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
-
-
-            Notification notification = getNotification(e);
-//            Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-//
-//            NotificationCompat.Builder mBuilder =
-//                    new NotificationCompat.Builder(this)
-//                            .setSmallIcon(R.drawable.ic_stat_name)
-//                            .setContentTitle( e.getTitle())
-//                            .setContentInfo("New event created by")
-//                            .setContentText(message)
-//                            .setAutoCancel(true)
-//                            .setSound(uri);
-//
-//            Intent resultIntent = new Intent(getApplicationContext(), EventsActivity.class);
-//
-//            TaskStackBuilder stackBuilder = TaskStackBuilder.create(getApplicationContext());
-//            stackBuilder.addParentStack(EventsActivity.class);
-//            stackBuilder.addNextIntent(resultIntent);
-//            PendingIntent resultPendingIntent =
-//                    stackBuilder.getPendingIntent(
-//                            0,
-//                            PendingIntent.FLAG_UPDATE_CURRENT
-//                    );
-//            mBuilder.setContentIntent(resultPendingIntent);
-
-
-            // int id = intent.getIntExtra(NOTIFICATION_ID, 0);
-            notificationManager.notify(1, notification);
-            Log.d("TEST", "finished notifiation");
+            sendNotification(e);
 
         }
 
@@ -90,75 +57,55 @@ public class MyFirebaseMessagingService extends  FirebaseMessagingService {
         }
 
 
+
+    }
+
+    private void sendNotification(Event e){
+
         // Also if you intend on generating your own notifications as a result of a received FCM
         // message, here is where that should be initiated. See sendNotification method below.
 
-    }
+//        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
+//        mBuilder.setSmallIcon(R.drawable.calendario_icon_transperent);
+//        mBuilder.setContentTitle(e.getTitle());
+//        mBuilder.setContentText(e.getDescription());
+        int year = e.getDateStart().get(Calendar.YEAR);
+        int month = e.getDateStart().get(Calendar.MONTH);
+        int day = e.getDateStart().get(Calendar.DAY_OF_MONTH);
+        String monthTxt = String.valueOf(month);
+        String dayTxt = String.valueOf(day);
+        if (month < 10){
+            monthTxt = '0'+monthTxt;
+        }
+        if (day < 10){
+            dayTxt = '0'+dayTxt;
+        }
+        String message = dayTxt + "/" + monthTxt + "/" + year;
 
-    private Notification getNotification(Event e) {
-
-        String message = e.getDateStart().get(Calendar.DAY_OF_MONTH) + "/" + e.getDateStart().get(Calendar.MONTH)
-                + " " + e.getDateStart().get(Calendar.HOUR_OF_DAY) + ":" + e.getDateStart().get(Calendar.MINUTE);
-
+        Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
-        .setDefaults(Notification.DEFAULT_ALL)
-
-                // Set required fields, including the small icon, the
-                // notification title, and text.
-                .setSmallIcon(R.drawable.ic_stat_name)
-                .setContentTitle(e.getTitle())
+                .setSmallIcon(R.drawable.calendario_icon_transperent)
+                .setContentTitle( e.getTitle())
+//                .setContentInfo("New event created by")
                 .setContentText(message)
+                .setAutoCancel(true)
+                 .setSound(uri);
 
-                // All fields below this line are optional.
+        Intent resultIntent = new Intent(this, NotificationEventActivity.class);
+        resultIntent.putExtra("event",e);
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+        stackBuilder.addParentStack(NotificationEventActivity.class);
 
-                // Use a default priority (recognized on devices running Android
-                // 4.1 or later)
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+// Adds the Intent that starts the Activity to the top of the stack
+        stackBuilder.addNextIntent(resultIntent);
+        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0,PendingIntent.FLAG_UPDATE_CURRENT);
+        mBuilder.setContentIntent(resultPendingIntent);
 
-                // Provide a large icon, shown with the notification in the
-                // notification drawer on devices running Android 3.0 or later.
-//                .setLargeIcon(R.drawable.ic_stat_name)
+        NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-                // Set ticker text (preview) information for this notification.
-                .setTicker(e.getTitle())
-
-                // Set the pending intent to be initiated when the user touches
-                // the notification.
-                .setContentIntent(
-                        PendingIntent.getActivity(
-                                this,
-                                0,
-                                new Intent(getApplicationContext(), NotificationEventActivity.class).putExtra("event",e),
-                                PendingIntent.FLAG_UPDATE_CURRENT))
-
-                // Show expanded text content on devices running Android 4.1 or
-                // later.
-                .setStyle(new NotificationCompat.BigTextStyle()
-                        .bigText(e.getDescription())
-                        .setBigContentTitle(e.getTitle())
-                        .setSummaryText(message))
-
-
-//                .addAction(
-//                        R.drawable.ic_action_stat_share,
-//                        res.getString(R.string.action_share),
-//                        PendingIntent.getActivity(
-//                                context,
-//                                0,
-//                                Intent.createChooser(new Intent(Intent.ACTION_SEND)
-//                                        .setType("text/plain")
-//                                        .putExtra(Intent.EXTRA_TEXT, "Dummy text"), "Dummy title"),
-//                                PendingIntent.FLAG_UPDATE_CURRENT))
-//                .addAction(
-//                        R.drawable.ic_action_stat_reply,
-//                        res.getString(R.string.action_reply),
-//                        null)
-
-                // Automatically dismiss the notification when it is touched.
-                .setAutoCancel(true);
-
-        return mBuilder.build();
-
+// notificationID allows you to update the notification later on.
+        mNotificationManager.notify(1, mBuilder.build());
     }
+
 }

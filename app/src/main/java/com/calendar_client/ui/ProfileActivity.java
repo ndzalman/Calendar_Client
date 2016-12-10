@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -156,11 +157,11 @@ public class ProfileActivity extends AppCompatActivity {
                 });
 
                 imgViewUser = (ImageView) findViewById(R.id.imgviewUser);
-                Bitmap b = dataHolder.getBitmap();
-                if (b != null) {
+                if (user.getImage() != null){
+                    Bitmap b = BitmapFactory
+                            .decodeByteArray(user.getImage(),0,user.getImage().length);
                     imgViewUser.setImageBitmap(b);
                 }
-
 
                 imgViewUser.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -300,6 +301,12 @@ public class ProfileActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Boolean result) {
             if (result != null && result) {
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                Gson gson = new Gson();
+                String customerJSON = gson.toJson(user);
+                editor.putString("user", customerJSON);
+                editor.apply();
+                btnEditUser.setEnabled(true);
                 btnEditUser.setEnabled(true);
                 showSnackBar(getResources().getString(R.string.dialog_update_success));
             } else {
@@ -337,7 +344,6 @@ public class ProfileActivity extends AppCompatActivity {
                         bit.compress(Bitmap.CompressFormat.JPEG, 50, stream);
                         byteArray = stream.toByteArray();
                     }
-                    dataHolder.setImgByte(byteArray);
                     user.setImage(byteArray);
                     return null;
                 }
@@ -345,7 +351,7 @@ public class ProfileActivity extends AppCompatActivity {
                 @Override
                 protected void onPostExecute(Void aVoid) {
                     //Set it in the ImageView
-                    imgViewUser.setImageBitmap(dataHolder.getBitmap());
+                    imgViewUser.setImageBitmap(bit);
                     file.delete();
                     l1.setVisibility(View.VISIBLE);
                     l2.setVisibility(View.GONE);

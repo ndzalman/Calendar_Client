@@ -27,22 +27,7 @@ public class Data {
     private Set<User> users = new HashSet<>();
     private List<Event> sharedEvents = new ArrayList<>();
     private boolean isOnline = false;
-    private Bitmap bitmap;
 
-    public Bitmap getBitmap() {
-        Log.d("DATAHOLDER-getbitmap","bitmap: " + bitmap);
-        return bitmap;
-    }
-
-    public void setBitmap(Bitmap bitmap) {
-        this.bitmap = bitmap;
-    }
-
-    public void setImgByte(byte[] imgByte){
-        Bitmap b = BitmapFactory.decodeByteArray(imgByte,0,imgByte.length);
-        this.bitmap = Bitmap.createScaledBitmap(b,350,350,false);
-        Log.d("DATAHOLDER-setbyte","bitmap: " + bitmap);
-    }
     public static Data getInstance() {
         return ourInstance;
     }

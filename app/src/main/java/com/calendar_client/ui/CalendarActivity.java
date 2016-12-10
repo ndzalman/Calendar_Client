@@ -1,34 +1,36 @@
 package com.calendar_client.ui;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.gesture.Gesture;
+import android.gesture.GestureLibraries;
+import android.gesture.GestureLibrary;
+import android.gesture.GestureOverlayView;
+import android.gesture.Prediction;
+import android.graphics.Color;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
-import android.telephony.SmsManager;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.EditText;
+import android.widget.CalendarView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.calendar_client.R;
 import com.calendar_client.data.Event;
@@ -37,6 +39,8 @@ import com.calendar_client.utils.Data;
 import com.calendar_client.utils.EventDecorator;
 import com.calendar_client.utils.EventsDBConstants;
 import com.calendar_client.utils.EventsDBHandler;
+import com.calendar_client.utils.OnSwipeTouchListener;
+import com.calendar_client.utils.SwipeGestureDetector;
 import com.google.gson.Gson;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
@@ -49,6 +53,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 public class CalendarActivity extends DrawerActivity {
 
@@ -63,13 +69,22 @@ public class CalendarActivity extends DrawerActivity {
     private HashSet<CalendarDay> dates;
     private EventDecorator eventDecorator;
     private Data data;
-    private static List<Event> eventsStatic;
+    private TextView tvMonthYear;
+    private ImageView imgArrowLeft;
+    private ImageView imgArrowRight;
+    private String monthName;
+    private final Locale israel = new Locale("iw");
+    private final Locale defaultLocale = Locale.getDefault();
+    private boolean isRtl;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calendar);
         super.onCreateDrawer();
+
+        isRtl = Locale.getDefault().getLanguage().toString().equals(israel.getLanguage().toString());
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String userJSON = sharedPreferences.getString("user", "");
@@ -80,6 +95,9 @@ public class CalendarActivity extends DrawerActivity {
         final int color = ContextCompat.getColor(this, R.color.colorPrimary);
 
         calendar = (MaterialCalendarView) findViewById(R.id.calendarView);
+        tvMonthYear= (TextView) findViewById(R.id.tvMonthYear);
+        imgArrowLeft = (ImageView) findViewById(R.id.imgArrowLeft);
+        imgArrowRight = (ImageView) findViewById(R.id.imgArrowRight);
 
         // setting the first day of week
         calendar.state().edit()
@@ -98,7 +116,7 @@ public class CalendarActivity extends DrawerActivity {
             events = dbHandler.getEventByDay(calendar.getSelectedDate().getCalendar(), user.getId());
             dates = dbHandler.getEventByMonth
                     (calendar.getSelectedDate().getCalendar(), user.getId());
-        }else{
+        } else {
             events = filterEventsByDay(calendar.getSelectedDate().getCalendar());
             dates = filterEventsByMonth(calendar.getSelectedDate().getCalendar());
         }
@@ -114,7 +132,7 @@ public class CalendarActivity extends DrawerActivity {
         fabAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent newEventIntent = new Intent(CalendarActivity.this, MainActivity.class);
+                Intent newEventIntent = new Intent(CalendarActivity.this, EditEventActivity.class);
                 newEventIntent.putExtra("selectedDay", calendar.getSelectedDate().getCalendar());
                 startActivity(newEventIntent);
                 finish();
@@ -126,13 +144,13 @@ public class CalendarActivity extends DrawerActivity {
         calendar.setOnDateChangedListener(new OnDateSelectedListener() {
             @Override
             public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
-                Log.e("DayChange","before events size: " + events.size());
+                Log.e("DayChange", "before events size: " + events.size());
                 if (!data.isOnline()) {
                     events = dbHandler.getEventByDay(date.getCalendar(), user.getId());
-                } else{
+                } else {
                     events = filterEventsByDay(calendar.getSelectedDate().getCalendar());
                 }
-                Log.e("DayChange","after events size: " + events.size());
+                Log.e("DayChange", "after events size: " + events.size());
                 eventAdapter.getData().clear();
                 eventAdapter.getData().addAll(events);
                 // update ui list
@@ -144,8 +162,8 @@ public class CalendarActivity extends DrawerActivity {
         lvEvents.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-               Event event = (Event) adapterView.getItemAtPosition(position);
-                Intent editEvent = new Intent(CalendarActivity.this, MainActivity.class);
+                Event event = (Event) adapterView.getItemAtPosition(position);
+                Intent editEvent = new Intent(CalendarActivity.this, EventActivity.class);
                 editEvent.putExtra("event", event);
                 startActivity(editEvent);
 
@@ -159,10 +177,13 @@ public class CalendarActivity extends DrawerActivity {
         calendar.setOnMonthChangedListener(new OnMonthChangedListener() {
             @Override
             public void onMonthChanged(MaterialCalendarView widget, CalendarDay date) {
+                monthName = String.format(Locale.getDefault(),"%tB",calendar.getCurrentDate().getCalendar());
+                tvMonthYear.setText(monthName + " " + calendar.getCurrentDate().getYear());
+
                 Log.e("monthChanged", "before dates size " + dates.size());
                 if (!data.isOnline()) {
                     dates = dbHandler.getEventByMonth(date.getCalendar(), user.getId());
-                } else{
+                } else {
                     dates = filterEventsByMonth(date.getCalendar());
                 }
 
@@ -174,13 +195,62 @@ public class CalendarActivity extends DrawerActivity {
             }
         });
 
-        if (!data.isOnline()){
+        if (!data.isOnline()) {
             fabAdd.setVisibility(View.GONE);
 
         }
 
-    }
+        if (isRtl){
+            calendar.setPagingEnabled(false);
 
+            final GestureDetector gestureDetector = new GestureDetector(this, new SwipeGestureDetector(calendar));
+            calendar.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    return gestureDetector.onTouchEvent(event);
+                }
+            });
+
+            calendar.setOnTouchListener(new OnSwipeTouchListener(CalendarActivity.this) {
+                public void onSwipeRight() {
+                    calendar.goToNext();
+                }
+
+                public void onSwipeLeft() {
+                    calendar.goToPrevious();
+                }
+
+            });
+
+        }
+
+        imgArrowLeft.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isRtl){
+                    calendar.goToNext();
+                }else{
+                    calendar.goToPrevious();
+                }
+            }
+        });
+
+        imgArrowRight.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isRtl){
+                    calendar.goToPrevious();
+                }else{
+                    calendar.goToNext();
+                }
+            }
+        });
+
+        monthName = String.format(Locale.getDefault(),"%tB",calendar.getCurrentDate().getCalendar());
+        tvMonthYear.setText(monthName + " " + calendar.getCurrentDate().getYear());
+        calendar.setTopbarVisible(false);
+
+    }
 
     //events adapter
     private class MyAdapter extends BaseAdapter {
@@ -223,9 +293,7 @@ public class CalendarActivity extends DrawerActivity {
                 convertView = inflater.inflate(layout, parent, false);
                 holder = new ViewHolder();
                 holder.tvTitle = (TextView) convertView.findViewById(R.id.tvTitle);
-                holder.tvDescription = (TextView) convertView.findViewById(R.id.tvDescription);
                 holder.tvTime = (TextView) convertView.findViewById(R.id.tvTime);
-                holder.tvLocation = (TextView) convertView.findViewById(R.id.tvLocation);
 
                 convertView.setTag(holder);
 
@@ -234,8 +302,6 @@ public class CalendarActivity extends DrawerActivity {
             }
 
             holder.tvTitle.setText(event.getTitle());
-            holder.tvDescription.setText(event.getDescription());
-            holder.tvLocation.setText(event.getLocation());
 
             SimpleDateFormat sdf = new SimpleDateFormat(EventsDBConstants.TIME_FORMAT);
             Date date = event.getDateStart().getTime();
@@ -250,9 +316,7 @@ public class CalendarActivity extends DrawerActivity {
 
         private class ViewHolder {
             TextView tvTitle;
-            TextView tvDescription;
             TextView tvTime;
-            TextView tvLocation;
         }
     }
 
@@ -273,11 +337,14 @@ public class CalendarActivity extends DrawerActivity {
                 .show();
     }
 
-    private List<Event> filterEventsByDay(Calendar calendar){
+    private List<Event> filterEventsByDay(Calendar calendar) {
         List<Event> eventOfToday = new ArrayList<>();
-        for (Event event: data.getSharedEvents()) {
-            if (calendar.get(Calendar.YEAR) == event.getDateStart().get(Calendar.YEAR) &&
-                    calendar.get(Calendar.MONTH) == event.getDateStart().get(Calendar.MONTH)) {
+        for (Event event : data.getSharedEvents()) {
+            if ((calendar.get(Calendar.YEAR) == event.getDateStart().get(Calendar.YEAR) ||
+                    calendar.get(Calendar.YEAR) == event.getDateEnd().get(Calendar.YEAR)) &&
+                    (calendar.get(Calendar.MONTH) == event.getDateStart().get(Calendar.MONTH) ||
+                            calendar.get(Calendar.MONTH) == event.getDateEnd().get(Calendar.MONTH))) {
+
                 if (calendar.get(Calendar.DAY_OF_MONTH) == event.getDateStart().get(Calendar.DAY_OF_MONTH) ||
                         calendar.get(Calendar.DAY_OF_MONTH) == event.getDateEnd().get(Calendar.DAY_OF_MONTH)) {
                     eventOfToday.add(event);
@@ -289,43 +356,46 @@ public class CalendarActivity extends DrawerActivity {
         if (eventOfToday.size() > 0) {
             Log.e("EVENT-USRE", "users in event: " + eventOfToday.get(0).getUsers().toString());
         }
-        Log.d("EVENTS","size of events : " + eventOfToday.size());
-        return  eventOfToday;
+        Log.d("EVENTS", "size of events : " + eventOfToday.size());
+        return eventOfToday;
     }
 
-    private HashSet<CalendarDay> filterEventsByMonth(Calendar d){
+    private HashSet<CalendarDay> filterEventsByMonth(Calendar d) {
         // TODO: change on month listener when changing to week mode
         Calendar between = Calendar.getInstance();
         CalendarDay day;
         HashSet<CalendarDay> dates = new HashSet<>();
 
         List<Event> eventOfToday = new ArrayList<>();
-        for (Event e: data.getSharedEvents()){
-            Log.d("EVENTS","today: " + d.get(Calendar.MONTH) + " == " + e.getDateStart().get(Calendar.MONTH));
-            Log.d("EVENTS","today: " + d.get(Calendar.DAY_OF_MONTH) + " == " + e.getDateStart().get(Calendar.DAY_OF_MONTH));
+        for (Event e : data.getSharedEvents()) {
+            Log.d("EVENTS", "today: " + d.get(Calendar.MONTH) + " == " + e.getDateStart().get(Calendar.MONTH));
+            Log.d("EVENTS", "today: " + d.get(Calendar.DAY_OF_MONTH) + " == " + e.getDateStart().get(Calendar.DAY_OF_MONTH));
             if (e.getDateStart().get(Calendar.MONTH) == d.get(Calendar.MONTH)
-                    && e.getDateStart().get(Calendar.YEAR) == d.get(Calendar.YEAR)){
+                    && e.getDateStart().get(Calendar.YEAR) == d.get(Calendar.YEAR)) {
                 day = CalendarDay.from(e.getDateStart());
                 dates.add(day);
             }
         }
 
-        for (Event event: data.getSharedEvents()) {
-            if (event.getDateEnd().after(event.getDateStart())){
+        for (Event event : data.getSharedEvents()) {
+            if (event.getDateEnd().after(event.getDateStart())) {
                 between = Calendar.getInstance();
-                int length = event.getDateEnd().get(Calendar.DAY_OF_MONTH) - event.getDateStart().get(Calendar.DAY_OF_MONTH);
+                long diff = (event.getDateEnd().getTimeInMillis()) - (event.getDateStart().getTimeInMillis());
+                long days = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
                 between.setTimeInMillis(event.getDateStart().getTimeInMillis());
-                while (length > 0){
-                    between.roll(Calendar.DAY_OF_MONTH,true);
+                Log.e("events", "days: " + days);
+                while (days > 0) {
+                    between.add(Calendar.DAY_OF_MONTH, 1);
                     day = CalendarDay.from(between);
                     dates.add(day);
-                    length--;
+                    days--;
                 }
             }
         }
-        Log.d("EVENTS","size of dates : " + dates.size());
+        Log.d("EVENTS", "size of dates : " + dates.size());
 
-        return  dates;
+        return dates;
     }
+
 
 }

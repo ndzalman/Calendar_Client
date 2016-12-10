@@ -1,62 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/main"
-    android:background="@drawable/calendario_background"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/calendario_background">
 
     <android.support.v4.widget.DrawerLayout
         android:id="@+id/drawer_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            >
+            android:orientation="vertical">
+
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:background="@color/colorPrimaryDark"
-                />
+                android:background="@color/colorPrimaryDark" />
 
             <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            >
-
-                <LinearLayout
-                    android:layoutDirection="ltr"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    >
-            <com.prolificinteractive.materialcalendarview.MaterialCalendarView
-                android:id="@+id/calendarView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:mcv_tileSize="45dp"
-                app:mcv_dateTextAppearance="@style/TextAppearance.AppCompat.Medium"
-                app:mcv_showOtherDates="all"
-                app:mcv_selectionColor="@color/colorPrimaryDark"
-                />
-
-            <ListView
-                android:layout_marginTop="10dp"
-                android:id="@+id/lvEvents"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:headerDividersEnabled="true"
-                />
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/linear"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layoutDirection="ltr"
+                        android:layout_margin="10dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        >
+
+                        <ImageView
+                            android:layout_gravity="start"
+                            android:layout_marginStart="5dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:srcCompat="@drawable/ic_keyboard_arrow_left"
+                            android:id="@+id/imgArrowLeft"
+                            android:clickable="true"
+                            android:layout_weight="1" />
+
+                        <TextView
+                            android:gravity="center"
+                            android:text="December 2016"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/tvMonthYear"
+                            android:layout_weight="1"
+                            android:textAppearance="@style/TextAppearance.MaterialCalendarWidget.Header" />
+
+                        <ImageView
+                            android:layout_gravity="start"
+                            android:layout_marginStart="5dp"
+                            android:clickable="true"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:srcCompat="@drawable/ic_keyboard_arrow_right"
+                            android:id="@+id/imgArrowRight"
+                            android:layout_weight="1" />
+
+                    </LinearLayout>
+
+                        <com.prolificinteractive.materialcalendarview.MaterialCalendarView
+                            android:id="@+id/calendarView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:mcv_dateTextAppearance="@style/TextAppearance.AppCompat.Medium"
+                            app:mcv_selectionColor="@color/colorPrimaryDark"
+                            app:mcv_showOtherDates="all" />
+
+                    <ListView
+                        android:id="@+id/lvEvents"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:headerDividersEnabled="true" />
 
                 </LinearLayout>
-        </LinearLayout>
+            </LinearLayout>
         </LinearLayout>
 
 
@@ -67,19 +99,16 @@
             android:layout_height="match_parent"
             android:layout_gravity="start"
             android:fitsSystemWindows="true"
-            app:menu="@menu/drawer"
             app:headerLayout="@layout/drawer_header"
-            />
+            app:menu="@menu/drawer" />
 
 
-
-</android.support.v4.widget.DrawerLayout>
+    </android.support.v4.widget.DrawerLayout>
 
     <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        >
+        android:layout_gravity="bottom|end">
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fabAdd"

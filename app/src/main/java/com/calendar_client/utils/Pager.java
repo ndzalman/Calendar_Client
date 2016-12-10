@@ -5,7 +5,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.calendar_client.ui.ContactFragment;
-import com.calendar_client.ui.EventDetailsFragement;
+import com.calendar_client.ui.EventDetailsFragment;
 
 /**
  * Created by ashom on 21-Nov-16.
@@ -29,7 +29,7 @@ public class Pager  extends FragmentStatePagerAdapter {
         //Returning the current tabs
         switch (position) {
             case 0:
-                EventDetailsFragement tab1 = new EventDetailsFragement();
+                EventDetailsFragment tab1 = new EventDetailsFragment();
                 return tab1;
             case 1:
                 ContactFragment tab2 = new ContactFragment();

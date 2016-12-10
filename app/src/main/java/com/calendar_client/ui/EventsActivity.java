@@ -17,7 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -89,7 +88,7 @@ public class EventsActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 Event event = (Event) adapterView.getItemAtPosition(position);
-                Intent editEvent = new Intent(EventsActivity.this,MainActivity.class);
+                Intent editEvent = new Intent(EventsActivity.this,EditEventActivity.class);
                 editEvent.putExtra("event",event);
                 startActivity(editEvent);
             }

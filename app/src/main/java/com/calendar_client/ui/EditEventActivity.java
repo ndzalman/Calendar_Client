@@ -10,7 +10,7 @@ import com.calendar_client.R;
 import com.calendar_client.utils.Data;
 import com.calendar_client.utils.Pager;
 
-public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSelectedListener{
+public class EditEventActivity extends AppCompatActivity implements TabLayout.OnTabSelectedListener{
     //This is our tablayout
     private TabLayout tabLayout;
 

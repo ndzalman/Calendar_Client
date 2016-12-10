@@ -8,7 +8,6 @@ import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,9 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.calendar_client.R;
@@ -40,8 +37,6 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -71,6 +66,12 @@ public class DayEventsActivity extends AppCompatActivity {
         Gson gson = new Gson();
         user = gson.fromJson(userJSON, User.class);
 
+        TextView tvTitle = (TextView) findViewById(R.id.tvTitle);
+        SimpleDateFormat sdfs = new SimpleDateFormat(EventsDBConstants.DATE_FORMAT);
+        Date date1 = Calendar.getInstance().getTime();
+        String today = sdfs.format(date1);
+        tvTitle.setText(today);
+
         lvEvents = (ListView) findViewById(R.id.lvEvents);
 
         data = Data.getInstance();
@@ -79,7 +80,26 @@ public class DayEventsActivity extends AppCompatActivity {
             events = dbHandler.getAllEvents(user.getId());
             initList();
         }else{
-            new GetUpcomingEvents().execute();
+//            new GetUpcomingEvents().execute();
+            List<Event> eventOfToday = new ArrayList<>();
+            Calendar calendar = Calendar.getInstance();
+            for (Event event: data.getSharedEvents()) {
+                if (calendar.get(Calendar.YEAR) == event.getDateStart().get(Calendar.YEAR) &&
+                        calendar.get(Calendar.MONTH) == event.getDateStart().get(Calendar.MONTH)) {
+                    if (calendar.get(Calendar.DAY_OF_MONTH) == event.getDateStart().get(Calendar.DAY_OF_MONTH) ||
+                            calendar.get(Calendar.DAY_OF_MONTH) == event.getDateEnd().get(Calendar.DAY_OF_MONTH)) {
+                        eventOfToday.add(event);
+                    } else if (calendar.after(event.getDateStart()) && calendar.before(event.getDateEnd())) {
+                        eventOfToday.add(event);
+                    }
+                }
+            }
+            if (eventOfToday.size() > 0) {
+                Log.e("EVENT-USRE", "users in event: " + eventOfToday.get(0).getUsers().toString());
+            }
+            Log.d("EVENTS","size of events : " + eventOfToday.size());
+            events = eventOfToday;
+            initList();
         }
 
 
@@ -89,7 +109,7 @@ public class DayEventsActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 Event event = (Event) adapterView.getItemAtPosition(position);
-                Intent editEvent = new Intent(DayEventsActivity.this,MainActivity.class);
+                Intent editEvent = new Intent(DayEventsActivity.this,EditEventActivity.class);
                 editEvent.putExtra("event",event);
                 startActivity(editEvent);
             }
@@ -107,14 +127,14 @@ public class DayEventsActivity extends AppCompatActivity {
 //            }
 //        });
 
-        eventAdapter = new MyAdapter(this,R.layout.single_event_order_by_date_layout,events);
+        eventAdapter = new MyAdapter(this,R.layout.single_day_event_layout,events);
         lvEvents.setAdapter(eventAdapter);
-        if (events == null || events.size() <= 0){
-            RelativeLayout listLayout = (RelativeLayout) findViewById(R.id.listLayout);
-            listLayout.setVisibility(View.GONE);
-            CardView noEventsLayout = (CardView) findViewById(R.id.noEventsLayout);
-            noEventsLayout.setVisibility(View.VISIBLE);
-        }
+//        if (events == null || events.size() <= 0){
+//            RelativeLayout listLayout = (RelativeLayout) findViewById(R.id.listLayout);
+//            listLayout.setVisibility(View.GONE);
+//            CardView noEventsLayout = (CardView) findViewById(R.id.noEventsLayout);
+//            noEventsLayout.setVisibility(View.VISIBLE);
+//        }
     }
 
     private class MyAdapter extends BaseAdapter {
@@ -159,8 +179,6 @@ public class DayEventsActivity extends AppCompatActivity {
                 holder.tvTitle = (TextView) convertView.findViewById(R.id.tvTitle);
                 holder.tvDescription = (TextView) convertView.findViewById(R.id.tvDescription);
                 holder.tvLocation = (TextView) convertView.findViewById(R.id.tvLocation);
-                holder.tvDate = (TextView) convertView.findViewById(R.id.tvDate);
-                holder.locationLayout = (LinearLayout) convertView.findViewById(R.id.locationLayout);
 
                 convertView.setTag(holder);
 
@@ -169,28 +187,8 @@ public class DayEventsActivity extends AppCompatActivity {
             }
 
             holder.tvTitle.setText(event.getTitle());
-            SimpleDateFormat sdfs = new SimpleDateFormat(EventsDBConstants.DATE_FORMAT);
-            Date date1 = Calendar.getInstance().getTime();
-            String today = sdfs.format(date1);
-            holder.tvTitle.setText(today);
-
+            holder.tvLocation.setText(event.getLocation());
             holder.tvDescription.setText(event.getDescription());
-
-            if (event.getLocation() == null || event.getLocation().isEmpty()) {
-                holder.locationLayout.setVisibility(View.GONE);
-            }else{
-                holder.tvLocation.setText(event.getLocation());
-            }
-
-
-            SimpleDateFormat sdf = new SimpleDateFormat(EventsDBConstants.TIME_FORMAT);
-            Date date = event.getDateStart().getTime();
-            sdf = new SimpleDateFormat(EventsDBConstants.DATE_FORMAT);
-            date = event.getDateStart().getTime();
-            String starDatetxt = sdf.format(date);
-            date = event.getDateEnd().getTime();
-            String endDateTxt = sdf.format(date);
-            holder.tvDate.setText(starDatetxt + " - " + endDateTxt);
 
             return convertView;
 
@@ -199,9 +197,7 @@ public class DayEventsActivity extends AppCompatActivity {
         private class ViewHolder{
             TextView tvTitle;
             TextView tvDescription;
-            TextView tvDate;
             TextView tvLocation;
-            LinearLayout locationLayout;
         }
     }
 
@@ -211,7 +207,7 @@ public class DayEventsActivity extends AppCompatActivity {
         protected String doInBackground(String... strings) {
             StringBuilder response;
             try {
-                URL url = new URL(ApplicationConstants.GET_UPCOMING_EVENTS + "?id=" + user.getId());
+                URL url = new URL(ApplicationConstants.GET_EVENTS_OF_TODAY + "?id=" + user.getId());
                 response = new StringBuilder();
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 Log.e("DEBUG", conn.getResponseCode() + "");

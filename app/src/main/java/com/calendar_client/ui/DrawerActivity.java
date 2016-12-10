@@ -3,6 +3,7 @@ package com.calendar_client.ui;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -61,12 +62,10 @@ public abstract class DrawerActivity extends AppCompatActivity {
         }
 
         ImageView imgviewHeaderImage = (ImageView) headerView.findViewById(R.id.imgviewHeaderImage);
-        Data data = Data.getInstance();
-        Bitmap b = data.getBitmap();
-        if (b != null) {
+        if (u.getImage() != null){
+            Bitmap b = BitmapFactory.decodeByteArray(u.getImage(),0,u.getImage().length);
             imgviewHeaderImage.setImageBitmap(b);
         }
-
 
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override

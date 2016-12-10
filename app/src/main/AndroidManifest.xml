@@ -21,6 +21,9 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
 
+    <!-- edit and add event - for location -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
     <uses-feature
         android:name="android.hardware.camera"
         android:required="true" />
@@ -73,7 +76,7 @@
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/colorPrimary" />
 
-        <activity android:name=".ui.MainActivity" />
+        <activity android:name=".ui.EditEventActivity" />
         <activity android:name=".ui.AboutActivity" />
 
         <meta-data
@@ -82,7 +85,8 @@
 
         <activity android:name=".ui.NotificationEventActivity" />
         <activity android:name=".ui.ProfileActivity" />
-        <activity android:name=".ui.DayEventsActivity"></activity>
+        <activity android:name=".ui.DayEventsActivity" />
+        <activity android:name=".ui.EventActivity"></activity>
     </application>
 
 </manifest>

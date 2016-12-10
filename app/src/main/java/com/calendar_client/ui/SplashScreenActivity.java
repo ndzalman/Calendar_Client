@@ -28,6 +28,7 @@ import com.calendar_client.data.Event;
 import com.calendar_client.data.User;
 import com.calendar_client.utils.ApplicationConstants;
 import com.calendar_client.utils.Data;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -51,7 +52,9 @@ public class SplashScreenActivity extends AppCompatActivity {
     private Data data;
     private User user;
     private GetSharedEventsTask getSharedEventsTask;
+    private RefreshTokenTask refreshTokenTask;
     private boolean permissionGranted = false;
+    private boolean logged = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,11 +69,21 @@ public class SplashScreenActivity extends AppCompatActivity {
 
         tvStatus.setTypeface(typeface);
 
+        intent = new Intent(SplashScreenActivity.this, LoginActivity.class);
+
         // if no wifi/data connection was found
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         final AlertDialog.Builder exitDialogBuilder = new AlertDialog.Builder(this);
 
-
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        String userJSON = sharedPreferences.getString("user", "");
+        if (!userJSON.equals("")){
+            user = new Gson().fromJson(userJSON,User.class);
+            logged = true;
+            intent = new Intent(SplashScreenActivity.this, CalendarActivity.class);
+            refreshTokenTask = new RefreshTokenTask();
+            refreshTokenTask.execute();
+        }
 
         // if no wifi/data connection was found
         alertDialogBuilder.setTitle(R.string.alert_dialog_title)
@@ -79,9 +92,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                 .setPositiveButton(R.string.alert_dialog_positive, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                        String userJSON = sharedPreferences.getString("user", "");
-                        if (!userJSON.equals("")) {
+                        if (logged) {
                             NextActivity();
                         } else{
                             dialog.cancel();
@@ -131,10 +142,7 @@ public class SplashScreenActivity extends AppCompatActivity {
             data.setOnline(isOnline());
         }
 
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        String userJSON = sharedPreferences.getString("user", "");
-        if (!userJSON.equals("")){
-            user = new Gson().fromJson(userJSON, User.class);
+        if (logged){
             if (data.isOnline()){
                 getSharedEventsTask = new GetSharedEventsTask();
                 getSharedEventsTask.execute();
@@ -206,7 +214,6 @@ public class SplashScreenActivity extends AppCompatActivity {
     }
 
     private void NextActivity(){
-        intent = new Intent(SplashScreenActivity.this, LoginActivity.class);
         finish();
         startActivity(intent);
     }
@@ -323,6 +330,52 @@ public class SplashScreenActivity extends AppCompatActivity {
         }
 
     }
+    private class RefreshTokenTask extends AsyncTask<String, Void, String> {
+        // get the email and password - before executing task
+        String token;
 
+        @Override
+        protected void onPreExecute() {
+            token = FirebaseInstanceId.getInstance().getToken();
+            user.setToken(token);
+            Log.e("TOKEN", token);
+            Log.d("REFRESH", "user id: " + user.getId());
+        }
+
+        // executing
+        // make http request to the server, send email and password for verification of the user
+        @Override
+        protected String doInBackground(String... strings) {
+            StringBuilder response;
+            try {
+                URL url = new URL(ApplicationConstants.REFRESH_TOKEN_URL + "?id=" + user.getId() + "&token=" + token);
+                response = new StringBuilder();
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                if (conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
+                    return null;
+                }
+
+                BufferedReader input = new BufferedReader(
+                        new InputStreamReader(conn.getInputStream()));
+
+                String line;
+                while ((line = input.readLine()) != null) {
+                    response.append(line + "\n");
+                }
+
+                input.close();
+
+                conn.disconnect();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+
+            String responseString = response.toString();
+            return responseString.toString();
+        }
+
+    }
 
 }

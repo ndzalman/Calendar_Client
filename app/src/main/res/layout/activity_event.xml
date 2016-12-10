@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:paddingBottom="16dp"
+    android:orientation="vertical"
+    android:id="@+id/eventLayout"
+    android:layout_gravity="start"
+    tools:context="com.calendar_client.ui.EventActivity">
+
+        <android.support.design.widget.CoordinatorLayout
+            android:id="@+id/cardLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.v7.widget.CardView
+                app:cardBackgroundColor="@color/colorPrimaryOpacity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                >
+
+                <LinearLayout
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <android.support.design.widget.FloatingActionButton
+                        android:id="@+id/fabEventEdit"
+                        android:layout_margin="10dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_edit_white"
+                        />
+
+                    <android.support.design.widget.FloatingActionButton
+                        android:id="@+id/fabEventDelete"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_delete_forever"
+                        android:layout_margin="10dp"
+                        />
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+        </android.support.design.widget.CoordinatorLayout>
+
+        <TextView
+            android:layout_below="@id/cardLayout"
+            android:layout_margin="10dp"
+            android:gravity="center"
+            android:text="@string/event_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.AppCompat.Title"
+            android:id="@+id/tvLayoutTitle"
+            />
+
+        <LinearLayout
+            android:id="@+id/titleLayout"
+            android:layout_below="@+id/tvLayoutTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_weight="3"
+            android:layout_margin="5dp"
+            android:layout_gravity="start"
+            >
+            <ImageView
+                android:layout_gravity="start"
+                android:src="@drawable/ic_details"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:id="@+id/imgViewDetails"
+                />
+
+            <TextView
+                android:layout_gravity="start"
+                android:gravity="start"
+                android:text="Title"
+                android:layout_marginEnd="8dp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:id="@+id/tvEventTitle"
+                android:textColor="@color/colorPrimary"
+                android:layout_weight="1.5" />
+
+
+            <TextView
+                android:gravity="start"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_weight="1" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/dateStarLayout"
+            android:layout_below="@+id/titleLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="3"
+            android:layout_margin="5dp"
+            android:layout_gravity="start"
+            >
+
+            <ImageView
+                android:layout_gravity="start"
+                android:id="@+id/imgViewTime"
+                android:src="@drawable/ic_access_time"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                />
+
+            <TextView
+                android:layout_marginEnd="8dp"
+                android:layout_gravity="start"
+                android:gravity="start"
+                android:text="Date"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:id="@+id/tvEventDateStart"
+                android:textColor="@color/colorPrimaryDark"
+                android:layout_weight="1.5"
+                />
+
+            <TextView
+                android:gravity="start"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_weight="1" />
+
+
+        </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/dateEndLayout"
+        android:layout_below="@+id/dateStarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="3"
+        android:layout_margin="5dp"
+        android:layout_gravity="start"
+        >
+
+        <TextView
+            android:gravity="start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_weight="0.5" />
+
+        <TextView
+            android:layout_marginEnd="8dp"
+            android:layout_gravity="start"
+            android:gravity="start"
+            android:text="Date"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:id="@+id/tvEventDateEnd"
+            android:textColor="@color/colorPrimaryDark"
+            android:layout_weight="1.5"
+            />
+
+        <TextView
+            android:gravity="start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_weight="1" />
+
+
+    </LinearLayout>
+        <LinearLayout
+            android:id="@+id/descriptionLayout"
+            android:layout_below="@+id/dateEndLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="3"
+            android:layout_margin="5dp"
+            android:layout_gravity="start"
+            >
+
+            <ImageView
+                android:layout_gravity="start"
+                android:id="@+id/imgViewDescription"
+                android:src="@drawable/ic_description"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                />
+
+
+            <TextView
+                android:layout_marginEnd="8dp"
+                android:text="Description"
+                android:gravity="start"
+                android:layout_gravity="start"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/colorPrimaryDark"
+                android:id="@+id/tvEventDescription"
+                android:layout_weight="1" />
+
+            <TextView
+                android:gravity="start"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_weight="1" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/locationLayout"
+            android:layout_below="@+id/descriptionLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_weight="3"
+            android:layout_margin="5dp"
+            android:layout_gravity="start"
+            >
+            <ImageView
+                android:layout_gravity="start"
+                android:src="@drawable/ic_location_on"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:id="@+id/imgViewLocation"
+                />
+
+            <TextView
+                android:layout_gravity="start"
+                android:layout_marginEnd="8dp"
+                android:gravity="start"
+                android:text="Location"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:id="@+id/tvEventLocation"
+                android:textColor="@color/colorPrimaryLight"
+                android:layout_weight="1.5" />
+
+            <TextView
+                android:gravity="start"
+                android:layout_gravity="start"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/colorPrimaryDark"
+                android:layout_weight="1" />
+
+        </LinearLayout>
+
+        <android.support.v7.widget.AppCompatButton
+            android:layout_marginTop="10dp"
+            android:layout_centerInParent="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/locationLayout"
+            android:id="@+id/btnShowMore"
+            android:text="Show More"
+            android:background="@color/colorPrimary"
+            android:textColor="@color/white"
+            />
+
+
+        <TextView
+            android:layout_margin="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Contacts"
+            android:layout_below="@+id/btnShowMore"
+            android:id="@+id/tvContacts"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+        <ListView
+            android:layout_margin="10dp"
+            android:layout_below="@+id/tvContacts"
+            android:id="@+id/listContacts"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            >
+
+        </ListView>
+
+
+
+    </RelativeLayout>

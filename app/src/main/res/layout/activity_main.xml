@@ -6,7 +6,7 @@
     android:background="@drawable/calendario_background"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.MainActivity">
+    tools:context=".ui.EditEventActivity">
 
     <!-- our tablayout to display tabs  -->
     <android.support.design.widget.TabLayout

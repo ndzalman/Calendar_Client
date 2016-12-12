@@ -132,6 +132,11 @@ public class EventDetailsFragment extends Fragment implements GoogleApiClient.On
         }
         InitEditViewComponents();
 
+        checkLocationPermission();
+        if (locationPermissionGranted) {
+            initGoogleLocation();
+        }
+
         return view;
     }
 
@@ -445,31 +450,6 @@ public class EventDetailsFragment extends Fragment implements GoogleApiClient.On
         tvTitle = (TextView) view.findViewById(R.id.tvTitle);
         tvPickLocation = (TextView) view.findViewById(R.id.tvPickLocation);
 
-        checkLocationPermission();
-        if (locationPermissionGranted) {
-            mGoogleApiClient = new GoogleApiClient
-                    .Builder(getActivity())
-                    .addApi(Places.GEO_DATA_API)
-                    .addApi(Places.PLACE_DETECTION_API)
-                    .enableAutoManage(getActivity(), this)
-                    .build();
-
-            tvPickLocation.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
-
-                    try {
-                        startActivityForResult(builder.build(getActivity()), PLACE_PICKER_REQUEST);
-                    } catch (GooglePlayServicesRepairableException e) {
-                        e.printStackTrace();
-                    } catch (GooglePlayServicesNotAvailableException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-        }
-
         fabDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -510,6 +490,30 @@ public class EventDetailsFragment extends Fragment implements GoogleApiClient.On
 
                         new EditEventTask().execute();
                     }
+                }
+            }
+        });
+    }
+
+    private void initGoogleLocation() {
+        mGoogleApiClient = new GoogleApiClient
+                .Builder(getActivity())
+                .addApi(Places.GEO_DATA_API)
+                .addApi(Places.PLACE_DETECTION_API)
+                .enableAutoManage(getActivity(), this)
+                .build();
+
+        tvPickLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+
+                try {
+                    startActivityForResult(builder.build(getActivity()), PLACE_PICKER_REQUEST);
+                } catch (GooglePlayServicesRepairableException e) {
+                    e.printStackTrace();
+                } catch (GooglePlayServicesNotAvailableException e) {
+                    e.printStackTrace();
                 }
             }
         });
@@ -684,6 +688,7 @@ public class EventDetailsFragment extends Fragment implements GoogleApiClient.On
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     locationPermissionGranted = true;
+                    initGoogleLocation();
 
                 } else {
                     // Permission Denied

@@ -181,8 +181,15 @@ public class ProfileActivity extends AppCompatActivity {
                                 }, REQUEST_EXTERNAL_STORAGE);
                             }
                         } else { //api 23 and above
-                            permission = checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-                            if (permission != PackageManager.PERMISSION_GRANTED) {
+                            int permission1;
+                            int permission2;
+                            int permission3;
+                            permission1 = checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                            permission2 = checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE);
+                            permission3 = checkSelfPermission(Manifest.permission.CAMERA);
+
+                            if (permission1 != PackageManager.PERMISSION_GRANTED || permission2 != PackageManager.PERMISSION_GRANTED ||permission3 != PackageManager.PERMISSION_GRANTED) {
+                                // We don't have permission so prompt the user
                                 // We don't have permission so prompt the user
                                 requestPermissions(
                                         PERMISSIONS_STORAGE,

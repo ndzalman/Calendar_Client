@@ -27,15 +27,11 @@ public class EditEventActivity extends AppCompatActivity implements TabLayout.On
 
         //Adding the tabs using addTab() method
         tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.tab_event_details)));
-        Data data = Data.getInstance();
-        if (data.isOnline()){
-            tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.tav_event_contacts)));
-        }
+        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.tav_event_contacts)));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         //Initializing viewPager
         viewPager = (ViewPager) findViewById(R.id.pager);
-
 
         //Creating our pager adapter
         Pager adapter = new Pager(getSupportFragmentManager(), tabLayout.getTabCount());

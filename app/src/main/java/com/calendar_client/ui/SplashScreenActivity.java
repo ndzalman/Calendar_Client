@@ -57,26 +57,23 @@ public class SplashScreenActivity extends AppCompatActivity {
     private boolean permissionGranted = false;
     private boolean logged = false;
     private EventsDBHandler eventsDBHandler;
+    private final int NETWORK_PERMISSION_REQUEST = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
 
-        Typeface typeface = Typeface.createFromAsset(getAssets(), "BreeSerif-Regular.ttf");
         eventsDBHandler = new EventsDBHandler(this);
 
         // link the fields in layout
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         tvStatus = (TextView) findViewById(R.id.tvStatus);
 
+        Typeface typeface = Typeface.createFromAsset(getAssets(), "BreeSerif-Regular.ttf");
         tvStatus.setTypeface(typeface);
 
         intent = new Intent(SplashScreenActivity.this, LoginActivity.class);
-
-        // if no wifi/data connection was found
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-        final AlertDialog.Builder exitDialogBuilder = new AlertDialog.Builder(this);
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String userJSON = sharedPreferences.getString("user", "");
@@ -89,6 +86,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         }
 
         // if no wifi/data connection was found
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         alertDialogBuilder.setTitle(R.string.alert_dialog_title)
                 .setMessage(R.string.alert_dialog_message)
                 .setCancelable(false)
@@ -168,7 +166,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         protected Boolean doInBackground(Void... params) {
             int i = 0;
 
-            if (getSharedEventsTask != null){
+            if (getSharedEventsTask != null){ // if online
                 while (i < 4) {
                     i=2;
                     if (getSharedEventsTask.getStatus() == Status.FINISHED){
@@ -241,7 +239,7 @@ public class SplashScreenActivity extends AppCompatActivity {
             } else {
                 ActivityCompat.requestPermissions(SplashScreenActivity.this, new String[]{Manifest.permission.INTERNET,
                         Manifest.permission.ACCESS_NETWORK_STATE
-                }, 1);
+                }, NETWORK_PERMISSION_REQUEST);
             }
         } else { //api 23 and above
             permission1 = checkSelfPermission(Manifest.permission.INTERNET);
@@ -252,7 +250,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                 requestPermissions(
                         new String[]{Manifest.permission.INTERNET,
                                 Manifest.permission.ACCESS_NETWORK_STATE},
-                        1);
+                        NETWORK_PERMISSION_REQUEST);
             } else {
                 permissionGranted = true;
             }
@@ -264,7 +262,7 @@ public class SplashScreenActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         switch (requestCode) {
-            case 1: {
+            case NETWORK_PERMISSION_REQUEST: {
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 

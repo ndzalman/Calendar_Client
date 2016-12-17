@@ -61,33 +61,6 @@ public class LoginActivity extends AppCompatActivity {
         btnLogin.setTypeface(typeface);
         tvSignUp.setTypeface(typeface);
 
-        // get user from shared preference. if doesnt exist return empty string
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        String userJSON = sharedPreferences.getString("user", "");
-
-        // if user exist, move on to home screen
-//        if (!userJSON.equals("")) {
-//            Gson gson = new Gson();
-//            user = gson.fromJson(userJSON, User.class);
-//
-//            Log.d("SHARED", userJSON);
-//
-//            if (data.isOnline()) {
-//                new LoginTask().execute();
-//            }
-//
-//            finish();
-//            Intent intent = new Intent(LoginActivity.this, CalendarActivity.class);
-//            startActivity(intent);
-//        }
-
-        // link layout components
-        tvSignUp = (TextView) findViewById(R.id.tvSignUp);
-        etEmail = (EditText) findViewById(R.id.etEmail);
-        etPassword = (EditText) findViewById(R.id.etPassword);
-        btnLogin = (Button) findViewById(R.id.btnLogin);
-
-
         tvSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

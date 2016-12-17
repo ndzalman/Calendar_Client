@@ -91,6 +91,11 @@ public class EventActivity extends AppCompatActivity {
             user = new Gson().fromJson(userJSON,User.class);
         }
 
+        if (!Data.getInstance().isOnline()){
+            fabEventDelete.setVisibility(View.GONE);
+            fabEventEdit.setVisibility(View.GONE);
+        }
+
     }
 
     private void initEventViewComponents() {
@@ -124,10 +129,6 @@ public class EventActivity extends AppCompatActivity {
         } else{
             locationLayout.setVisibility(View.GONE);
         }
-
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        String userJSON = sharedPreferences.getString("user", "");
-        User user = new Gson().fromJson(userJSON,User.class);
 
         fabEventEdit = (FloatingActionButton) findViewById(R.id.fabEventEdit);
         if (event.getOwnerId() == user.getId()){
@@ -283,7 +284,7 @@ public class EventActivity extends AppCompatActivity {
                 phoneNumber = phoneNumberBefore;
             }
 
-            if (phoneNumber.length() != 10){
+            if (phoneNumber.length() != 10){ //lenght of a regular mobile phone
                 continue;
             }
 
@@ -295,7 +296,7 @@ public class EventActivity extends AppCompatActivity {
                 }
             }
         }
-        if (existingUsers.size() > 0){
+        if (existingUsers.size() > 0){ //meaning that there are users in this event that not exist in your phone
             Log.e("EXISTING-USERS","ADDING OTHER USERS");
             for (User user: existingUsers){
                 usersNames.add(user.getUserName());

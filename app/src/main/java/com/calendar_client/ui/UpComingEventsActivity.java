@@ -68,7 +68,6 @@ public class UpComingEventsActivity extends AppCompatActivity {
         data = Data.getInstance();
         if (!data.isOnline()) {
             dbHandler = new EventsDBHandler(this);
-//            events = dbHandler.getAllEvents(user.getId());
             events = dbHandler.getUpComingEvents(user.getId());
             initList();
         }else{
@@ -228,55 +227,6 @@ public class UpComingEventsActivity extends AppCompatActivity {
             LinearLayout descriptionLayout;
         }
     }
-
-//    private class GetUpcomingEvents extends AsyncTask<String, Void, String> {
-//        // executing
-//        @Override
-//        protected String doInBackground(String... strings) {
-//            StringBuilder response;
-//            try {
-//                URL url = new URL(ApplicationConstants.GET_UPCOMING_EVENTS + "?id=" + user.getId());
-//                response = new StringBuilder();
-//                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-//                Log.e("DEBUG", conn.getResponseCode() + "");
-//                if (conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
-//                    Log.e("DEBUG", conn.getResponseMessage());
-//                    return null;
-//                }
-//
-//                BufferedReader input = new BufferedReader(
-//                        new InputStreamReader(conn.getInputStream()));
-//
-//                String line;
-//                while ((line = input.readLine()) != null) {
-//                    response.append(line + "\n");
-//                }
-//
-//                input.close();
-//
-//                conn.disconnect();
-//
-//                Type listType = new TypeToken<ArrayList<Event>>() {
-//                }.getType();
-//                List<Event> upcomingEvents = new Gson().fromJson(response.toString(), listType);
-//                events = upcomingEvents;
-//
-//
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//                return null;
-//            }
-//
-//            return null;
-//        }
-//
-//        @Override
-//        protected void onPostExecute(String response) {
-//            initList();
-//
-//        }
-//
-//    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

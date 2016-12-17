@@ -7,6 +7,7 @@
     android:layout_width="match_parent"
     android:fillViewport="true"
     android:layout_height="match_parent"
+    android:id="@+id/editEventLayout"
     >
 
     <RelativeLayout
@@ -162,7 +163,9 @@
                 android:layout_alignParentLeft="true"
                 android:id="@+id/tvPickLocation"
                 android:text="@string/new_event_location_hint"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:drawableBottom="@drawable/powered_by_google_light"
+                />
 
         <android.support.design.widget.TextInputLayout
             android:layout_below="@id/tvPickLocation"

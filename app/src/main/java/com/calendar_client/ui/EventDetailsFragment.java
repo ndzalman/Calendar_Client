@@ -1,6 +1,7 @@
 package com.calendar_client.ui;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.DatePickerDialog;
 import android.app.Notification;
@@ -63,7 +64,7 @@ import java.util.Calendar;
 import static android.app.Activity.RESULT_OK;
 
 
-public class EventDetailsFragment extends Fragment implements GoogleApiClient.OnConnectionFailedListener {
+public class EventDetailsFragment extends Fragment {
     private static final String TAG = "NEW_EVENT";
 
     // Edit Event
@@ -95,6 +96,7 @@ public class EventDetailsFragment extends Fragment implements GoogleApiClient.On
     public static final int PLACE_PICKER_REQUEST = 1;
 
     private GoogleApiClient mGoogleApiClient;
+    private Activity activity;
 
 
     @Override
@@ -102,6 +104,7 @@ public class EventDetailsFragment extends Fragment implements GoogleApiClient.On
         //Returning the layout file after inflating
         //Change R.layout.tab1 in you classes
         view = inflater.inflate(R.layout.event_details_layout, container, false);
+        activity = getActivity();
 
 //        PendingResult<PlaceLikelihoodBuffer> result = Places.PlaceDetectionApi
 //                .getCurrentPlace(mGoogleApiClient, null);
@@ -144,12 +147,7 @@ public class EventDetailsFragment extends Fragment implements GoogleApiClient.On
         initEditLayoutComponents();
         initEventDetails();
         Data data = Data.getInstance();
-        if (!data.isOnline()) {
-            fabDone.setVisibility(View.GONE);
-            tvTitle.setText(getString(R.string.edit_event_title));
-        } else {
-            initDateAndTimePicker();
-        }
+        initDateAndTimePicker();
     }
 
     private void initEventDetails() {
@@ -496,20 +494,13 @@ public class EventDetailsFragment extends Fragment implements GoogleApiClient.On
     }
 
     private void initGoogleLocation() {
-        mGoogleApiClient = new GoogleApiClient
-                .Builder(getActivity())
-                .addApi(Places.GEO_DATA_API)
-                .addApi(Places.PLACE_DETECTION_API)
-                .enableAutoManage(getActivity(), this)
-                .build();
-
         tvPickLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
 
                 try {
-                    startActivityForResult(builder.build(getActivity()), PLACE_PICKER_REQUEST);
+                    startActivityForResult(builder.build(activity), PLACE_PICKER_REQUEST);
                 } catch (GooglePlayServicesRepairableException e) {
                     e.printStackTrace();
                 } catch (GooglePlayServicesNotAvailableException e) {
@@ -518,12 +509,6 @@ public class EventDetailsFragment extends Fragment implements GoogleApiClient.On
             }
         });
     }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
-    }
-
 
     private class AddEventTask extends AsyncTask<String, Void, Boolean> {
         boolean result = true;
@@ -704,68 +689,6 @@ public class EventDetailsFragment extends Fragment implements GoogleApiClient.On
 
         }
     }
-
-//    private class GetSharedEventsTask extends AsyncTask<String, Void, String> {
-//        // executing
-//        @Override
-//        protected String doInBackground(String... strings) {
-//            Log.e("SharedEvents","In Shared Events task");
-//            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
-//            String userJSON = sharedPreferences.getString("user", "");
-//            Gson gson = new Gson();
-//            User user = gson.fromJson(userJSON,User.class);
-//
-//            StringBuilder response;
-//            try {
-//                URL url = new URL(ApplicationConstants.GET_ALL_SHARED_EVENTS + "?id=" + user.getId());
-//                response = new StringBuilder();
-//                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-//                Log.e("DEBUG", conn.getResponseCode() + "");
-//                if (conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
-//                    Log.e("DEBUG", conn.getResponseMessage());
-//                    return null;
-//                }
-//
-//                BufferedReader input = new BufferedReader(
-//                        new InputStreamReader(conn.getInputStream()));
-//
-//                String line;
-//                while ((line = input.readLine()) != null) {
-//                    response.append(line + "\n");
-//                }
-//
-//                input.close();
-//
-//                conn.disconnect();
-//
-//                Type listType = new TypeToken<ArrayList<Event>>() {
-//                }.getType();
-//                List<Event> sharedEvents = new Gson().fromJson(response.toString(), listType);
-//                Data data = Data.getInstance();
-//                data.setSharedEvents(sharedEvents);
-//
-//
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//                return null;
-//            }
-//
-//            return null;
-//        }
-//
-//        @Override
-//        protected void onPostExecute(String response) {
-//            Data data = Data.getInstance();
-//            Log.d("EVENT-SIZE", "events size: " + data.getSharedEvents().size());
-//            if (data.getSharedEvents().size() > 0) {
-//                Log.d("EVENT-SIZE", "event: " + data.getSharedEvents().get(0).toString());
-//                Log.d("EVENT-SIZE", "event: " + data.getSharedEvents().get(0).getUsers().toString());
-//            }
-//
-//        }
-//
-//    }
-
 
     private class EditEventTask extends AsyncTask<String, Void, Boolean> {
         boolean result = false;

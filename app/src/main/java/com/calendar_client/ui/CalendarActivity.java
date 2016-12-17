@@ -41,6 +41,9 @@ import com.calendar_client.utils.EventsDBConstants;
 import com.calendar_client.utils.EventsDBHandler;
 import com.calendar_client.utils.OnSwipeTouchListener;
 import com.calendar_client.utils.SwipeGestureDetector;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.gson.Gson;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
@@ -114,12 +117,13 @@ public class CalendarActivity extends DrawerActivity {
 
         //get user events by his id from SQLite
         data = Data.getInstance();
+        // list of events
         events = filterEventsByDay(calendar.getSelectedDate().getCalendar());
+        // decoratores of the month
         dates = filterEventsByMonth(calendar.getSelectedDate().getCalendar());
 
         eventAdapter = new MyAdapter(this, R.layout.single_event, events);
         lvEvents.setAdapter(eventAdapter);
-
 
         eventDecorator = new EventDecorator(color, dates);
         calendar.addDecorator(eventDecorator);
@@ -158,7 +162,6 @@ public class CalendarActivity extends DrawerActivity {
                 Intent editEvent = new Intent(CalendarActivity.this, EventActivity.class);
                 editEvent.putExtra("event", event);
                 startActivity(editEvent);
-
             }
         });
 
@@ -185,7 +188,6 @@ public class CalendarActivity extends DrawerActivity {
 
         if (!data.isOnline()) {
             fabAdd.setVisibility(View.GONE);
-
         }
 
         if (isRtl){
@@ -370,7 +372,6 @@ public class CalendarActivity extends DrawerActivity {
         CalendarDay day;
         HashSet<CalendarDay> dates = new HashSet<>();
 
-        List<Event> eventOfToday = new ArrayList<>();
         for (Event e : data.getSharedEvents()) {
             Log.d("EVENTS", "today: " + d.get(Calendar.MONTH) + " == " + e.getDateStart().get(Calendar.MONTH));
             Log.d("EVENTS", "today: " + d.get(Calendar.DAY_OF_MONTH) + " == " + e.getDateStart().get(Calendar.DAY_OF_MONTH));
@@ -383,7 +384,6 @@ public class CalendarActivity extends DrawerActivity {
 
         for (Event event : data.getSharedEvents()) {
             if (event.getDateEnd().after(event.getDateStart())) {
-                between = Calendar.getInstance();
                 long diff = (event.getDateEnd().getTimeInMillis()) - (event.getDateStart().getTimeInMillis());
                 long days = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
                 Log.e("MONTH","days between " + days);

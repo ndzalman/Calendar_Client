@@ -69,9 +69,7 @@ public class SignUpActivity extends AppCompatActivity {
     private TextView tvLoginLink;
     private EditText etPhoneNumber;
     private User user;
-    private PopupWindow popupWindow;
     private ScrollView layout;
-    private boolean numberValidate = false;
     private LinearLayout progressLayout;
     private LinearLayout formLayout;
     private boolean permissionGranted = false;
@@ -85,7 +83,6 @@ public class SignUpActivity extends AppCompatActivity {
 
         initComponents();
 
-        tvDateOfBirth = (TextView) findViewById(R.id.tvDateOfBirth);
         tvDateOfBirth.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -109,7 +106,6 @@ public class SignUpActivity extends AppCompatActivity {
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 if (validate()){
                     checkPermission();
                     if (permissionGranted) {
@@ -179,8 +175,8 @@ public class SignUpActivity extends AppCompatActivity {
         final String key = data.generateKey();
         String strMessage = "Your verification code is: " + key;
 
-        SmsManager sm = SmsManager.getDefault();
-        sm.sendTextMessage(strPhone, null, strMessage, null, null);
+        SmsManager smsManager = SmsManager.getDefault();
+        smsManager.sendTextMessage(strPhone, null, strMessage, null, null);
 
         final Dialog dialog = new Dialog(SignUpActivity.this);
 //        dialog.setTitle("Title");
@@ -188,7 +184,6 @@ public class SignUpActivity extends AppCompatActivity {
         dialog.setCancelable(false);
         dialog.setCanceledOnTouchOutside(false);
         dialog.setContentView(R.layout.sms_verification_popup);
-
 
         Button btnConfirm = (Button) dialog.findViewById(R.id.btnConfirm);
         btnConfirm.setOnClickListener(new View.OnClickListener() {
@@ -300,6 +295,7 @@ public class SignUpActivity extends AppCompatActivity {
         btnSignUp = (Button) findViewById(R.id.btnSignUp);
         tvLoginLink = (TextView) findViewById(R.id.tvLoginLink);
         etPhoneNumber = (EditText) findViewById(R.id.etPhoneNumber);
+        tvDateOfBirth = (TextView) findViewById(R.id.tvDateOfBirth);
 
         Typeface typeface = Typeface.createFromAsset(getAssets(), "BreeSerif-Regular.ttf");
 

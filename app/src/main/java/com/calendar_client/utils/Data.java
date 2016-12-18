@@ -1,5 +1,6 @@
 package com.calendar_client.utils;
 
+import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -27,7 +28,6 @@ public class Data {
     private Set<User> users = new HashSet<>();
     private List<Event> sharedEvents = new ArrayList<>();
     private boolean isOnline = false;
-
     public static Data getInstance() {
         return ourInstance;
     }

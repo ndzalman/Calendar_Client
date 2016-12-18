@@ -9,6 +9,10 @@
     <string name="alert_dialog_negative">Exit</string>
     <string name="exit_alert_dialog_title">You are not logged</string>
 
+    <!--Alert Dialog - server off-->
+    <string name="alert_dialog_server_title">We could not establish a connection</string>
+    <string name="alert_dialog_server_message">Please try again later, or continue offline</string>
+
     <!--SplashScreen status-->
     <string name="splash_screen_status_start">Please Wait..</string>
     <string name="splash_screen_status_in_progress">Loading Components..</string>

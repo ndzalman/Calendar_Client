@@ -7,6 +7,7 @@ import android.app.DatePickerDialog;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -16,7 +17,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -40,14 +40,12 @@ import com.calendar_client.data.User;
 import com.calendar_client.utils.ApplicationConstants;
 import com.calendar_client.utils.Data;
 import com.calendar_client.utils.EventsDBHandler;
-import com.calendar_client.utils.NotificationReceiver;
-import com.google.android.gms.common.ConnectionResult;
+import com.calendar_client.utils.NotificationAlarmReceiver;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.GoogleApiClient;
 //import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.gson.Gson;
 
@@ -62,6 +60,7 @@ import java.net.URL;
 import java.util.Calendar;
 
 import static android.app.Activity.RESULT_OK;
+import static android.content.Intent.FLAG_INCLUDE_STOPPED_PACKAGES;
 
 
 public class EventDetailsFragment extends Fragment {
@@ -95,8 +94,8 @@ public class EventDetailsFragment extends Fragment {
     public static final int LOCATION_PERMISSION_REQUEST = 2;
     public static final int PLACE_PICKER_REQUEST = 1;
 
-    private GoogleApiClient mGoogleApiClient;
     private Activity activity;
+    private Calendar oldStartId;
 
 
     @Override
@@ -343,21 +342,42 @@ public class EventDetailsFragment extends Fragment {
     }
 
     private void scheduleNotification() {
-        Intent notificationIntent = new Intent(getActivity(), NotificationReceiver.class);
-        notificationIntent.putExtra(NotificationReceiver.NOTIFICATION_ID, event.getId());
-        notificationIntent.putExtra(NotificationReceiver.NOTIFICATION, getNotification());
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(), 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+//        ComponentName receiver = new ComponentName(getActivity(), NotificationAlarmReceiver.class);
+//        PackageManager pm = getActivity().getPackageManager();
+//
+//        pm.setComponentEnabledSetting(receiver,
+//                PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+//                PackageManager.DONT_KILL_APP);
 
-        AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, event.getDateStart().getTimeInMillis(), pendingIntent);
+        int id = (int)event.getDateStart().getTimeInMillis();
+        Log.e("schedule","id is " + id);
+//        Intent notificationIntent = new Intent(getActivity().getApplicationContext(), NotificationAlarmReceiver.class);
+//        notificationIntent.putExtra(NOTIFICATION_ID,((int)event.getDateStart().getTimeInMillis()));
+//        notificationIntent.putExtra(NOTIFICATION,(getNotification()));
+//        PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity().getApplicationContext(), (int)event.getDateStart().getTimeInMillis(), notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        long when = event.getDateStart().getTimeInMillis();
+
+        AlarmManager am = (AlarmManager)getActivity().getBaseContext().getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(getActivity().getBaseContext(), NotificationAlarmReceiver.class);
+        intent.putExtra("event", event);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity().getBaseContext(), id, intent,0 );
+        am.set(AlarmManager.RTC_WAKEUP, when, pendingIntent);
     }
 
-    private void updateNotifcation() {
+    private void updateNotification(Calendar oldStart) {
+        int id = (int)oldStart.getTimeInMillis();
 
-    }
+        AlarmManager am = (AlarmManager)getActivity().getBaseContext().getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(getActivity().getBaseContext(), NotificationAlarmReceiver.class);
+        intent.putExtra("event", event);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity().getBaseContext(), id, intent,0 );
+        am.cancel(pendingIntent);
 
-    private void deleteNotifcation() {
-
+        id = (int)event.getDateStart().getTimeInMillis();
+        long when = event.getDateStart().getTimeInMillis();
+        pendingIntent = PendingIntent.getBroadcast(getActivity().getBaseContext(), id, intent,0 );
+        am.set(AlarmManager.RTC_WAKEUP, when, pendingIntent);
     }
 
     private Notification getNotification() {
@@ -408,6 +428,9 @@ public class EventDetailsFragment extends Fragment {
             return false;
         } else {
 
+            if (isNew == false){
+                oldStartId = event.getDateStart();
+            }
             event.setDescription(etDescription.getText().toString());
             event.setTitle(etEventTitle.getText().toString());
             Calendar dateStart = Calendar.getInstance();
@@ -416,6 +439,8 @@ public class EventDetailsFragment extends Fragment {
             dateStart.set(Calendar.DAY_OF_MONTH, dayStart);
             dateStart.set(Calendar.HOUR_OF_DAY, hourStart);
             dateStart.set(Calendar.MINUTE, minuteStart);
+            dateStart.set(Calendar.SECOND, 0);
+            dateStart.set(Calendar.MILLISECOND, 0);
             event.setDateStart(dateStart);
             Calendar dateEnd = Calendar.getInstance();
             dateEnd.set(Calendar.YEAR, yearEnd);
@@ -423,6 +448,8 @@ public class EventDetailsFragment extends Fragment {
             dateEnd.set(Calendar.DAY_OF_MONTH, dayEnd);
             dateEnd.set(Calendar.HOUR_OF_DAY, hourEnd);
             dateEnd.set(Calendar.MINUTE, minuteEnd);
+            dateEnd.set(Calendar.SECOND, 0);
+            dateEnd.set(Calendar.MILLISECOND, 0);
             event.setDateEnd(dateEnd);
 
             if (!tvPickLocation.getText().equals(getString(R.string.new_event_location_hint))) {
@@ -478,6 +505,7 @@ public class EventDetailsFragment extends Fragment {
                     } else {
                         // if we editing existing event we update the SQLite and execute the edit
                         // event task
+                        updateNotification(oldStartId);
                         fabDone.setEnabled(false);
                         boolean isSuccessful = dbHandler.updateEvent(event);
                         if (isSuccessful) {

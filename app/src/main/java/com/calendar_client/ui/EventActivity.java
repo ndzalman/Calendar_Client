@@ -1,6 +1,8 @@
 package com.calendar_client.ui;
 
 import android.Manifest;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -21,9 +23,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -36,9 +35,8 @@ import com.calendar_client.utils.ApplicationConstants;
 import com.calendar_client.utils.Data;
 import com.calendar_client.utils.EventsDBConstants;
 import com.calendar_client.utils.EventsDBHandler;
+import com.calendar_client.utils.NotificationAlarmReceiver;
 import com.google.gson.Gson;
-
-import org.w3c.dom.Text;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -50,8 +48,6 @@ import java.net.ProtocolException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 public class EventActivity extends AppCompatActivity {
@@ -75,6 +71,8 @@ public class EventActivity extends AppCompatActivity {
     private List<String> usersNames = new ArrayList<>();
     private boolean isOwner = false;
     private User user;
+    public static String NOTIFICATION_ID = "notification-id";
+    public static String NOTIFICATION = "notification";
 
 
     @Override
@@ -82,8 +80,6 @@ public class EventActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event);
         event = (Event) getIntent().getSerializableExtra("event");
-        dbHandler = new EventsDBHandler(this);
-        initEventViewComponents();
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String userJSON = sharedPreferences.getString("user","");
@@ -91,11 +87,24 @@ public class EventActivity extends AppCompatActivity {
             user = new Gson().fromJson(userJSON,User.class);
         }
 
+        dbHandler = new EventsDBHandler(this);
+        initEventViewComponents();
+
         if (!Data.getInstance().isOnline()){
             fabEventDelete.setVisibility(View.GONE);
             fabEventEdit.setVisibility(View.GONE);
         }
 
+    }
+
+    private void deleteNotification() {
+        int id = (int)event.getDateStart().getTimeInMillis();
+
+        AlarmManager am = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(getBaseContext(), NotificationAlarmReceiver.class);
+        intent.putExtra("event", event);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getBaseContext(), id, intent,0 );
+        am.cancel(pendingIntent);
     }
 
     private void initEventViewComponents() {
@@ -152,7 +161,7 @@ public class EventActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 fabEventDelete.setEnabled(false);
-
+                deleteNotification(); //cancel notfication
                 boolean isSuccessful = dbHandler.deleteEvent(event);
                 if (isSuccessful) {
                     Log.i("DELETE-EVENT", "Event Deleted successfuly");
@@ -482,7 +491,12 @@ public class EventActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         finish();
-        Intent calendar = new Intent(this,CalendarActivity.class);
-        startActivity(calendar);
+        if (getIntent().getBooleanExtra("notification",false) != false){
+            Intent splash = new Intent(this,SplashScreenActivity.class);
+            startActivity(splash);
+        } else{
+            Intent calendar = new Intent(this,CalendarActivity.class);
+            startActivity(calendar);
+        }
     }
 }

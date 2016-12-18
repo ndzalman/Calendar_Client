@@ -159,6 +159,7 @@ public class LoginActivity extends AppCompatActivity {
             // if response not null it means user exist and i save it to the shared preference
             // in order to launch straight to home screen in the next time we open the application
             if (response != null && !response.equals("null")) {
+                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 Gson gson = new Gson();
                 user = gson.fromJson(response, User.class);

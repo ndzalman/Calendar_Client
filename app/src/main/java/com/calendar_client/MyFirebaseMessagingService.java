@@ -1,7 +1,5 @@
 package com.calendar_client;
 
-import android.app.AlarmManager;
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -17,10 +15,8 @@ import android.util.Log;
 import com.calendar_client.data.Event;
 import com.calendar_client.data.User;
 import com.calendar_client.ui.EventActivity;
-import com.calendar_client.ui.UpComingEventsActivity;
 import com.calendar_client.utils.Data;
 import com.calendar_client.utils.EventsDBHandler;
-import com.calendar_client.utils.NotificationReceiver;
 import com.google.firebase.messaging.*;
 import com.google.gson.Gson;
 
@@ -47,7 +43,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             EventsDBHandler eventsDBHandler = new EventsDBHandler(this);
             eventsDBHandler.addEvent(e, u.getId());
             Data.getInstance().getSharedEvents().add(e);
-            scheduleNotification(e);
 
             sendNotification(e);
 
@@ -95,6 +90,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         Intent resultIntent = new Intent(this, EventActivity.class);
         resultIntent.putExtra("event", e);
+        resultIntent.putExtra("notification", true);
+
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
         stackBuilder.addParentStack(EventActivity.class);
 
@@ -108,52 +105,5 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 // notificationID allows you to update the notification later on.
         mNotificationManager.notify(1, mBuilder.build());
     }
-
-    private void scheduleNotification(Event event) {
-        Log.e("TEST","schedule notfication");
-        Intent notificationIntent = new Intent(MyFirebaseMessagingService.this, NotificationReceiver.class);
-        notificationIntent.putExtra(NotificationReceiver.NOTIFICATION_ID, event.getId());
-        notificationIntent.putExtra(NotificationReceiver.NOTIFICATION, getNotification(event));
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, event.getDateStart().getTimeInMillis(), pendingIntent);
-    }
-
-    private Notification getNotification(Event event) {
-        Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-
-        NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(this)
-                        .setSmallIcon(R.drawable.ic_stat_name)
-                        .setContentTitle(event.getTitle())
-                        .setContentText(event.getDateStart().get(Calendar.HOUR_OF_DAY) + ":" + event.getDateStart().get(Calendar.MINUTE)
-                                + " - " + event.getDateEnd().get(Calendar.HOUR_OF_DAY) + ":" + event.getDateEnd().get(Calendar.MINUTE)
-                        )
-                        .setAutoCancel(true)
-                        .setSound(uri);
-
-// Creates an explicit intent for an Activity in your app
-        Intent resultIntent = new Intent(this, EventActivity.class);
-        resultIntent.putExtra("event",event);
-
-// The stack builder object will contain an artificial back stack for the
-// started Activity.
-// This ensures that navigating backward from the Activity leads out of
-// your application to the Home screen.
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-// Adds the back stack for the Intent (but not the Intent itself)
-        stackBuilder.addParentStack(UpComingEventsActivity.class);
-// Adds the Intent that starts the Activity to the top of the stack
-        stackBuilder.addNextIntent(resultIntent);
-        PendingIntent resultPendingIntent =
-                stackBuilder.getPendingIntent(
-                        0,
-                        PendingIntent.FLAG_UPDATE_CURRENT
-                );
-        mBuilder.setContentIntent(resultPendingIntent);
-        return mBuilder.build();
-    }
-
 
 }

@@ -10,6 +10,9 @@
     <string name="alert_dialog_negative">יציאה</string>
     <string name="exit_alert_dialog_title">אינך מחובר</string>
 
+    <!--Alert Dialog - server off-->
+    <string name="alert_dialog_server_title">לא הצלחנו להתחבר</string>
+    <string name="alert_dialog_server_message">Please try again later, or continue offline</string>
 
     <!--SplashScreen status-->
     <string name="splash_screen_status_start">אנא המתן..</string>

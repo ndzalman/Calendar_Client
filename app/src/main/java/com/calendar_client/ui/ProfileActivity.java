@@ -58,7 +58,6 @@ public class ProfileActivity extends AppCompatActivity {
     private SharedPreferences sharedPreferences;
     private User user;
     private EditText etUserName;
-    private EditText etMobilePhone;
     private EditText etEmail;
     private TextView tvEditPassword;
     private Button btnEditUser;
@@ -99,8 +98,6 @@ public class ProfileActivity extends AppCompatActivity {
         }
         etUserName = (EditText) findViewById(R.id.etUserName);
         etUserName.setText(user.getUserName());
-        etMobilePhone = (EditText) findViewById(R.id.etMobilePhone);
-        etMobilePhone.setText(user.getPhoneNumber());
         etEmail = (EditText) findViewById(R.id.etEmail);
         etEmail.setText(user.getEmail());
         tvEditPassword = (TextView) findViewById(R.id.tvEditPassword);
@@ -150,7 +147,6 @@ public class ProfileActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
                         user.setUserName(etUserName.getText().toString());
-                        user.setPhoneNumber(etMobilePhone.getText().toString());
                         user.setEmail(etEmail.getText().toString());
                         btnEditUser.setEnabled(false);
                         new UpdateUserTask().execute();
@@ -363,11 +359,12 @@ public class ProfileActivity extends AppCompatActivity {
                     imgViewUser.setImageBitmap(bit);
                     file.delete();
                     l1.setVisibility(View.VISIBLE);
+                    btnEditUser.setVisibility(View.VISIBLE);
                     l2.setVisibility(View.GONE);
                     super.onPostExecute(aVoid);
                 }
             }
-
+            btnEditUser.setVisibility(View.GONE);
             l1.setVisibility(View.GONE);
             l2.setVisibility(View.VISIBLE);
             new PicTask().execute();

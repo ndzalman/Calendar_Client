@@ -53,15 +53,15 @@
     <string name="sign_up_phone_number_empty">Mobile Phone is empty</string>
 
     <!--Popup sms verification -->
-    <string name="popup_title">Confirm your mobile phone number</string>
+    <string name="popup_title">confirm your mobile phone number</string>
     <string name="popup_enter_code">Enter verification code</string>
     <string name="popup_code_hint">Verification code</string>
-    <string name="popup_button">Confirm</string>
+    <string name="popup_button">confirm</string>
     <string name="popup_key_not_match">Key is not a match!</string>
 
 
     <!--New/Edit Event Screen -->
-    <string name="new_event_title">New Event</string>
+    <string name="new_event_title">NEW EVENT</string>
     <string name="edit_event_title">Event Details</string>
     <string name="new_event_title_hint">Event Title</string>
     <string name="new_event_edit_title">Edit Event</string>
@@ -98,7 +98,7 @@
     <string name="exit_dialog_negative">NO</string>
 
     <!--Contact fragnebt-->
-    <string name="add_contacts">contact to this event</string>
+    <string name="add_contacts">Contacts</string>
 
     <!-- Events -->
     <string name="events_title">Upcoming events</string>
@@ -131,7 +131,7 @@
     <string name="tav_event_contacts">Add Contacts</string>
 
     <!--Event Details -->
-    <string name="event_title">Event Details</string>
+    <string name="event_title">EVENT DETAILS</string>
     <string name="event_btn_show_more">Show more</string>
     <string name="event_btn_show_less">Show less</string>
     <string name="event_contacts">Participants at the event:</string>

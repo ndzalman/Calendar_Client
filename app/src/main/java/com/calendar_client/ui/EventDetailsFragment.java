@@ -3,16 +3,20 @@ package com.calendar_client.ui;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlarmManager;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.media.RingtoneManager;
@@ -32,10 +36,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -102,6 +108,11 @@ public class EventDetailsFragment extends Fragment {
     public static final int ALARM_PERMISSION_REQUEST = 1;
     public static final int LOCATION_PERMISSION_REQUEST = 2;
     public static final int PLACE_PICKER_REQUEST = 1;
+    private static final int REQUEST_EXTERNAL_STORAGE = 1;
+    private static String[] PERMISSIONS_STORAGE = {
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+    };
 
     private Activity activity;
     private Calendar oldStartId;
@@ -116,6 +127,8 @@ public class EventDetailsFragment extends Fragment {
 
     private final static int PICK_IMAGE_REQUEST = 1235;
 
+    Bitmap selectedImage;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         //Returning the layout file after inflating
@@ -123,7 +136,8 @@ public class EventDetailsFragment extends Fragment {
         view = inflater.inflate(R.layout.event_details_layout, container, false);
         activity = getActivity();
 
-//        PendingResult<PlaceLikelihoodBuffer> result = Places.PlaceDetectionApi
+        verifyStoragePermissions(getActivity());
+//        PendingResult<PlaceLikelihoodBuffeor> result = Places.PlaceDetectionApi
 //                .getCurrentPlace(mGoogleApiClient, null);
 //        result.setResultCallback(new ResultCallback<PlaceLikelihoodBuffer>() {
 //            @Override
@@ -158,6 +172,22 @@ public class EventDetailsFragment extends Fragment {
         }
 
         return view;
+    }
+
+
+
+    public static void verifyStoragePermissions(Activity activity) {
+        // Check if we have write permission
+        int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            // We don't have permission so prompt the user
+            ActivityCompat.requestPermissions(
+                    activity,
+                    PERMISSIONS_STORAGE,
+                    REQUEST_EXTERNAL_STORAGE
+            );
+        }
     }
 
     private void InitEditViewComponents() {
@@ -250,8 +280,8 @@ public class EventDetailsFragment extends Fragment {
             Uri filePath = data.getData();
 
             try {
-                Bitmap bitmap = Bitmap.createScaledBitmap(MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), filePath), 200, 200, true);
-                ivPicture.setImageBitmap(bitmap);
+                selectedImage = Bitmap.createScaledBitmap(MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), filePath), 500, 500, true);
+                ivPicture.setImageBitmap(selectedImage);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -523,6 +553,25 @@ public class EventDetailsFragment extends Fragment {
                 startActivityForResult(Intent.createChooser(intent, getResources().getString(R.string.select_picture)), PICK_IMAGE_REQUEST);
             }
         });
+
+        ivPicture.setClickable(true);
+        ivPicture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                final AlertDialog dialog = builder.create();
+                LayoutInflater inflater = activity.getLayoutInflater();
+                View dialogLayout = inflater.inflate(R.layout.image_popup, null);
+                dialog.setView(dialogLayout);
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                ImageView image = (ImageView) dialogLayout.findViewById(R.id.popup_image);
+                image.setImageBitmap(selectedImage);
+
+                dialog.show();
+
+            }
+        });
+
 
         fabDone.setOnClickListener(new View.OnClickListener() {
             @Override

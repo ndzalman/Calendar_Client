@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:background="@drawable/calendario_background"
     android:id="@+id/popup_layout"
-    >
+    android:padding="16dp">
 
 
     <TextView
@@ -13,27 +13,35 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:id="@+id/tvTitle"
-        android:layout_margin="15dp"
+        android:layout_margin="6dp"
         android:textColor="@color/colorPrimary"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        android:fontFamily="sans-serif-smallcaps"
+        android:padding="6dp"
+        android:textStyle="normal|bold"
+        android:textSize="30sp" />
 
     <TextView
         android:text="@string/popup_enter_code"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvTitle"
-        android:layout_margin="10dp"
+        android:layout_margin="6dp"
         android:id="@+id/tvEnterCode"
         android:textColor="@color/colorPrimaryDark"
-        android:textAppearance="@style/TextAppearance.AppCompat.Headline" />
+        android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+        android:fontFamily="sans-serif-condensed"
+        android:gravity="center"
+        android:padding="6dp" />
 
     <android.support.design.widget.TextInputLayout
         android:layout_below="@+id/tvEnterCode"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
         android:id="@+id/code"
-        >
+        android:padding="6dp"
+        android:background="@color/whiteOpacity"
+        android:layout_margin="10dp">
         <EditText
             android:id="@+id/etCode"
             android:hint="@string/popup_code_hint"
@@ -41,17 +49,27 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:textColorHint="@color/colorPrimary"
-            android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+            android:padding="10dp"
+            android:textColor="@color/colorPrimaryLight"
+            android:textSize="18sp"
+            android:fontFamily="sans-serif-condensed" />
     </android.support.design.widget.TextInputLayout>
 
 
     <android.support.v7.widget.AppCompatButton
         android:text="@string/popup_button"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/code"
         android:layout_margin="10dp"
         android:background="@color/colorPrimaryDark"
         android:layout_centerInParent="true"
-        android:id="@+id/btnConfirm" />
+        android:id="@+id/btnConfirm"
+        android:padding="10dp"
+        android:gravity="center"
+        android:textSize="20sp"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:fontFamily="sans-serif-smallcaps" />
 </RelativeLayout>

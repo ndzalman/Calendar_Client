@@ -14,7 +14,8 @@
         android:layout_height="0dp"
         android:weightSum="10"
         android:padding="5dp"
-        android:background="@android:drawable/editbox_dropdown_light_frame">
+        android:background="@drawable/clickable_text_view"
+        android:layout_margin="5dp">
 
         <ImageView
             android:src="@drawable/ic_details_white"
@@ -29,7 +30,6 @@
 
         <TextView
             android:text="Title"
-            android:textAppearance="?android:attr/textAppearanceMedium"
             android:id="@+id/tvTitle"
             android:textColor="@color/colorPrimaryLight"
             android:layout_width="0dp"
@@ -38,9 +38,9 @@
             android:layout_margin="3dp"
             android:gravity="center|start"
             android:layout_weight="4"
-            android:fontFamily="serif"
-            android:textStyle="bold|italic"
-            android:textSize="16sp" />
+            android:fontFamily="sans-serif-condensed"
+            android:textSize="18sp"
+            android:textStyle="normal|bold" />
 
         <ImageView
             android:id="@+id/imgViewTime"
@@ -57,16 +57,14 @@
             android:text="Time"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:textAppearance="?android:attr/textAppearanceMedium"
             android:id="@+id/tvTime"
             android:textColor="@color/colorPrimaryLight"
             android:padding="3dp"
             android:layout_margin="3dp"
             android:gravity="center|start"
             android:layout_weight="4"
-            android:fontFamily="serif"
-            android:textStyle="italic"
-            android:textSize="16sp" />
+            android:fontFamily="sans-serif-condensed"
+            android:textSize="18sp" />
 
 
     </LinearLayout>

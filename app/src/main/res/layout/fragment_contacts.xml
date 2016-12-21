@@ -8,21 +8,24 @@
     <TextView
         android:text="@string/add_contacts"
         android:gravity="center"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/tvAddContacts"
         android:layout_margin="10dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        android:padding="10dp"
+        android:textSize="24sp"
+        android:textStyle="normal|bold"
+        android:fontFamily="sans-serif-smallcaps"
+        android:textColor="@color/colorPrimary" />
 
     <ListView
         android:layout_below="@id/tvAddContacts"
         android:id="@+id/lvUsers"
-        android:divider="@android:color/transparent"
         android:dividerHeight="5dp"
-        android:layout_marginEnd="5dp"
-        android:layout_marginStart="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        />
+        android:layout_margin="5dp"
+        android:padding="5dp" />
 
 </RelativeLayout>

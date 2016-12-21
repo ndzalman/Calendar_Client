@@ -14,39 +14,39 @@
     <string name="alert_dialog_server_message">Please try again later, or continue offline</string>
 
     <!--SplashScreen status-->
-    <string name="splash_screen_status_start">Please Wait..</string>
-    <string name="splash_screen_status_in_progress">Loading Components..</string>
-    <string name="splash_screen_status_end">Done !</string>
+    <string name="splash_screen_status_start">Please Wait...</string>
+    <string name="splash_screen_status_in_progress">Loading Components...</string>
+    <string name="splash_screen_status_end">Done!</string>
 
     <!--LoginScreen -->
-    <string name="login_title">Login</string>
+    <string name="login_title">LOGIN</string>
     <string name="login_email_hint">Email</string>
     <string name="login_password_hint">Password</string>
     <string name="login_button">Login</string>
     <string name="login_sign_up">No account yet? Create one</string>
-    <string name="login_password_error_length">minimum 5 letters</string>
-    <string name="login_password_error_empty">password is empty</string>
-    <string name="login_email_error_invalid">invalid email</string>
-    <string name="login_email_error_empty">email is empty</string>
+    <string name="login_password_error_length">Minimum 5 letters</string>
+    <string name="login_password_error_empty">Password is empty</string>
+    <string name="login_email_error_invalid">Invalid email</string>
+    <string name="login_email_error_empty">Email is empty</string>
     <string name="login_error">Incorrect Details</string>
 
     <!--SignUp Screen -->
-    <string name="sign_up_title">Sign Up</string>
+    <string name="sign_up_title">SIGN UP</string>
     <string name="sign_up_username_hint">User Name</string>
     <string name="sign_up_email_hint">Email</string>
     <string name="sign_up_password_hint">Password</string>
     <string name="sign_up_confirm_password_hint">Confirm Password</string>
     <string name="sign_up_date">Date Of Birth</string>
     <string name="sign_up_link_login">Already a member? Login</string>
-    <string name="sign_up_btn_sign_up">Create Account</string>
-    <string name="sign_up_username_error_length">minimum 5 letters</string>
-    <string name="sign_up_username_error_empty">user name is empty</string>
-    <string name="sign_up_email_error_invalid">invalid email</string>
-    <string name="sign_up_email_error_empty">email is empty</string>
-    <string name="sign_up_password_error_length">minimum 5 letters</string>
-    <string name="sign_up_password_error_empty">password is empty</string>
-    <string name="sign_up_confirm_password_error_no_match">password are not equal</string>
-    <string name="sign_up_date_empty">pick your date of birth</string>
+    <string name="sign_up_btn_sign_up">CREATE ACCOUNT</string>
+    <string name="sign_up_username_error_length">Minimum 5 letters</string>
+    <string name="sign_up_username_error_empty">User name is empty</string>
+    <string name="sign_up_email_error_invalid">Invalid email</string>
+    <string name="sign_up_email_error_empty">Email is empty</string>
+    <string name="sign_up_password_error_length">Minimum 5 letters</string>
+    <string name="sign_up_password_error_empty">Password is empty</string>
+    <string name="sign_up_confirm_password_error_no_match">Password are not equal</string>
+    <string name="sign_up_date_empty">Pick your date of birth</string>
     <string name="sign_up_successful">Account Created !</string>
     <string name="sign_up_error">We Could not create your account</string>
     <string name="sign_up_phone_number_hint">Mobile Phone</string>
@@ -61,7 +61,7 @@
 
 
     <!--New/Edit Event Screen -->
-    <string name="new_event_title">Add New Event</string>
+    <string name="new_event_title">New Event</string>
     <string name="edit_event_title">Event Details</string>
     <string name="new_event_title_hint">Event Title</string>
     <string name="new_event_edit_title">Edit Event</string>
@@ -93,12 +93,12 @@
 
     <!--Alert Dialog - exit dialog-->
     <string name="exit_dialog_title">Exit Application</string>
-    <string name="exit_dialog_message">Are you sure you want to exit ?</string>
+    <string name="exit_dialog_message">Are you sure you want to exit?</string>
     <string name="exit_dialog_postive">YES</string>
     <string name="exit_dialog_negative">NO</string>
 
     <!--Contact fragnebt-->
-    <string name="add_contacts">Add contact to this event</string>
+    <string name="add_contacts">contact to this event</string>
 
     <!-- Events -->
     <string name="events_title">Upcoming events</string>
@@ -144,6 +144,5 @@
     <string name="location">Location</string>
     <string name="arrow_left">Left Arrow</string>
     <string name="arrow_right">Right Arrow</string>
-
-
+    <string name="select_picture">Select_Picture</string>
 </resources>

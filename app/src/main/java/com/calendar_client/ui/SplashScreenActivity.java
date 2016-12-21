@@ -72,8 +72,8 @@ public class SplashScreenActivity extends AppCompatActivity {
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         tvStatus = (TextView) findViewById(R.id.tvStatus);
 
-        Typeface typeface = Typeface.createFromAsset(getAssets(), "BreeSerif-Regular.ttf");
-        tvStatus.setTypeface(typeface);
+//        Typeface typeface = Typeface.createFromAsset(getAssets(), "BreeSerif-Regular.ttf");
+//        tvStatus.setTypeface(typeface);
 
         intent = new Intent(SplashScreenActivity.this, LoginActivity.class);
 

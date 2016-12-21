@@ -25,13 +25,13 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="@color/colorAccent"
         android:text=""
         android:id="@+id/tvStatus"
         android:layout_weight="2"
         android:gravity="center"
-        />
+        android:fontFamily="sans-serif-condensed"
+        android:textSize="14sp" />
 
     <ProgressBar
         android:layout_width="wrap_content"

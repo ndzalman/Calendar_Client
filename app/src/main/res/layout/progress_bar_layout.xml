@@ -5,7 +5,7 @@
 
 
     <ProgressBar
-        style="?android:attr/progressBarStyleLarge"
+        style="@style/Widget.AppCompat.ProgressBar"
         android:layout_width="match_parent"
         android:layout_centerInParent="true"
         android:layout_height="wrap_content"

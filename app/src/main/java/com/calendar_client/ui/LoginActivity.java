@@ -47,7 +47,11 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        Typeface typeface = Typeface.createFromAsset(getAssets(), "BreeSerif-Regular.ttf");
+//        Typeface typeface = Typeface.createFromAsset(getAssets(), "BreeSerif-Regular.ttf");
+//        etEmail.setTypeface(typeface);
+//        etPassword.setTypeface(typeface);
+//        btnLogin.setTypeface(typeface);
+//        tvSignUp.setTypeface(typeface);
 
         // link layout components
         etEmail = (EditText) findViewById(R.id.etEmail);
@@ -56,10 +60,6 @@ public class LoginActivity extends AppCompatActivity {
         tvSignUp = (TextView) findViewById(R.id.tvSignUp);
 
         data = Data.getInstance();
-        etEmail.setTypeface(typeface);
-        etPassword.setTypeface(typeface);
-        btnLogin.setTypeface(typeface);
-        tvSignUp.setTypeface(typeface);
 
         tvSignUp.setOnClickListener(new View.OnClickListener() {
             @Override

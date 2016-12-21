@@ -297,12 +297,12 @@ public class SignUpActivity extends AppCompatActivity {
         etPhoneNumber = (EditText) findViewById(R.id.etPhoneNumber);
         tvDateOfBirth = (TextView) findViewById(R.id.tvDateOfBirth);
 
-        Typeface typeface = Typeface.createFromAsset(getAssets(), "BreeSerif-Regular.ttf");
-
-        etUserName.setTypeface(typeface);
-        tvDateOfBirth.setTypeface(typeface);
-        btnSignUp.setTypeface(typeface);
-        tvLoginLink.setTypeface(typeface);
+//        Typeface typeface = Typeface.createFromAsset(getAssets(), "BreeSerif-Regular.ttf");
+//
+//        etUserName.setTypeface(typeface);
+//        tvDateOfBirth.setTypeface(typeface);
+//        btnSignUp.setTypeface(typeface);
+//        tvLoginLink.setTypeface(typeface);
     }
 
     // if details validation was successful we sent the new user to the server

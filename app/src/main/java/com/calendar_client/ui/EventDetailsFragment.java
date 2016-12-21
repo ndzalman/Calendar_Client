@@ -12,11 +12,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.preference.PreferenceManager;
+import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -30,6 +34,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -47,9 +53,11 @@ import com.google.android.gms.common.api.GoogleApiClient;
 //import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.gson.Gson;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -58,6 +66,7 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.util.Calendar;
+import java.util.Date;
 
 import static android.app.Activity.RESULT_OK;
 import static android.content.Intent.FLAG_INCLUDE_STOPPED_PACKAGES;
@@ -97,6 +106,15 @@ public class EventDetailsFragment extends Fragment {
     private Activity activity;
     private Calendar oldStartId;
 
+    private DatePickerDialog dpdStart;
+    private DatePickerDialog dpdEnd;
+
+    private LatLngBounds seletedPlace;
+
+    private ImageView ivPicture;
+    private ImageButton ibPicture;
+
+    private final static int PICK_IMAGE_REQUEST = 1235;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -163,6 +181,7 @@ public class EventDetailsFragment extends Fragment {
             hourStart = c.get(Calendar.HOUR_OF_DAY);
             minuteStart = c.get(Calendar.MINUTE);
 
+
             tvDateStart.setText(selected.get(Calendar.DAY_OF_MONTH) + "/" + (selected.get(Calendar.MONTH) + 1) + "/" + selected.get(Calendar.YEAR));
             if (minuteStart < 10) {
                 tvTimeStart.setText(hourStart + ":0" + minuteStart);
@@ -222,65 +241,81 @@ public class EventDetailsFragment extends Fragment {
         if (requestCode == PLACE_PICKER_REQUEST) {
             if (resultCode == RESULT_OK) {
                 Place place = PlacePicker.getPlace(data, getActivity());
+                seletedPlace = place.getViewport();
 //                String toastMsg = String.format("Place: %s", place.getName());
 //                Toast.makeText(getActivity(), toastMsg, Toast.LENGTH_LONG).show();
                 tvPickLocation.setText(place.getName());
+            }
+        } else if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            Uri filePath = data.getData();
+
+            try {
+                Bitmap bitmap = Bitmap.createScaledBitmap(MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), filePath), 200, 200, true);
+                ivPicture.setImageBitmap(bitmap);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
     }
 
     private void initDateAndTimePicker() {
 
-        tvDateStart.setOnClickListener(new View.OnClickListener() {
+        dpdStart = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
             @Override
-            public void onClick(View view) {
-                DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
 //                        if (c.get(Calendar.YEAR) > year || c.get(Calendar.MONTH) > month || c.get(Calendar.DAY_OF_MONTH) > day) {
 //                            Toast.makeText(getActivity(), getResources().getString(R.string.new_event_date_error), Toast.LENGTH_SHORT).show();
 //                        } else {
-                        tvDateStart.setText(day + "/" + (month + 1) + "/" + year);
-                        yearStart = year;
-                        monthStart = month;
-                        dayStart = day;
-//                        }
-                    }
-                }, yearStart, monthStart, dayStart);
+                tvDateStart.setText(day + "/" + (month + 1) + "/" + year);
+                yearStart = year;
+                monthStart = month;
+                dayStart = day;
+                Calendar selectedDate = Calendar.getInstance();
+                selectedDate.set(year, month, day);
 
-                if (Build.VERSION.SDK_INT < 21) {
-                    datePickerDialog.getDatePicker().getCalendarView().setFirstDayOfWeek(Calendar.SUNDAY);
-                } else {
-                    datePickerDialog.getDatePicker().setFirstDayOfWeek(Calendar.SUNDAY);
-                }
-                datePickerDialog.show();
+
+                dpdEnd.getDatePicker().setMinDate(selectedDate.getTime().getTime());
+//                        }
+            }
+        }, yearStart, monthStart, dayStart);
+        dpdStart.getDatePicker().setMinDate(new Date().getTime());
+        if (Build.VERSION.SDK_INT < 21) {
+            dpdStart.getDatePicker().getCalendarView().setFirstDayOfWeek(Calendar.SUNDAY);
+        } else {
+            dpdStart.getDatePicker().setFirstDayOfWeek(Calendar.SUNDAY);
+        }
+        tvDateStart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                dpdStart.show();
             }
         });
 
+        dpdEnd = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                if (year < yearStart ||
+                        (c.get(Calendar.YEAR) == yearStart && month < monthStart) || (month == monthStart && day < dayStart)) {
+                    Toast.makeText(getActivity(), getResources().getString(R.string.new_event_date_error), Toast.LENGTH_SHORT).show();
+                } else {
+                    tvDateEnd.setText(day + "/" + (month + 1) + "/" + year);
+                    yearEnd = year;
+                    monthEnd = month;
+                    dayEnd = day;
+                }
+            }
+        }, yearEnd, monthEnd, dayEnd);
+        dpdEnd.getDatePicker().setMinDate(new Date().getTime());
+        if (Build.VERSION.SDK_INT < 21) {
+            dpdEnd.getDatePicker().getCalendarView().setFirstDayOfWeek(Calendar.SUNDAY);
+        } else {
+            dpdEnd.getDatePicker().setFirstDayOfWeek(Calendar.SUNDAY);
+        }
         tvDateEnd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                        if (year < yearStart ||
-                                (c.get(Calendar.YEAR) == yearStart && month < monthStart) || (month == monthStart && day < dayStart)) {
-                            Toast.makeText(getActivity(), getResources().getString(R.string.new_event_date_error), Toast.LENGTH_SHORT).show();
-                        } else {
-                            tvDateEnd.setText(day + "/" + (month + 1) + "/" + year);
-                            yearEnd = year;
-                            monthEnd = month;
-                            dayEnd = day;
-                        }
-                    }
-                }, yearEnd, monthEnd, dayEnd);
-
-                if (Build.VERSION.SDK_INT < 21) {
-                    datePickerDialog.getDatePicker().getCalendarView().setFirstDayOfWeek(Calendar.SUNDAY);
-                } else {
-                    datePickerDialog.getDatePicker().setFirstDayOfWeek(Calendar.SUNDAY);
-                }
-                datePickerDialog.show();
+                dpdEnd.show();
             }
         });
 
@@ -349,8 +384,8 @@ public class EventDetailsFragment extends Fragment {
 //                PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
 //                PackageManager.DONT_KILL_APP);
 
-        int id = (int)event.getDateStart().getTimeInMillis();
-        Log.e("schedule","id is " + id);
+        int id = (int) event.getDateStart().getTimeInMillis();
+        Log.e("schedule", "id is " + id);
 //        Intent notificationIntent = new Intent(getActivity().getApplicationContext(), NotificationAlarmReceiver.class);
 //        notificationIntent.putExtra(NOTIFICATION_ID,((int)event.getDateStart().getTimeInMillis()));
 //        notificationIntent.putExtra(NOTIFICATION,(getNotification()));
@@ -358,25 +393,25 @@ public class EventDetailsFragment extends Fragment {
 
         long when = event.getDateStart().getTimeInMillis();
 
-        AlarmManager am = (AlarmManager)getActivity().getBaseContext().getSystemService(Context.ALARM_SERVICE);
+        AlarmManager am = (AlarmManager) getActivity().getBaseContext().getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(getActivity().getBaseContext(), NotificationAlarmReceiver.class);
         intent.putExtra("event", event);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity().getBaseContext(), id, intent,0 );
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity().getBaseContext(), id, intent, 0);
         am.set(AlarmManager.RTC_WAKEUP, when, pendingIntent);
     }
 
     private void updateNotification(Calendar oldStart) {
-        int id = (int)oldStart.getTimeInMillis();
+        int id = (int) oldStart.getTimeInMillis();
 
-        AlarmManager am = (AlarmManager)getActivity().getBaseContext().getSystemService(Context.ALARM_SERVICE);
+        AlarmManager am = (AlarmManager) getActivity().getBaseContext().getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(getActivity().getBaseContext(), NotificationAlarmReceiver.class);
         intent.putExtra("event", event);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity().getBaseContext(), id, intent,0 );
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity().getBaseContext(), id, intent, 0);
         am.cancel(pendingIntent);
 
-        id = (int)event.getDateStart().getTimeInMillis();
+        id = (int) event.getDateStart().getTimeInMillis();
         long when = event.getDateStart().getTimeInMillis();
-        pendingIntent = PendingIntent.getBroadcast(getActivity().getBaseContext(), id, intent,0 );
+        pendingIntent = PendingIntent.getBroadcast(getActivity().getBaseContext(), id, intent, 0);
         am.set(AlarmManager.RTC_WAKEUP, when, pendingIntent);
     }
 
@@ -428,7 +463,7 @@ public class EventDetailsFragment extends Fragment {
             return false;
         } else {
 
-            if (isNew == false){
+            if (isNew == false) {
                 oldStartId = event.getDateStart();
             }
             event.setDescription(etDescription.getText().toString());
@@ -454,7 +489,7 @@ public class EventDetailsFragment extends Fragment {
 
             if (!tvPickLocation.getText().equals(getString(R.string.new_event_location_hint))) {
                 event.setLocation(tvPickLocation.getText().toString());
-            } else{
+            } else {
                 event.setLocation("");
             }
 
@@ -474,6 +509,20 @@ public class EventDetailsFragment extends Fragment {
         fabDone = (FloatingActionButton) view.findViewById(R.id.fabDone);
         tvTitle = (TextView) view.findViewById(R.id.tvTitle);
         tvPickLocation = (TextView) view.findViewById(R.id.tvPickLocation);
+
+        ivPicture = (ImageView) view.findViewById(R.id.ivPicture);
+        ibPicture = (ImageButton) view.findViewById(R.id.ibPicture);
+
+        ibPicture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+
+                startActivityForResult(Intent.createChooser(intent, getResources().getString(R.string.select_picture)), PICK_IMAGE_REQUEST);
+            }
+        });
 
         fabDone.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -527,6 +576,9 @@ public class EventDetailsFragment extends Fragment {
             public void onClick(View v) {
                 PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
 
+                if (seletedPlace != null) {
+                    builder.setLatLngBounds(seletedPlace);
+                }
                 try {
                     startActivityForResult(builder.build(activity), PLACE_PICKER_REQUEST);
                 } catch (GooglePlayServicesRepairableException e) {

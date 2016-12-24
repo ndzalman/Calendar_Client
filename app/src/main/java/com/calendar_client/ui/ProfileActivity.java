@@ -336,15 +336,18 @@ public class ProfileActivity extends AppCompatActivity {
                 protected Void doInBackground(Void... voids) {
 
                     try {
-                        bit = Picasso.with(ProfileActivity.this).
-                                load(file).get();
+                        bit = Picasso.with(ProfileActivity.this)
+                                .load(file)
+                                .noFade()
+                                .centerCrop()
+                                .resize(350,350)
+                                .get();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                     byte[] byteArray = null;
                     ByteArrayOutputStream stream = new ByteArrayOutputStream();
                     Log.e("DEBUG", "Bitmap is :" + bit);
-                    bit = Bitmap.createScaledBitmap(bit,350,350,false);
                     if( bit != null ) {
                         bit.compress(Bitmap.CompressFormat.JPEG, 50, stream);
                         byteArray = stream.toByteArray();

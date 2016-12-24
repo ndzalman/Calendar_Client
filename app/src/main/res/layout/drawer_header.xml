@@ -4,9 +4,21 @@
     android:layout_width="match_parent"
     android:layout_height="150dp"
     android:background="?attr/colorPrimaryDark"
-    android:padding="16dp"
-    android:theme="@style/ThemeOverlay.AppCompat.Dark"
-    android:gravity="bottom">
+    android:padding="8dp"
+    android:theme="@style/ThemeOverlay.AppCompat.Dark">
+
+   <de.hdodenhof.circleimageview.CircleImageView
+       android:layout_width="350dp"
+       android:layout_height="350dp"
+       android:id="@+id/imgviewHeaderImage"
+       android:src="@drawable/ic_action_user"
+       android:layout_alignParentStart="true"
+       android:layout_alignParentLeft="true"
+       app:civ_border_width="0.5dp"
+       app:civ_border_color="@color/white"
+       android:layout_toStartOf="@+id/tvHeaderTitle"
+       android:layout_toLeftOf="@+id/tvHeaderTitle"
+       android:layout_alignParentTop="true" />
 
 
    <TextView
@@ -17,25 +29,8 @@
        android:layout_height="wrap_content"
        android:layout_alignParentEnd="true"
        android:layout_alignParentRight="true"
-       android:textAppearance="@style/TextAppearance.AppCompat.Large"
+       android:textAppearance="@style/TextAppearance.AppCompat.Medium"
        android:layout_alignParentBottom="true"
-       android:layout_margin="10dp"
        android:fontFamily="sans-serif-condensed"
        android:textSize="24sp" />
-
-
-   <de.hdodenhof.circleimageview.CircleImageView
-       android:layout_width="150dp"
-       android:layout_height="350dp"
-       android:id="@+id/imgviewHeaderImage"
-       android:src="@drawable/ic_action_user"
-       android:layout_alignParentStart="true"
-       android:layout_alignParentLeft="true"
-       app:civ_border_width="0.5dp"
-       app:civ_border_color="@color/white"
-       android:layout_toLeftOf="@+id/tvHeaderTitle"
-       android:layout_toStartOf="@+id/tvHeaderTitle" />
-
-
-
 </RelativeLayout>

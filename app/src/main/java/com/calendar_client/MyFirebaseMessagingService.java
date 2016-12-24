@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
@@ -15,12 +16,25 @@ import android.util.Log;
 import com.calendar_client.data.Event;
 import com.calendar_client.data.User;
 import com.calendar_client.ui.EventActivity;
+import com.calendar_client.utils.ApplicationConstants;
 import com.calendar_client.utils.Data;
 import com.calendar_client.utils.EventsDBHandler;
 import com.google.firebase.messaging.*;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.lang.reflect.Type;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
@@ -33,18 +47,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         // Check if message contains a data payload.
         if (remoteMessage.getData().size() > 0) {
             Log.d("TEST", "Message data payload: " + remoteMessage.getData());
-            Event e = new Gson().fromJson(remoteMessage.getData().toString(), Event.class);
-            Log.d("event", "event recived: " + e);
+//            Event e = new Gson().fromJson(remoteMessage.getData().toString(), Event.class);
+//            Log.d("TEST", "event recived: " + e);
+            String id = remoteMessage.getData().get("id");
+            int eventId = Integer.parseInt(id);
             // get user from shared preference. if doesnt exist return empty string
-            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-            String userJSON = sharedPreferences.getString("user", "");
-            User u = new Gson().fromJson(userJSON, User.class);
 
-            EventsDBHandler eventsDBHandler = new EventsDBHandler(this);
-            eventsDBHandler.addEvent(e, u.getId());
-            Data.getInstance().getSharedEvents().add(e);
-
-            sendNotification(e);
+            sendNotification(eventId);
 
         }
 
@@ -56,7 +65,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     }
 
-    private void sendNotification(Event e) {
+    private void sendNotification(int id) {
+        new GetEventTask(id).execute();
 
         // Also if you intend on generating your own notifications as a result of a received FCM
         // message, here is where that should be initiated. See sendNotification method below.
@@ -65,6 +75,11 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 //        mBuilder.setSmallIcon(R.drawable.calendario_icon_transperent);
 //        mBuilder.setContentTitle(e.getTitle());
 //        mBuilder.setContentText(e.getDescription());
+
+
+    }
+
+    private void notifcation(Event e){
         int year = e.getDateStart().get(Calendar.YEAR);
         int month = e.getDateStart().get(Calendar.MONTH);
         int day = e.getDateStart().get(Calendar.DAY_OF_MONTH);
@@ -105,5 +120,71 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 // notificationID allows you to update the notification later on.
         mNotificationManager.notify(1, mBuilder.build());
     }
+
+    private class GetEventTask extends AsyncTask<String, Void, String> {
+        int eventId;
+
+        public GetEventTask(int id){
+            this.eventId = id;
+        }
+
+        // executing
+        @Override
+        protected String doInBackground(String... strings) {
+            Log.d("test","in get event task");
+            StringBuilder response;
+            try {
+                URL url = new URL(ApplicationConstants.GET_EVENT_BY_ID + "?id=" + eventId);
+                response = new StringBuilder();
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                Log.e("DEBUG", conn.getResponseCode() + "");
+                if (conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
+                    Log.e("DEBUG", conn.getResponseMessage());
+                    return null;
+                }
+
+                BufferedReader input = new BufferedReader(
+                        new InputStreamReader(conn.getInputStream()));
+
+                String line;
+                while ((line = input.readLine()) != null) {
+                    response.append(line + "\n");
+                }
+
+                input.close();
+
+                conn.disconnect();
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+
+            return response.toString();
+        }
+
+        @Override
+        protected void onPostExecute(String response) {
+            Log.d("test","in get event task POST");
+            if (response != null){
+                Log.d("test","in get event task response is " + response);
+                Event newEvent = new Gson().fromJson(response.toString(), Event.class);
+                Data.getInstance().getSharedEvents().add(newEvent);
+
+                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                String userJSON = sharedPreferences.getString("user", "");
+                User u = new Gson().fromJson(userJSON, User.class);
+
+                EventsDBHandler eventsDBHandler = new EventsDBHandler(MyFirebaseMessagingService.this);
+                eventsDBHandler.addEvent(newEvent, u.getId());
+
+                notifcation(newEvent);
+            }
+
+        }
+
+    }
+
 
 }

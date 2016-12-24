@@ -61,8 +61,10 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.gson.Gson;
+import com.squareup.picasso.Picasso;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -124,6 +126,7 @@ public class EventDetailsFragment extends Fragment {
 
     private ImageView ivPicture;
     private ImageButton ibPicture;
+    private byte[] picture;
 
     private final static int PICK_IMAGE_REQUEST = 1235;
 
@@ -136,7 +139,6 @@ public class EventDetailsFragment extends Fragment {
         view = inflater.inflate(R.layout.event_details_layout, container, false);
         activity = getActivity();
 
-        verifyStoragePermissions(getActivity());
 //        PendingResult<PlaceLikelihoodBuffeor> result = Places.PlaceDetectionApi
 //                .getCurrentPlace(mGoogleApiClient, null);
 //        result.setResultCallback(new ResultCallback<PlaceLikelihoodBuffer>() {
@@ -172,22 +174,6 @@ public class EventDetailsFragment extends Fragment {
         }
 
         return view;
-    }
-
-
-
-    public static void verifyStoragePermissions(Activity activity) {
-        // Check if we have write permission
-        int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-
-        if (permission != PackageManager.PERMISSION_GRANTED) {
-            // We don't have permission so prompt the user
-            ActivityCompat.requestPermissions(
-                    activity,
-                    PERMISSIONS_STORAGE,
-                    REQUEST_EXTERNAL_STORAGE
-            );
-        }
     }
 
     private void InitEditViewComponents() {
@@ -263,6 +249,11 @@ public class EventDetailsFragment extends Fragment {
 
             tvTimeEnd.setText(timeEnd);
             tvTitle.setText(getResources().getString(R.string.new_event_edit_title));
+
+            if (event.getImage() != null){
+                Bitmap b = BitmapFactory.decodeByteArray(event.getImage(),0,event.getImage().length);
+                ivPicture.setImageBitmap(b);
+            }
         }
     }
 
@@ -278,14 +269,29 @@ public class EventDetailsFragment extends Fragment {
             }
         } else if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
             Uri filePath = data.getData();
-
             try {
                 selectedImage = Bitmap.createScaledBitmap(MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), filePath), 500, 500, true);
-                ivPicture.setImageBitmap(selectedImage);
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            picture = null;
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            if( selectedImage != null ) {
+                selectedImage.compress(Bitmap.CompressFormat.JPEG, 50, stream);
+                picture = stream.toByteArray();
+                ivPicture.setImageBitmap(selectedImage);
+            }
+//            try {
+////                selectedImage = Bitmap.createScaledBitmap(MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), filePath), 500, 500, true);
+//                ivPicture.setImageBitmap(selectedImage);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
         }
+
+
+
+
     }
 
     private void initDateAndTimePicker() {
@@ -516,6 +522,7 @@ public class EventDetailsFragment extends Fragment {
             dateEnd.set(Calendar.SECOND, 0);
             dateEnd.set(Calendar.MILLISECOND, 0);
             event.setDateEnd(dateEnd);
+            event.setImage(picture);
 
             if (!tvPickLocation.getText().equals(getString(R.string.new_event_location_hint))) {
                 event.setLocation(tvPickLocation.getText().toString());

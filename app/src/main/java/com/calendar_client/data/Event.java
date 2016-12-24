@@ -58,6 +58,12 @@ public class Event implements Serializable{
      * Location of this event
      */
     private String location;
+
+    /**
+     * extra data on the event
+     */
+    private byte[] image;
+
     /**
      * Default constructor.initialize an empty event object.
      */
@@ -218,6 +224,14 @@ public class Event implements Serializable{
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public byte[] getImage() {
+        return image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image;
     }
 
     @Override

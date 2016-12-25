@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:id="@+id/eventLayout"
     android:layout_gravity="start"
@@ -12,7 +12,6 @@
     android:background="@drawable/calendario_background">
 
     <TextView
-
             android:layout_margin="6dp"
             android:gravity="center"
             android:text="@string/event_title"
@@ -20,9 +19,9 @@
             android:layout_height="wrap_content"
             android:textAppearance="@style/TextAppearance.AppCompat.Title"
             android:id="@+id/tvLayoutTitle"
-        android:fontFamily="sans-serif-smallcaps"
-        android:textColor="@color/colorPrimary"
-        android:textStyle="normal|bold"
+            android:fontFamily="sans-serif-smallcaps"
+            android:textColor="@color/colorPrimary"
+            android:textStyle="normal|bold"
         android:textSize="24sp"
         android:padding="6dp" />
 
@@ -35,6 +34,7 @@
             android:layout_margin="3dp"
             android:layout_gravity="start"
             android:padding="3dp">
+
             <ImageView
                 android:contentDescription="@string/title"
                 android:layout_gravity="center|start"

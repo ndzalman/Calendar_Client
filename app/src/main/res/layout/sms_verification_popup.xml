@@ -53,7 +53,8 @@
             android:padding="10dp"
             android:textColor="@color/colorPrimaryLight"
             android:textSize="18sp"
-            android:fontFamily="sans-serif-condensed" />
+            android:fontFamily="sans-serif-condensed"
+            />
     </android.support.design.widget.TextInputLayout>
 
 

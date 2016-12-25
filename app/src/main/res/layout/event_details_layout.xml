@@ -51,7 +51,7 @@
                     android:fontFamily="sans-serif-smallcaps"
                     android:textSize="30sp"
                     android:padding="5dp"
-                    android:layout_margin="5dp"
+                    android:layout_margin="3dp"
                     android:textStyle="bold" />
 
             </LinearLayout>
@@ -63,22 +63,25 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/whiteOpacity"
-                android:layout_margin="6dp"
-                android:padding="6dp">
+                >
 
                 <EditText
                     android:id="@+id/etEventTitle"
                     android:hint="@string/new_event_title_hint"
                     android:textColorHint="@color/colorPrimary"
                     android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:inputType="text"
                     android:nextFocusForward="@+id/place_autocomplete_fragment"
-                    android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_weight="10"
                     android:textColor="@color/colorPrimaryLight"
                     android:fontFamily="sans-serif-condensed"
-                    android:padding="10dp" />
+                    android:padding="10dp"
+                    android:drawableLeft="@drawable/ic_content_paste_black"
+                    android:gravity="start"
+                    tools:ignore="RtlHardcoded"
+                    android:drawablePadding="6dp"/>
             </android.support.design.widget.TextInputLayout>
 
 
@@ -93,21 +96,23 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:padding="5dp">
+                    android:padding="3dp">
 
                     <TextView
                         android:id="@+id/tvDateStart"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="5"
-                        android:layout_margin="5dp"
-                        android:gravity="center"
+                        android:layout_margin="3dp"
+                        android:gravity="start"
                         android:hint="@string/new_event_date_start_hint"
                         android:nextFocusForward="@+id/tvTimeStart"
                         android:background="@drawable/clickable_text_view"
                         android:padding="10dp"
+                        android:drawablePadding="15dp"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:fontFamily="sans-serif-condensed" />
+                        android:fontFamily="sans-serif-condensed"
+                        android:drawableLeft="@drawable/ic_today"/>
 
 
                     <TextView
@@ -115,7 +120,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="5"
-                        android:layout_margin="5dp"
+                        android:layout_margin="3dp"
                         android:gravity="center"
                         android:hint="@string/new_event_time_start_hint"
                         android:nextFocusForward="@+id/tvDateEnd"
@@ -149,21 +154,23 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:padding="5dp">
+                    android:padding="3dp">
 
 
                     <TextView
                         android:id="@+id/tvDateEnd"
-                        android:layout_margin="5dp"
+                        android:layout_margin="3dp"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="5"
-                        android:gravity="center"
+                        android:gravity="start"
+                        android:drawablePadding="15dp"
                         android:hint="@string/new_event_date_end_hint"
                         android:nextFocusForward="@+id/tvTimeEnd"
                         android:background="@drawable/clickable_text_view"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                         android:padding="10dp"
+                        android:drawableLeft="@drawable/ic_today"
                         android:fontFamily="sans-serif-condensed" />
 
                     <TextView
@@ -171,7 +178,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="5"
-                        android:layout_margin="5dp"
+                        android:layout_margin="3dp"
                         android:gravity="center"
                         android:hint="@string/new_event_time_end_hint"
                         android:nextFocusForward="@+id/place_autocomplete_clear_button"
@@ -184,7 +191,6 @@
             </LinearLayout>
 
             <TextView
-                android:layout_margin="6dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/DateEnd"
@@ -193,33 +199,38 @@
                 android:layout_alignParentLeft="true"
                 android:id="@+id/tvPickLocation"
                 android:text="@string/new_event_location_hint"
+                android:gravity="start"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:drawableBottom="@drawable/powered_by_google_light"
-                android:padding="15dp"
+                android:drawableRight="@drawable/powered_by_google_light"
+                android:padding="10dp"
                 android:background="@color/whiteOpacity"
-                android:fontFamily="sans-serif-condensed" />
+                android:fontFamily="sans-serif-condensed"
+                android:drawableLeft="@drawable/ic_location_on"
+                android:drawablePadding="6dp"
+                android:layout_marginBottom="6dp" />
 
             <android.support.design.widget.TextInputLayout
             android:layout_below="@id/tvPickLocation"
             android:id="@+id/Description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-                android:layout_margin="6dp"
-                android:padding="6dp"
-                android:background="@color/whiteOpacity">
+            android:background="@color/whiteOpacity">
 
             <EditText
                 android:id="@+id/etDescription"
                 android:hint="@string/new_event_description_hint"
                 android:textColorHint="@color/colorPrimary"
                 android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:inputType="text"
-                android:layout_height="wrap_content"
                 android:nextFocusForward="@+id/fabDone"
                 android:layout_weight="15"
                 android:padding="10dp"
+                android:drawablePadding="6dp"
                 android:fontFamily="sans-serif-condensed"
-                android:layout_gravity="center" />
+                android:layout_gravity="center"
+                android:drawableLeft="@drawable/ic_description"
+                />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -249,7 +260,8 @@
                         android:layout_height="match_parent"
                         android:id="@+id/ivPicture"
                         android:layout_weight="1"
-                        android:src="@drawable/ic_perm_contact_calendar"/>
+                        android:src="@drawable/ic_perm_contact_calendar"
+                        android:padding="10dp" />
                 </LinearLayout>
 
             </LinearLayout>

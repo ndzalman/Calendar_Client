@@ -46,7 +46,7 @@
         android:focusable="true"
         android:focusableInTouchMode="true"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:orientation="vertical"
         android:weightSum="10.5"
         android:layout_weight="1.12">
@@ -62,7 +62,7 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Display1"
             android:fontFamily="sans-serif-smallcaps"
             android:textStyle="bold"
-            android:textSize="36sp"
+            android:textSize="30sp"
             android:layout_margin="5dp"
             android:padding="5dp" />
 
@@ -143,7 +143,7 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                 android:textColor="@color/colorPrimaryLight"
                 android:fontFamily="sans-serif-condensed"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:padding="10dp" />
         </android.support.design.widget.TextInputLayout>
 
@@ -168,7 +168,7 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                 android:textColor="@color/colorPrimaryLight"
                 android:fontFamily="sans-serif-condensed"
-                android:textSize="15sp"
+                android:textSize="16sp"
                 android:padding="10dp" />
         </android.support.design.widget.TextInputLayout>
 
@@ -206,7 +206,7 @@
         android:layout_marginEnd="10dp"
         android:id="@+id/tvDateOfBirth"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_weight="1"
         android:background="@drawable/clickable_text_view"
         android:nextFocusDown="@+id/btnSignUp"
@@ -214,7 +214,7 @@
         android:gravity="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
         android:visibility="gone"
-        />
+            tools:ignore="NestedWeights" />
 
 
     <android.support.v7.widget.AppCompatButton

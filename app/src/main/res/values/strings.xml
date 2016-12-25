@@ -59,7 +59,6 @@
     <string name="popup_button">confirm</string>
     <string name="popup_key_not_match">Key is not a match!</string>
 
-
     <!--New/Edit Event Screen -->
     <string name="new_event_title">NEW EVENT</string>
     <string name="edit_event_title">Event Details</string>
@@ -90,7 +89,6 @@
     <string name="menu_item_update">Today</string>
     <string name="menu_item_about">About</string>
 
-
     <!--Alert Dialog - exit dialog-->
     <string name="exit_dialog_title">Exit Application</string>
     <string name="exit_dialog_message">Are you sure you want to exit?</string>
@@ -98,14 +96,14 @@
     <string name="exit_dialog_negative">NO</string>
 
     <!--Contact fragnebt-->
-    <string name="add_contacts">Contacts</string>
+    <string name="add_contacts">contacts</string>
 
     <!-- Events -->
-    <string name="events_title">Upcoming events</string>
+    <string name="events_title">upcoming events</string>
     <string name="no_events_title">You don\'t have any events!</string>
 
     <!-- Profile -->
-    <string name="profile_password">Change Password</string>
+    <string name="profile_password">change password</string>
     <string name="profile_phone">Mobile Phone</string>
     <string name="profile_user_name">User Name</string>
     <string name="profile_email">Email</string>

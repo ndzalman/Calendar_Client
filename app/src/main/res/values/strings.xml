@@ -8,6 +8,7 @@
     <string name="alert_dialog_neutral">Try Again</string>
     <string name="alert_dialog_negative">Exit</string>
     <string name="exit_alert_dialog_title">You are not logged</string>
+    <string name="alert_dialog_title_server_off">We couldn\'t establish a connection</string>
 
     <!--Alert Dialog - server off-->
     <string name="alert_dialog_server_title">We could not establish a connection</string>
@@ -147,4 +148,6 @@
     <string name="arrow_left">Left Arrow</string>
     <string name="arrow_right">Right Arrow</string>
     <string name="select_picture">Select Picture</string>
+
+
 </resources>

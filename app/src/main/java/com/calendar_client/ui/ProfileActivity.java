@@ -24,6 +24,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -205,8 +206,6 @@ public class ProfileActivity extends AppCompatActivity {
             // Respond to the action bar's Up/Home button
             case android.R.id.home:
                 finish();
-                Intent intent = new Intent(ProfileActivity.this, CalendarActivity.class);
-                startActivity(intent);
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -383,6 +382,21 @@ public class ProfileActivity extends AppCompatActivity {
         TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
         textView.setTextColor(Color.BLACK);
         snackbar.show();
+
+        snackbar.setCallback(new Snackbar.Callback() {
+            @Override
+            public void onDismissed(Snackbar snackbar, int event) {
+                finish();
+                Intent main = new Intent(ProfileActivity.this,CalendarActivity.class);
+                startActivity(main);
+            }
+        });
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
     }
 
 }

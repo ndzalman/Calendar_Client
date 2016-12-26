@@ -4,6 +4,7 @@
 
     <!--Alert Dialog - No internet-->
     <string name="alert_dialog_title">אין גישה לאינטרנט</string>
+    <string name="alert_dialog_title_server_off">מצטערים, לא הצלחנו להתחבר כעת</string>
     <string name="alert_dialog_message">אם תמשיך כלא מחובר חלק מהפעולות לא יהיו זמינות</string>
     <string name="alert_dialog_neutral">נסה שוב</string>
     <string name="alert_dialog_positive">המשך לאפליקציה</string>

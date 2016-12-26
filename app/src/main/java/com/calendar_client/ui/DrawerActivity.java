@@ -14,6 +14,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,6 +23,7 @@ import android.widget.TextView;
 
 import com.calendar_client.R;
 import com.calendar_client.data.User;
+import com.calendar_client.utils.Data;
 import com.google.gson.Gson;
 import com.prolificinteractive.materialcalendarview.CalendarMode;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
@@ -33,6 +35,7 @@ public abstract class DrawerActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private TextView tvHeaderTitle;
     private MaterialCalendarView calendar;
+    NavigationView navigationView;
 
     protected void onCreateDrawer() {
 
@@ -45,7 +48,7 @@ public abstract class DrawerActivity extends AppCompatActivity {
 //        getSupportActionBar().setLogo(getDrawable(R.drawable.logo));
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
+        navigationView = (NavigationView) findViewById(R.id.navigation_view);
 
         View view = findViewById(R.id.main);
         calendar = (MaterialCalendarView) drawerLayout.findViewById(R.id.calendarView);
@@ -66,7 +69,6 @@ public abstract class DrawerActivity extends AppCompatActivity {
             Bitmap b = BitmapFactory.decodeByteArray(u.getImage(),0,u.getImage().length);
             imgviewHeaderImage.setImageBitmap(b);
         }
-
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem) {
@@ -83,24 +85,21 @@ public abstract class DrawerActivity extends AppCompatActivity {
                         calendar.state().edit()
                                 .setCalendarDisplayMode(CalendarMode.WEEKS)
                                 .commit();
+                        navigationView.setCheckedItem(R.id.navigation_item_week);
                         break;
                     case R.id.navigation_item_day:
-                        finish();
                         Intent dayEventsActivity = new Intent(DrawerActivity.this,DayEventsActivity.class);
                         startActivity(dayEventsActivity);
                         break;
                     case R.id.navigation_item_schedule:
-                        finish();
                         Intent eventsActivity = new Intent(DrawerActivity.this,UpComingEventsActivity.class);
                         startActivity(eventsActivity);
                         break;
                     case R.id.navigation_item_profile:
-                        finish();
                         Intent profileActivity = new Intent(DrawerActivity.this,ProfileActivity.class);
                         startActivity(profileActivity);
                         break;
                     case R.id.navigation_item_about:
-                        finish();
                         Intent aboutActivity = new Intent(DrawerActivity.this,AboutActivity.class);
                         startActivity(aboutActivity);
                         break;
@@ -119,12 +118,18 @@ public abstract class DrawerActivity extends AppCompatActivity {
                return true;
             }
         });
+
+        if (!Data.getInstance().isOnline()){
+            navigationView.getMenu().findItem(R.id.navigation_item_profile).setVisible(false);
+
+        }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.toolbar_menu, menu);
+
         return true;
     }
 

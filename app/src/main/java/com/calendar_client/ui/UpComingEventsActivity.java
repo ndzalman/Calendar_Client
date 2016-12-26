@@ -187,7 +187,7 @@ public class UpComingEventsActivity extends AppCompatActivity {
 
             holder.tvTitle.setText(event.getTitle());
 
-            if (event.getLocation().isEmpty()) {
+            if (event.getLocation() != null && event.getLocation().isEmpty()) {
                 holder.locationLayout.setVisibility(View.GONE);
             }else{
                 holder.tvLocation.setText(event.getLocation());
@@ -234,11 +234,14 @@ public class UpComingEventsActivity extends AppCompatActivity {
             // Respond to the action bar's Up/Home button
             case android.R.id.home:
                 finish();
-                Intent intent = new Intent(UpComingEventsActivity.this, CalendarActivity.class);
-                startActivity(intent);
                 return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
 }

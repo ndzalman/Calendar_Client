@@ -6,18 +6,15 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Typeface;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.content.PermissionChecker;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.telephony.SmsManager;
 import android.util.Log;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -42,7 +39,6 @@ import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 public class SplashScreenActivity extends AppCompatActivity {
 
@@ -87,16 +83,28 @@ public class SplashScreenActivity extends AppCompatActivity {
             refreshTokenTask.execute();
         }
 
+
+        data = Data.getInstance();
+
+        //check if user in online, then if he is logged get the events from server
+        // and start the progress bar task
+        checkConnectivityAndUserLogged();
+
+    }
+
+    private void initAlertDialog(String title){
         // if no wifi/data connection was found
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-        alertDialogBuilder.setTitle(R.string.alert_dialog_title)
+        alertDialogBuilder.setTitle(title)
                 .setMessage(R.string.alert_dialog_message)
                 .setCancelable(false)
                 .setPositiveButton(R.string.alert_dialog_positive, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if (logged) {
-                            NextActivity();
+                            Data.getInstance().setOnline(false);
+                            data.setSharedEvents(eventsDBHandler.getAllEvents(user.getId()));
+                            nextActivity();
                         } else{
                             dialog.cancel();
                             // if user decided to continue offline but there is no user in the shared preferences
@@ -124,19 +132,12 @@ public class SplashScreenActivity extends AppCompatActivity {
                 })
                 .setNeutralButton(getString(R.string.alert_dialog_neutral), new DialogInterface.OnClickListener() {
 
-            public void onClick(DialogInterface dialog, int id) {
-                checkConnectivityAndUserLogged();
-            }});
+                    public void onClick(DialogInterface dialog, int id) {
+                        checkConnectivityAndUserLogged();
+                    }});
 
 
         alertDialog = alertDialogBuilder.create();
-
-        data = Data.getInstance();
-
-        //check if user in online, then if he is logged get the events from server
-        // and start the progress bar task
-        checkConnectivityAndUserLogged();
-
     }
 
     private void checkConnectivityAndUserLogged(){
@@ -200,9 +201,10 @@ public class SplashScreenActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Boolean isConnected) {
-            if (isConnected) {
-                NextActivity();
+            if (!logged) {
+                nextActivity();
             } else{
+                initAlertDialog(getString(R.string.alert_dialog_title));
                 alertDialog.show();
             }
         }
@@ -216,11 +218,6 @@ public class SplashScreenActivity extends AppCompatActivity {
                 tvStatus.setText(R.string.splash_screen_status_end);
             }
         }
-    }
-
-    private void NextActivity(){
-        finish();
-        startActivity(intent);
     }
 
     public boolean isOnline() {
@@ -286,16 +283,18 @@ public class SplashScreenActivity extends AppCompatActivity {
         // executing
         @Override
         protected String doInBackground(String... strings) {
-            Log.e("SharedEvents","In Shared Events task");
+            Log.e("SharedEvents","In Shared Events task url " + ApplicationConstants.GET_ALL_SHARED_EVENTS);
             StringBuilder response;
             try {
                 URL url = new URL(ApplicationConstants.GET_ALL_SHARED_EVENTS + "?id=" + user.getId());
                 response = new StringBuilder();
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setConnectTimeout(6000);
+                conn.setReadTimeout(6000);
                 Log.e("DEBUG", conn.getResponseCode() + "");
                 if (conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
                     Log.e("DEBUG", conn.getResponseMessage());
-                    return null;
+                    return "-3";
                 }
 
                 BufferedReader input = new BufferedReader(
@@ -310,28 +309,37 @@ public class SplashScreenActivity extends AppCompatActivity {
 
                 conn.disconnect();
 
-                Type listType = new TypeToken<ArrayList<Event>>() {
-                }.getType();
-                List<Event> sharedEvents = new Gson().fromJson(response.toString(), listType);
-                data.setSharedEvents(sharedEvents);
 
-
+            }catch (ConnectException ex){
+                Log.e("connect-timeout","excption " + ex.getMessage());
+                return  "-1";
+            } catch (SocketTimeoutException ste) {
+                Log.e("socket-timeout","excption " + ste.getMessage());
+                return "-2";
             } catch (Exception e) {
                 e.printStackTrace();
                 return null;
             }
 
-            return null;
+            return response.toString();
         }
 
         @Override
         protected void onPostExecute(String response) {
-            Log.d("EVENT-SIZE", "events size: " + data.getSharedEvents().size());
-            if (data.getSharedEvents().size() > 0) {
-                Log.d("EVENT-SIZE", "event: " + data.getSharedEvents().get(0).toString());
-                Log.d("EVENT-SIZE", "event: " + data.getSharedEvents().get(0).getUsers().toString());
-            }
+            if (response != null) {
+                Log.e("RESPONSE","response is " + response);
+                if (response.equals("-1") || response.equals("-2") || response.equals("-3")){
+                 initAlertDialog(getString(R.string.alert_dialog_title_server_off));
+                 alertDialog.show();
+            }else{
+                    nextActivity();
+                    Type listType = new TypeToken<ArrayList<Event>>() {
+                    }.getType();
+                    List<Event> sharedEvents = new Gson().fromJson(response.toString(), listType);
+                    data.setSharedEvents(sharedEvents);
 
+                }
+            }
         }
 
     }
@@ -381,6 +389,11 @@ public class SplashScreenActivity extends AppCompatActivity {
             return responseString.toString();
         }
 
+    }
+
+    private void nextActivity(){
+        finish();
+        startActivity(intent);
     }
 
 }

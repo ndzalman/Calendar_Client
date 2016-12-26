@@ -39,8 +39,6 @@ public class EditEventActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         finish();
-        Intent events = new Intent(this, CalendarActivity.class);
-        startActivity(events);
     }
 
     static class CustomPagerAdapter extends FragmentStatePagerAdapter {

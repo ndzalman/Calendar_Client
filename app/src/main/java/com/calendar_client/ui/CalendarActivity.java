@@ -240,6 +240,7 @@ public class CalendarActivity extends DrawerActivity {
         monthName = String.format(Locale.getDefault(),"%tB",calendar.getCurrentDate().getCalendar());
         tvMonthYear.setText(monthName + " " + calendar.getCurrentDate().getYear());
         calendar.setTopbarVisible(false);
+        navigationView.setCheckedItem(R.id.navigation_item_month);
 
     }
 

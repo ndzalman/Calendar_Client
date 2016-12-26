@@ -108,6 +108,7 @@ public class EventActivity extends AppCompatActivity {
         if (!Data.getInstance().isOnline()){
             fabEventDelete.setVisibility(View.GONE);
             fabEventEdit.setVisibility(View.GONE);
+            btnShowMore.setVisibility(View.GONE);
         }
 
     }
@@ -118,8 +119,6 @@ public class EventActivity extends AppCompatActivity {
             // Respond to the action bar's Up/Home button
             case android.R.id.home:
                 finish();
-                Intent intent = new Intent(this, CalendarActivity.class);
-                startActivity(intent);
                 return true;
         }
         return super.onOptionsItemSelected(item);

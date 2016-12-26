@@ -79,6 +79,7 @@
     <string name="add_picture">הוסף תמונה</string>
     <string name="see_picture">צפה בתמונה</string>
     <string name="event_admin">מנהל</string>
+    <string name="new_event_add_reminder">הוסף תזכורת</string>
 
     <!--Navigation Drawer-->
     <string name="navigation_drawer_open">Open navigation drawer</string>

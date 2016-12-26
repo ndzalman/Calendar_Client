@@ -1,4 +1,10 @@
 package com.calendar_client.utils;
+
+import com.calendar_client.data.Reminder;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class ApplicationConstants {
 
    //public static final String SERVER_IP = "10.0.2.2"; // nadav IP

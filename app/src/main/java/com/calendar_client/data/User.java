@@ -40,10 +40,6 @@ public class User implements Serializable{
      */
     private String password;
 
-    /**
-     * Date of birth of the user
-     */
-    private Calendar dateOfBirth;
 
     /**
      * token of the user
@@ -79,7 +75,6 @@ public class User implements Serializable{
         this.userName = userName;
         this.email = email;
         this.password = password;
-        this.dateOfBirth = dateOfBirth;
     }
 
     public User(int id,String userName, String email, String password, Calendar dateOfBirth, List<Event> events) {
@@ -87,7 +82,6 @@ public class User implements Serializable{
         this.userName = userName;
         this.email = email;
         this.password = password;
-        this.dateOfBirth = dateOfBirth;
     }
 
     /**
@@ -138,21 +132,6 @@ public class User implements Serializable{
         this.password = password;
     }
 
-    /**
-     * Returns the date of birth of the user
-     * @return the date of birth of the user
-     */
-    public Calendar getDateOfBirth() {
-        return dateOfBirth;
-    }
-
-    /**
-     * Sets the date of birth of the user
-     * @param dateOfBirth the date of birth of the user
-     */
-    public void setDateOfBirth(Calendar dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
-    }
 
     /**
      * Returns the events of the user
@@ -273,7 +252,6 @@ public class User implements Serializable{
                 ", userName='" + userName + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
-                ", dateOfBirth=" + dateOfBirth +
                 ", token=" + token +
                 ", events=" + events +
                 '}';

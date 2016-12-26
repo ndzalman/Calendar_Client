@@ -101,4 +101,5 @@ public class EditEventActivity extends AppCompatActivity {
             fragmentTitleList.add(title);
         }
     }
+
 }

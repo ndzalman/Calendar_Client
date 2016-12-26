@@ -318,7 +318,6 @@ public class SignUpActivity extends AppCompatActivity {
             dateOfBirth.set(Calendar.YEAR,year);
             dateOfBirth.set(Calendar.MONTH,month);
             dateOfBirth.set(Calendar.DAY_OF_MONTH,day);
-            user.setDateOfBirth(dateOfBirth);
             user.setPassword(etPassword.getText().toString());
             user.setUserName(etUserName.getText().toString());
 

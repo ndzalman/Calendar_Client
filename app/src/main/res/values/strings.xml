@@ -78,6 +78,7 @@
     <string name="add_picture">Add Picture</string>
     <string name="see_picture">See Picture</string>
     <string name="event_admin">Admin</string>
+    <string name="new_event_add_reminder">Add Reminder</string>
 
 
     <!--Navigation Drawer-->
@@ -149,5 +150,13 @@
     <string name="arrow_right">Right Arrow</string>
     <string name="select_picture">Select Picture</string>
 
+
+    <!--Reminders -->
+    <string name="reminder_on_time">On Time</string>
+    <string name="reminder_on_time_int">0</string>
+    <string name="reminder_10_min_before">10 Minutes Before</string>
+    <string name="reminder_10_min_before_int">10</string>
+    <string name="reminder_one_day_before">One Day Before</string>
+    <string name="reminder_one_day_before_int">1440</string>
 
 </resources>

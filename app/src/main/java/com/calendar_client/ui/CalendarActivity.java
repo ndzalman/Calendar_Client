@@ -136,7 +136,6 @@ public class CalendarActivity extends DrawerActivity {
                 Intent newEventIntent = new Intent(CalendarActivity.this, EditEventActivity.class);
                 newEventIntent.putExtra("selectedDay", calendar.getSelectedDate().getCalendar());
                 startActivity(newEventIntent);
-                finish();
             }
         });
 

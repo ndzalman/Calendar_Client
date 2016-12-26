@@ -201,6 +201,7 @@ public class EventActivity extends AppCompatActivity {
                     startActivity(editEvent);
                 }
             });
+
         } else{
             isOwner = false;
             fabEventEdit.setVisibility(View.GONE);
@@ -243,6 +244,7 @@ public class EventActivity extends AppCompatActivity {
                 }
             }
         });
+
 
         listContacts = (ListView) findViewById(R.id.listContacts);
 
@@ -316,8 +318,6 @@ public class EventActivity extends AppCompatActivity {
                 Data.getInstance().getSharedEvents().remove(event);
                 Toast.makeText(EventActivity.this, getResources().getString(R.string.event_deleted), Toast.LENGTH_SHORT).show();
                 EventActivity.this.finish();
-                Intent events = new Intent(EventActivity.this, CalendarActivity.class);
-                startActivity(events);
             } else {
                 fabEventDelete.setEnabled(true);
             }

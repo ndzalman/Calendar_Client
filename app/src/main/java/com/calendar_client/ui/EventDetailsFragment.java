@@ -5,20 +5,15 @@ import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
-import android.app.Dialog;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
-import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
-import android.media.ExifInterface;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -37,18 +32,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.WindowManager;
+import android.widget.BaseAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.calendar_client.R;
 import com.calendar_client.data.Event;
+import com.calendar_client.data.Reminder;
 import com.calendar_client.data.User;
 import com.calendar_client.utils.ApplicationConstants;
 import com.calendar_client.utils.Data;
@@ -56,17 +53,14 @@ import com.calendar_client.utils.EventsDBHandler;
 import com.calendar_client.utils.NotificationAlarmReceiver;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
-import com.google.android.gms.common.api.GoogleApiClient;
 //import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.gson.Gson;
-import com.squareup.picasso.Picasso;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -74,15 +68,18 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import static android.app.Activity.RESULT_OK;
-import static android.content.Intent.FLAG_INCLUDE_STOPPED_PACKAGES;
 
 
 public class EventDetailsFragment extends Fragment {
     private static final String TAG = "NEW_EVENT";
+    private static final int NO_REMINDER = -2;
 
     // Edit Event
     private EditText etEventTitle;
@@ -95,6 +92,8 @@ public class EventDetailsFragment extends Fragment {
     private EditText etDescription;
     private FloatingActionButton fabDone;
     private TextView tvAddPicture;
+    private CheckBox chkboxReminder;
+    private Spinner spinnerReminder;
 
     private int yearStart, monthStart, dayStart;
     private int hourStart, minuteStart;
@@ -124,10 +123,12 @@ public class EventDetailsFragment extends Fragment {
     private DatePickerDialog dpdStart;
     private DatePickerDialog dpdEnd;
 
-    private LatLngBounds seletedPlace;
+    private LatLngBounds selectedPlace;
 
     private ImageView ivPicture;
     private byte[] picture;
+
+    private boolean reminderChanged = false;
 
     private final static int PICK_IMAGE_REQUEST = 1235;
 
@@ -251,6 +252,17 @@ public class EventDetailsFragment extends Fragment {
             tvTimeEnd.setText(timeEnd);
             tvTitle.setText(getResources().getString(R.string.new_event_edit_title));
 
+            if (event.getReminder() != NO_REMINDER){
+                chkboxReminder.setChecked(true);
+                if (event.getReminder() == Integer.parseInt(getString(R.string.reminder_on_time_int))){
+                    spinnerReminder.setSelection(0);
+                } else if (event.getReminder() == Integer.parseInt(getString(R.string.reminder_10_min_before_int))){
+                    spinnerReminder.setSelection(1);
+                } else if (event.getReminder() == Integer.parseInt(getString(R.string.reminder_one_day_before_int))){
+                    spinnerReminder.setSelection(2);
+                }
+            }
+
             if (event.getImage() != null){
                 Bitmap b = BitmapFactory.decodeByteArray(event.getImage(),0,event.getImage().length);
                 selectedImage = b;
@@ -265,7 +277,7 @@ public class EventDetailsFragment extends Fragment {
         if (requestCode == PLACE_PICKER_REQUEST) {
             if (resultCode == RESULT_OK) {
                 Place place = PlacePicker.getPlace(data, getActivity());
-                seletedPlace = place.getViewport();
+                selectedPlace = place.getViewport();
 //                String toastMsg = String.format("Place: %s", place.getName());
 //                Toast.makeText(getActivity(), toastMsg, Toast.LENGTH_LONG).show();
                 tvPickLocation.setText(place.getName());
@@ -436,7 +448,9 @@ public class EventDetailsFragment extends Fragment {
 //        notificationIntent.putExtra(NOTIFICATION,(getNotification()));
 //        PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity().getApplicationContext(), (int)event.getDateStart().getTimeInMillis(), notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        long when = event.getDateStart().getTimeInMillis();
+        long reminder = TimeUnit.MINUTES.toMillis(event.getReminder());
+        Log.e("ALARAM","reminder: " + reminder);
+        long when = event.getDateStart().getTimeInMillis() + reminder;
 
         AlarmManager am = (AlarmManager) getActivity().getBaseContext().getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(getActivity().getBaseContext(), NotificationAlarmReceiver.class);
@@ -455,7 +469,9 @@ public class EventDetailsFragment extends Fragment {
         am.cancel(pendingIntent);
 
         id = (int) event.getDateStart().getTimeInMillis();
-        long when = event.getDateStart().getTimeInMillis();
+        long reminder = TimeUnit.MINUTES.toMillis(event.getReminder());
+        Log.e("ALARAM","reminder: " + reminder);
+        long when = event.getDateStart().getTimeInMillis() + reminder;
         pendingIntent = PendingIntent.getBroadcast(getActivity().getBaseContext(), id, intent, 0);
         am.set(AlarmManager.RTC_WAKEUP, when, pendingIntent);
     }
@@ -543,6 +559,17 @@ public class EventDetailsFragment extends Fragment {
                 event.setLocation("");
             }
 
+            if (chkboxReminder.isChecked()){
+                Reminder reminder = (Reminder) spinnerReminder.getSelectedItem();
+                if (reminder.getReminderTime() != event.getReminder()){
+                    reminderChanged = true;
+                    event.setReminder(reminder.getReminderTime());
+                } else{
+                    reminderChanged = false;
+                }
+            } else{
+                event.setReminder(NO_REMINDER);
+            }
 
             return true;
         }
@@ -559,6 +586,23 @@ public class EventDetailsFragment extends Fragment {
         fabDone = (FloatingActionButton) view.findViewById(R.id.fabDone);
         tvTitle = (TextView) view.findViewById(R.id.tvTitle);
         tvPickLocation = (TextView) view.findViewById(R.id.tvPickLocation);
+        chkboxReminder = (CheckBox) view.findViewById(R.id.chkboxReminder);
+        spinnerReminder = (Spinner) view.findViewById(R.id.spinnerReminder);
+        List<Reminder> reminders = new ArrayList<>();
+        Reminder reminder = new Reminder();
+        reminder.setReminder(getString(R.string.reminder_on_time));
+        reminder.setReminderTime(Integer.parseInt(getString(R.string.reminder_on_time_int)));
+        reminders.add(reminder);
+        reminder = new Reminder();
+        reminder.setReminder(getString(R.string.reminder_10_min_before));
+        reminder.setReminderTime(Integer.parseInt(getString(R.string.reminder_10_min_before_int)));
+        reminders.add(reminder);
+        reminder = new Reminder();
+        reminder.setReminder(getString(R.string.reminder_one_day_before));
+        reminder.setReminderTime(Integer.parseInt(getString(R.string.reminder_one_day_before_int)));
+        reminders.add(reminder);
+
+        spinnerReminder.setAdapter(new MyAdapter(getActivity(), reminders, R.layout.spinner_item_reminder));
 
         ivPicture = (ImageView) view.findViewById(R.id.ivPicture);
         tvAddPicture = (TextView) view.findViewById(R.id.tvAddPicture);
@@ -589,6 +633,17 @@ public class EventDetailsFragment extends Fragment {
                 dialog.show();
                 dialog.getWindow().setLayout(650, 800);
 
+            }
+        });
+
+        chkboxReminder.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked){
+                    spinnerReminder.setVisibility(View.VISIBLE);
+                } else{
+                    spinnerReminder.setVisibility(View.GONE);
+                }
             }
         });
 
@@ -623,7 +678,9 @@ public class EventDetailsFragment extends Fragment {
                     } else {
                         // if we editing existing event we update the SQLite and execute the edit
                         // event task
-                        updateNotification(oldStartId);
+                        if (reminderChanged){
+                            updateNotification(oldStartId);
+                        }
                         fabDone.setEnabled(false);
                         boolean isSuccessful = dbHandler.updateEvent(event);
                         if (isSuccessful) {
@@ -645,8 +702,8 @@ public class EventDetailsFragment extends Fragment {
             public void onClick(View v) {
                 PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
 
-                if (seletedPlace != null) {
-                    builder.setLatLngBounds(seletedPlace);
+                if (selectedPlace != null) {
+                    builder.setLatLngBounds(selectedPlace);
                 }
                 try {
                     startActivityForResult(builder.build(activity), PLACE_PICKER_REQUEST);
@@ -734,7 +791,7 @@ public class EventDetailsFragment extends Fragment {
                 if (isSuccessful) {
                     Log.i(TAG, "Event added successfuly");
                     checkSetAlaramPermission();
-                    if (alarmPermissionGranted) {
+                    if (alarmPermissionGranted && chkboxReminder.isChecked()) {
                         scheduleNotification();
                     }
                 } else {
@@ -910,5 +967,58 @@ public class EventDetailsFragment extends Fragment {
         }
     }
 
+    public class MyAdapter extends BaseAdapter {
+
+        Context context;
+        int resource;
+        List<Reminder> reminders;
+
+
+        public MyAdapter(Context context, List<Reminder> drinks, int resource) {
+            this.context = context;
+            this.resource = resource;
+            this.reminders = drinks;
+        }
+
+        @Override
+        public View getDropDownView(int position, View convertView, ViewGroup parent) {
+            return getView(position, convertView, parent);
+        }
+
+        @Override
+        public int getCount() {
+            return reminders.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return reminders.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return reminders.get(position).getId();
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            TextView tvReminder;
+            final Reminder reminder = reminders.get(position);
+            if (convertView == null) {
+                LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                convertView = inflater.inflate(resource, parent, false);
+                tvReminder = (TextView) convertView.findViewById(R.id.tvReminder);
+                convertView.setTag(tvReminder);
+
+            } else {
+                tvReminder = (TextView) convertView.getTag();
+            }
+
+            tvReminder.setText(reminder.getReminder());
+
+            return convertView;
+        }
+
+    }
 
 }

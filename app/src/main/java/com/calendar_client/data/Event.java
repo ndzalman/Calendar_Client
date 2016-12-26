@@ -64,6 +64,12 @@ public class Event implements Serializable{
      */
     private byte[] image;
 
+
+    /**
+     * extra data on the event
+     */
+    private int reminder;
+
     /**
      * Default constructor.initialize an empty event object.
      */
@@ -251,4 +257,11 @@ public class Event implements Serializable{
                 '}';
     }
 
+    public int getReminder() {
+        return reminder;
+    }
+
+    public void setReminder(int reminder) {
+        this.reminder = reminder;
+    }
 }

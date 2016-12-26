@@ -4,6 +4,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -82,18 +85,22 @@ public abstract class DrawerActivity extends AppCompatActivity {
                                 .commit();
                         break;
                     case R.id.navigation_item_day:
+                        finish();
                         Intent dayEventsActivity = new Intent(DrawerActivity.this,DayEventsActivity.class);
                         startActivity(dayEventsActivity);
                         break;
                     case R.id.navigation_item_schedule:
+                        finish();
                         Intent eventsActivity = new Intent(DrawerActivity.this,UpComingEventsActivity.class);
                         startActivity(eventsActivity);
                         break;
                     case R.id.navigation_item_profile:
+                        finish();
                         Intent profileActivity = new Intent(DrawerActivity.this,ProfileActivity.class);
                         startActivity(profileActivity);
                         break;
                     case R.id.navigation_item_about:
+                        finish();
                         Intent aboutActivity = new Intent(DrawerActivity.this,AboutActivity.class);
                         startActivity(aboutActivity);
                         break;
@@ -132,10 +139,10 @@ public abstract class DrawerActivity extends AppCompatActivity {
             case android.R.id.home: // home button on toolbar
                 drawerLayout.openDrawer(GravityCompat.START);
                 return true;
-            case R.id.item_update: // update button on toolabr - takes to the current day
-                calendar.setCurrentDate(Calendar.getInstance());
-                calendar.setSelectedDate(Calendar.getInstance());
-                return true;
+//            case R.id.item_update: // update button on toolabr - takes to the current day
+//                calendar.setCurrentDate(Calendar.getInstance());
+//                calendar.setSelectedDate(Calendar.getInstance());
+//                return true;
             default:
                 break;
         }

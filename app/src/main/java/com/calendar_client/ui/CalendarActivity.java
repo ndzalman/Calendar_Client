@@ -11,15 +11,16 @@ import android.gesture.GestureOverlayView;
 import android.gesture.Prediction;
 import android.graphics.Color;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.GravityCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -143,7 +144,7 @@ public class CalendarActivity extends DrawerActivity {
         // get the new events according to the selected day
         calendar.setOnDateChangedListener(new OnDateSelectedListener() {
             @Override
-            public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
+            public void onDateSelected(MaterialCalendarView widget, CalendarDay date, boolean selected) {
                 Log.e("DayChange", "before events size: " + events.size());
                 events = filterEventsByDay(calendar.getSelectedDate().getCalendar());
                 Log.e("DayChange", "after events size: " + events.size());
@@ -400,6 +401,31 @@ public class CalendarActivity extends DrawerActivity {
         Log.d("EVENTS", "size of dates : " + dates.size());
 
         return dates;
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        switch (id) {
+            case R.id.item_update: // update button on toolabr - takes to the current day
+                calendar.setCurrentDate(Calendar.getInstance());
+                calendar.setSelectedDate(Calendar.getInstance());
+                events = filterEventsByDay(Calendar.getInstance());
+                eventAdapter.getData().clear();
+                eventAdapter.getData().addAll(events);
+                // update ui list
+                eventAdapter.notifyDataSetChanged();
+                return true;
+            default:
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
 

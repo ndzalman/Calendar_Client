@@ -75,6 +75,9 @@
     <string name="new_event_date_error">תאריך לא חוקי!</string>
     <string name="new_event_time_error">זמן לא חוקי!</string>
     <string name="event_deleted">האירוע נמחק</string>
+    <string name="add_picture">הוסף תמונה</string>
+    <string name="see_picture">צפה בתמונה</string>
+    <string name="event_admin">מנהל</string>
 
     <!--Navigation Drawer-->
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -125,7 +128,7 @@
     <!-- About Activity -->
     <string name="about_developers">מפתחים: נדב ועידן זלמן</string>
     <string name="about_app_version">גרסה: 1.0</string>
-    <string name="about_credits">קרדיטים:\nאייקונים - Freepik\nתודה לאנאל שומראי</string>
+    <string name="about_credits">קרדיטים:\nאייקונים - Freepik</string>
 
     <!-- Tab Layout -->
     <string name="tab_event_details">פרטי האירוע</string>

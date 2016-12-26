@@ -1,5 +1,6 @@
 package com.calendar_client;
 
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -12,6 +13,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.calendar_client.data.Event;
 import com.calendar_client.data.User;
@@ -93,15 +95,17 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         }
         String message = dayTxt + "/" + monthTxt + "/" + year;
 
-        Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        long[] pattern = {500,500,500,500,500,500,500,500,500};
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.drawable.calendario_icon_transperent)
                         .setContentTitle(e.getTitle())
 //                .setContentInfo("New event created by")
                         .setContentText(message)
-                        .setAutoCancel(true)
-                        .setSound(uri);
+                        .setAutoCancel(false)
+                        .setVibrate(pattern)
+                        .setSound(alarmSound);
 
         Intent resultIntent = new Intent(this, EventActivity.class);
         resultIntent.putExtra("event", e);

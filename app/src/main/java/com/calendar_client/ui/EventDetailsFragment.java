@@ -37,6 +37,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -93,6 +94,7 @@ public class EventDetailsFragment extends Fragment {
     private TextView tvTitle;
     private EditText etDescription;
     private FloatingActionButton fabDone;
+    private TextView tvAddPicture;
 
     private int yearStart, monthStart, dayStart;
     private int hourStart, minuteStart;
@@ -125,7 +127,6 @@ public class EventDetailsFragment extends Fragment {
     private LatLngBounds seletedPlace;
 
     private ImageView ivPicture;
-    private ImageButton ibPicture;
     private byte[] picture;
 
     private final static int PICK_IMAGE_REQUEST = 1235;
@@ -252,7 +253,9 @@ public class EventDetailsFragment extends Fragment {
 
             if (event.getImage() != null){
                 Bitmap b = BitmapFactory.decodeByteArray(event.getImage(),0,event.getImage().length);
+                selectedImage = b;
                 ivPicture.setImageBitmap(b);
+                ivPicture.setVisibility(View.VISIBLE);
             }
         }
     }
@@ -270,16 +273,17 @@ public class EventDetailsFragment extends Fragment {
         } else if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
             Uri filePath = data.getData();
             try {
-                selectedImage = Bitmap.createScaledBitmap(MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), filePath), 500, 500, true);
+                selectedImage = Bitmap.createScaledBitmap(MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), filePath), 650, 800, true);
             } catch (IOException e) {
                 e.printStackTrace();
             }
             picture = null;
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
             if( selectedImage != null ) {
-                selectedImage.compress(Bitmap.CompressFormat.JPEG, 50, stream);
+                selectedImage.compress(Bitmap.CompressFormat.JPEG, 100, stream);
                 picture = stream.toByteArray();
                 ivPicture.setImageBitmap(selectedImage);
+                ivPicture.setVisibility(View.VISIBLE);
             }
 //            try {
 ////                selectedImage = Bitmap.createScaledBitmap(MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), filePath), 500, 500, true);
@@ -315,6 +319,7 @@ public class EventDetailsFragment extends Fragment {
             }
         }, yearStart, monthStart, dayStart);
         dpdStart.getDatePicker().setMinDate(new Date().getTime());
+        dpdStart.setTitle("");
         if (Build.VERSION.SDK_INT < 21) {
             dpdStart.getDatePicker().getCalendarView().setFirstDayOfWeek(Calendar.SUNDAY);
         } else {
@@ -343,6 +348,7 @@ public class EventDetailsFragment extends Fragment {
             }
         }, yearEnd, monthEnd, dayEnd);
         dpdEnd.getDatePicker().setMinDate(new Date().getTime());
+        dpdEnd.setTitle("");
         if (Build.VERSION.SDK_INT < 21) {
             dpdEnd.getDatePicker().getCalendarView().setFirstDayOfWeek(Calendar.SUNDAY);
         } else {
@@ -394,7 +400,10 @@ public class EventDetailsFragment extends Fragment {
                                 (selectedMinute < minuteStart && selectedHour == hourStart)
                                 ) {
                             Toast.makeText(getActivity(), getResources().getString(R.string.new_event_time_error), Toast.LENGTH_SHORT).show();
-                        } else {
+                        } else if (selectedHour < hourStart || (selectedHour == hourStart && selectedMinute < minuteStart)){
+                            Toast.makeText(getActivity(), getResources().getString(R.string.new_event_time_error), Toast.LENGTH_SHORT).show();
+                        }
+                        else {
                             hourEnd = selectedHour;
                             minuteEnd = selectedMinute;
                             if (minuteEnd < 10) {
@@ -497,6 +506,10 @@ public class EventDetailsFragment extends Fragment {
                 dateEndTxt.isEmpty() || timeEndTxt.isEmpty()) {
             Toast.makeText(getActivity(), getResources().getString(R.string.new_event_empty), Toast.LENGTH_SHORT).show();
             return false;
+        }
+        if(hourEnd < hourStart || (hourEnd == hourStart && minuteEnd < minuteStart)){
+            Toast.makeText(getActivity(), getResources().getString(R.string.new_event_date_error), Toast.LENGTH_SHORT).show();
+            return false;
         } else {
 
             if (isNew == false) {
@@ -548,9 +561,8 @@ public class EventDetailsFragment extends Fragment {
         tvPickLocation = (TextView) view.findViewById(R.id.tvPickLocation);
 
         ivPicture = (ImageView) view.findViewById(R.id.ivPicture);
-        ibPicture = (ImageButton) view.findViewById(R.id.ibPicture);
-
-        ibPicture.setOnClickListener(new View.OnClickListener() {
+        tvAddPicture = (TextView) view.findViewById(R.id.tvAddPicture);
+        tvAddPicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
@@ -575,6 +587,7 @@ public class EventDetailsFragment extends Fragment {
                 image.setImageBitmap(selectedImage);
 
                 dialog.show();
+                dialog.getWindow().setLayout(650, 800);
 
             }
         });

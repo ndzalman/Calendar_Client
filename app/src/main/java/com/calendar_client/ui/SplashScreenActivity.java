@@ -50,7 +50,7 @@ public class SplashScreenActivity extends AppCompatActivity {
     private TextView tvStatus;
     private AlertDialog alertDialog;
     private AlertDialog exitDialog;
-    private final static int SPLASH_TIME = 500;
+    private final static int SPLASH_TIME = 300;
     private Intent intent;
     private Data data;
     private User user;

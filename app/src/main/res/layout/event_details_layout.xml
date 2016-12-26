@@ -228,7 +228,8 @@
                 android:padding="10dp"
                 android:drawablePadding="6dp"
                 android:fontFamily="sans-serif-condensed"
-                android:layout_gravity="center"
+                android:layout_gravity="center_horizontal"
+                android:drawableStart="@drawable/ic_description"
                 android:drawableLeft="@drawable/ic_description"
                 />
 
@@ -236,9 +237,13 @@
 
 
             <LinearLayout
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
                 android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="15">
 
                 <LinearLayout
@@ -247,15 +252,19 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1">
 
-                    <ImageButton
-                        android:layout_width="match_parent"
+                    <TextView
+                        android:layout_gravity="center_vertical"
+                        android:gravity="center_vertical"
+                        android:text="@string/add_picture"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        app:srcCompat="@android:drawable/ic_menu_camera"
-                        android:id="@+id/ibPicture"
-                        android:layout_weight="1"
-                        android:onClick="dismissListener"/>
+                        android:drawableLeft="@drawable/ic_photo"
+                        android:id="@+id/tvAddPicture"
+                        android:drawablePadding="6dp"
+                        />
 
                     <ImageView
+                        android:visibility="gone"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:id="@+id/ivPicture"
@@ -267,28 +276,14 @@
             </LinearLayout>
 
             <android.support.design.widget.FloatingActionButton
+                android:layout_gravity="end"
             android:id="@+id/fabDone"
             android:layout_margin="10dp"
             app:fabSize="normal"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:src="@drawable/ic_done"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
             />
-
-            <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fabDelete"
-            app:fabSize="normal"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:src="@drawable/ic_delete_forever"
-            android:layout_alignParentBottom="true"
-            android:layout_margin="10dp"
-            android:visibility="gone"
-            android:layout_toLeftOf="@+id/fabDone"
-            android:layout_toStartOf="@+id/fabDone" />
 
 
     </LinearLayout>

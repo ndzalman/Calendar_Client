@@ -2,12 +2,15 @@ package com.calendar_client.ui;
 
 import android.Manifest;
 import android.app.AlarmManager;
+import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.preference.PreferenceManager;
@@ -15,14 +18,19 @@ import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.PermissionChecker;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -60,6 +68,7 @@ public class EventActivity extends AppCompatActivity {
     private TextView tvEventLocation;
     private LinearLayout descriptionLayout;
     private LinearLayout locationLayout;
+    private LinearLayout imageLayout;
     private TextView tvContacts;
     private Button btnShowMore;
     private ListView listContacts;
@@ -68,7 +77,7 @@ public class EventActivity extends AppCompatActivity {
     private MyAdapter contactAdapter;
     private List<User> usersInEvent;
     private boolean permissionGranted = false;
-    private List<String> usersNames = new ArrayList<>();
+    private List<UserInEvent> usersNames = new ArrayList<>();
     private boolean isOwner = false;
     private User user;
     public static String NOTIFICATION_ID = "notification-id";
@@ -80,6 +89,12 @@ public class EventActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event);
         event = (Event) getIntent().getSerializableExtra("event");
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle(this.getTitle());
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String userJSON = sharedPreferences.getString("user","");
@@ -95,6 +110,19 @@ public class EventActivity extends AppCompatActivity {
             fabEventEdit.setVisibility(View.GONE);
         }
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                finish();
+                Intent intent = new Intent(this, CalendarActivity.class);
+                startActivity(intent);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void deleteNotification() {
@@ -137,6 +165,29 @@ public class EventActivity extends AppCompatActivity {
             tvEventLocation.setText(event.getLocation());
         } else{
             locationLayout.setVisibility(View.GONE);
+        }
+
+        imageLayout = (LinearLayout) findViewById(R.id.imageLayout);
+        if (event.getImage() != null){
+            imageLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(EventActivity.this);
+                    final AlertDialog dialog = builder.create();
+                    LayoutInflater inflater = getLayoutInflater();
+                    View dialogLayout = inflater.inflate(R.layout.image_popup, null);
+                    dialog.setView(dialogLayout);
+                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                    ImageView image = (ImageView) dialogLayout.findViewById(R.id.popup_image);
+                    Bitmap b = BitmapFactory.decodeByteArray(event.getImage(),0,event.getImage().length);
+                    image.setImageBitmap(b);
+
+                    dialog.show();
+                    dialog.getWindow().setLayout(650, 800);
+                }
+            });
+        } else{
+            imageLayout.setVisibility(View.GONE);
         }
 
         fabEventEdit = (FloatingActionButton) findViewById(R.id.fabEventEdit);
@@ -274,7 +325,7 @@ public class EventActivity extends AppCompatActivity {
         }
     }
 
-    public List<String> getContacts(List<User> existingUsers) {
+    public List<UserInEvent> getContacts(List<User> existingUsers) {
         usersNames = new ArrayList<>();
         Cursor phones = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,null,null, null);
         while (phones.moveToNext())
@@ -299,7 +350,14 @@ public class EventActivity extends AppCompatActivity {
 
             for(int i=0; i<existingUsers.size(); i++) {
                 if (existingUsers.get(i).getPhoneNumber().equals(phoneNumber)){
-                    usersNames.add(name);
+                    UserInEvent u = new UserInEvent();
+                    u.setUserName(name);
+                    if (existingUsers.get(i).getId() == event.getOwnerId()){
+                        Log.e("CONTACT","user " + existingUsers.get(i).getId() + " event owner  " + event.getOwnerId());
+                        u.setOwner(true);
+                    }
+                    Log.e("CONTACT","user " + existingUsers.get(i).getUserName() + " user id  " + existingUsers.get(i).getId());
+                    usersNames.add(u);
                     existingUsers.remove(existingUsers.get(i));
                     break;
                 }
@@ -308,7 +366,9 @@ public class EventActivity extends AppCompatActivity {
         if (existingUsers.size() > 0){ //meaning that there are users in this event that not exist in your phone
             Log.e("EXISTING-USERS","ADDING OTHER USERS");
             for (User user: existingUsers){
-                usersNames.add(user.getUserName());
+                UserInEvent u = new UserInEvent();
+                u.setUserName(user.getUserName());
+                usersNames.add(u);
             }
         }
 
@@ -318,17 +378,17 @@ public class EventActivity extends AppCompatActivity {
     }
 
     private class MyAdapter extends BaseAdapter {
-        List<String> users;
+        List<UserInEvent> users;
         Context context;
         int layout;
 
-        public MyAdapter(Context context, int layout, List<String> users) {
+        public MyAdapter(Context context, int layout, List<UserInEvent> users) {
             this.context = context;
             this.users = users;
             this.layout = layout;
         }
 
-        public List<String> getData() {
+        public List<UserInEvent> getData() {
             return this.users;
         }
 
@@ -350,13 +410,14 @@ public class EventActivity extends AppCompatActivity {
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
             final MyAdapter.ViewHolder holder;
-            final String user = (String) getItem(position);
+            final UserInEvent user = (UserInEvent) getItem(position);
 
             if (convertView == null) {
                 LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 convertView = inflater.inflate(layout, parent, false);
                 holder = new MyAdapter.ViewHolder();
                 holder.tvUserName = (TextView) convertView.findViewById(R.id.tvUserName);
+                holder.tvEventAdmin = (TextView) convertView.findViewById(R.id.tvEventAdmin);
 
                 convertView.setTag(holder);
 
@@ -364,13 +425,20 @@ public class EventActivity extends AppCompatActivity {
                 holder = (MyAdapter.ViewHolder) convertView.getTag();
             }
 
-            holder.tvUserName.setText(usersNames.get(position));
+            holder.tvUserName.setText(users.get(position).getUserName());
+            if (users.get(position).isOwner()){
+                Log.e("CONTACT","user " + user.getUserName() + " event owner  " + event.getOwnerId());
+                holder.tvEventAdmin.setVisibility(View.VISIBLE);
+            }else{
+                holder.tvEventAdmin.setVisibility(View.GONE);
+            }
             return convertView;
 
         }
 
         private class ViewHolder {
             TextView tvUserName;
+            TextView tvEventAdmin;
         }
 
     }
@@ -497,6 +565,27 @@ public class EventActivity extends AppCompatActivity {
         } else{
             Intent calendar = new Intent(this,CalendarActivity.class);
             startActivity(calendar);
+        }
+    }
+
+    private class UserInEvent{
+        private String userName;
+        private boolean isOwner = false;
+
+        public String getUserName() {
+            return userName;
+        }
+
+        public void setUserName(String userName) {
+            this.userName = userName;
+        }
+
+        public boolean isOwner() {
+            return isOwner;
+        }
+
+        public void setOwner(boolean owner) {
+            isOwner = owner;
         }
     }
 }

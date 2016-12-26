@@ -15,4 +15,5 @@
     <color name="white">#e8e8e8</color>
     <color name="colorPrimaryOpacity">#5c007c9c</color>
     <color name="whiteOpacity">#50ffffff</color>
+    <color name="whiteTide">#ffffff</color>
 </resources>

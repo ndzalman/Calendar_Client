@@ -8,11 +8,34 @@
     android:id="@+id/eventLayout"
     android:layout_gravity="start"
     tools:context="com.calendar_client.ui.EventActivity"
-    android:padding="6dp"
     android:background="@drawable/calendario_background">
 
+    <android.support.design.widget.AppBarLayout
+        app:elevation="0dp"
+        android:id="@+id/myAppBarLayout"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimaryDark">
+
+            </android.support.v7.widget.Toolbar>
+
+
+        </RelativeLayout>
+    </android.support.design.widget.AppBarLayout>
+
     <TextView
-            android:layout_margin="6dp"
+        android:layout_below="@+id/myAppBarLayout"
+            android:layout_margin="3dp"
             android:gravity="center"
             android:text="@string/event_title"
             android:layout_width="match_parent"
@@ -23,7 +46,7 @@
             android:textColor="@color/colorPrimary"
             android:textStyle="normal|bold"
         android:textSize="24sp"
-        android:padding="6dp" />
+        android:padding="3dp" />
 
         <LinearLayout
             android:id="@+id/titleLayout"
@@ -31,9 +54,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_margin="3dp"
             android:layout_gravity="start"
-            android:padding="3dp">
+            android:layout_margin="3dp">
 
             <ImageView
                 android:contentDescription="@string/title"
@@ -54,23 +76,12 @@
                 android:layout_height="match_parent"
                 android:id="@+id/tvEventTitle"
                 android:textColor="@color/colorPrimary"
-                android:layout_weight="1"
+                android:layout_weight="3"
                 android:layout_margin="3dp"
                 android:padding="3dp"
                 android:fontFamily="sans-serif-condensed"
                 android:textSize="18sp" />
 
-
-            <TextView
-                android:gravity="center|start"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="center|start"
-                android:layout_weight="2"
-                android:layout_margin="3dp"
-                android:padding="3dp"
-                android:textSize="18sp"
-                android:fontFamily="sans-serif-condensed" />
 
         </LinearLayout>
 
@@ -81,8 +92,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_margin="3dp"
-            android:layout_gravity="start"
-            android:padding="3dp">
+            android:layout_gravity="start">
 
             <ImageView
                 android:contentDescription="@string/date"
@@ -103,18 +113,7 @@
                 android:layout_height="match_parent"
                 android:id="@+id/tvEventDateStart"
                 android:textColor="@color/colorPrimaryDark"
-                android:layout_weight="1"
-                android:layout_margin="3dp"
-                android:padding="3dp"
-                android:fontFamily="sans-serif-condensed"
-                android:textSize="18sp" />
-
-            <TextView
-                android:gravity="center|start"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="center|start"
-                android:layout_weight="2"
+                android:layout_weight="3"
                 android:layout_margin="3dp"
                 android:padding="3dp"
                 android:fontFamily="sans-serif-condensed"
@@ -130,8 +129,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_margin="3dp"
-        android:layout_gravity="start"
-        android:padding="3dp">
+        android:layout_gravity="start">
 
         <TextView
             android:layout_width="0dp"
@@ -152,22 +150,11 @@
             android:layout_height="match_parent"
             android:id="@+id/tvEventDateEnd"
             android:textColor="@color/colorPrimaryDark"
-            android:layout_weight="1"
+            android:layout_weight="3"
             android:layout_margin="3dp"
             android:padding="3dp"
             android:textSize="18sp"
             android:fontFamily="sans-serif-condensed" />
-
-        <TextView
-            android:gravity="center|start"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="center|start"
-            android:layout_weight="2"
-            android:layout_margin="3dp"
-            android:padding="3dp"
-            android:fontFamily="sans-serif-condensed"
-            android:textSize="18sp" />
 
 
     </LinearLayout>
@@ -178,7 +165,6 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_gravity="start"
-        android:padding="3dp"
         android:layout_below="@+id/dateEndLayout"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
@@ -204,22 +190,11 @@
             android:layout_height="match_parent"
             android:textColor="@color/colorPrimaryDark"
             android:id="@+id/tvEventDescription"
-            android:layout_weight="1"
+            android:layout_weight="3"
             android:layout_margin="3dp"
             android:padding="3dp"
             android:fontFamily="sans-serif-condensed"
             android:textSize="18sp" />
-
-        <TextView
-            android:gravity="center|start"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="center|start"
-            android:layout_weight="2"
-            android:fontFamily="sans-serif-condensed"
-            android:textSize="18sp"
-            android:layout_margin="3dp"
-            android:padding="3dp" />
 
 
     </LinearLayout>
@@ -231,8 +206,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_margin="3dp"
-            android:layout_gravity="start"
-            android:padding="3dp">
+            android:layout_gravity="start">
             <ImageView
                 android:contentDescription="@string/location"
                 android:layout_gravity="center|start"
@@ -252,93 +226,122 @@
                 android:layout_height="match_parent"
                 android:id="@+id/tvEventLocation"
                 android:textColor="@color/colorPrimaryLight"
-                android:layout_weight="1"
+                android:layout_weight="3"
                 android:layout_margin="3dp"
                 android:padding="3dp"
                 android:fontFamily="sans-serif-condensed"
                 android:textSize="18sp" />
 
-            <TextView
-                android:gravity="center|start"
-                android:layout_gravity="center|start"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:textColor="@color/colorPrimaryDark"
-                android:layout_weight="2"
-                android:padding="3dp"
-                android:layout_margin="3dp"
-                android:fontFamily="sans-serif-condensed"
-                android:textSize="18sp" />
+    </LinearLayout>
 
-        </LinearLayout>
 
-    <android.support.v7.widget.AppCompatButton
-        android:layout_centerInParent="true"
+    <LinearLayout
+        android:id="@+id/imageLayout"
+        android:layout_below="@+id/locationLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_margin="3dp"
+        android:layout_gravity="start">
+        <ImageView
+            android:contentDescription="@string/location"
+            android:layout_gravity="center|start"
+            android:src="@drawable/ic_photo"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:id="@+id/imgViewImage"
+            android:layout_margin="3dp"
+            android:padding="3dp" />
+
+        <TextView
+            android:layout_gravity="center|start"
+            android:gravity="center|start"
+            android:text="@string/see_picture"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:id="@+id/tvImage"
+            android:textColor="@color/colorPrimaryLight"
+            android:layout_weight="3"
+            android:layout_margin="3dp"
+            android:padding="3dp"
+            android:fontFamily="sans-serif-condensed"
+            android:textSize="18sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/buttonsLayout"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imageLayout"
+        >
+
+
+        <android.support.v7.widget.AppCompatButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/locationLayout"
             android:id="@+id/btnShowMore"
             android:text="@string/event_btn_show_more"
             android:background="@color/colorPrimary"
             android:textColor="@color/white"
-            android:padding="10dp"
-        android:layout_margin="10dp" />
-
-
-        <TextView
+            android:layout_gravity="center_vertical"
             android:layout_margin="10dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/event_contacts"
-            android:layout_below="@+id/btnShowMore"
-            android:id="@+id/tvContacts"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:visibility="gone"
-            />
+            android:padding="8dp"
+             />
 
-        <ListView
-            android:layout_below="@+id/tvContacts"
-            android:id="@+id/listContacts"
+        <LinearLayout
+            android:id="@+id/fabsLayout"
+            android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone"
+            android:layout_gravity="end"
+            android:gravity="end"
             >
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fabEventEdit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_edit_white"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                 />
 
-        </ListView>
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fabEventDelete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_delete_forever"
+                android:layout_margin="10dp" />
+        </LinearLayout>
+    </LinearLayout>
 
-    <LinearLayout
-        android:gravity="center"
-        android:orientation="horizontal"
+
+
+    <TextView
+        android:layout_margin="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignLeft="@+id/locationLayout"
-        android:layout_alignStart="@+id/locationLayout"
-        android:padding="5dp"
-        android:layout_margin="5dp">
+        android:text="@string/event_contacts"
+        android:layout_below="@+id/buttonsLayout"
+        android:id="@+id/tvContacts"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:visibility="gone"
+        />
 
-        <android.support.design.widget.FloatingActionButton
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:id="@+id/fabEventEdit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_edit_white"
-            />
-
-        <android.support.design.widget.FloatingActionButton
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:id="@+id/fabEventDelete"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_delete_forever"
-            />
-    </LinearLayout>
+    <ListView
+        android:layout_below="@+id/tvContacts"
+        android:id="@+id/listContacts"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        >
+    </ListView>
 
 
 </RelativeLayout>

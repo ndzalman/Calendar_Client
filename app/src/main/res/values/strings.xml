@@ -74,6 +74,10 @@
     <string name="new_event_date_error">Illegal date!</string>
     <string name="new_event_time_error">Illegal time!</string>
     <string name="event_deleted">Event Deleted</string>
+    <string name="add_picture">Add Picture</string>
+    <string name="see_picture">See Picture</string>
+    <string name="event_admin">Admin</string>
+
 
     <!--Navigation Drawer-->
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -122,7 +126,7 @@
     <!-- About Activity -->
     <string name="about_developers">Developers: Nadav &amp; Idan Zalman</string>
     <string name="about_app_version">Version: 1.0</string>
-    <string name="about_credits">Credits:\nIcons - Freepik\nThanks to Anael Shomari</string>
+    <string name="about_credits">Credits:\nIcons - Freepik</string>
 
     <!-- Tab Layout -->
     <string name="tab_event_details">Event Details</string>

@@ -2,178 +2,79 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="16dp"
-    android:paddingTop="16dp"
-    android:weightSum="9"
+    android:weightSum="20"
     android:orientation="vertical"
     android:id="@+id/layout"
-    >
+    android:padding="6dp"
+    android:layout_margin="6dp"
+    android:background="@drawable/container">
 
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="3"
-        android:paddingBottom="5dp"
-        >
-
-    <ImageView
-        android:contentDescription="@string/date"
-        android:layout_gravity="center"
-        android:id="@+id/imgViewTime"
-        android:src="@drawable/ic_access_time"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.5"
-        />
-
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:gravity="start|center"
+            android:text="Title"
+            android:id="@+id/tvTitle"
+            android:textColor="@color/colorPrimaryDark"
+            android:layout_weight="1.7"
+            android:padding="10dp"
+            android:drawablePadding="15dp"
+            android:drawableLeft="@drawable/ic_content_paste_black"
+            android:drawableStart="@drawable/ic_content_paste_black"
+            android:fontFamily="sans-serif-condensed"
+            android:textSize="18sp"
+            android:textStyle="normal|bold"/>
 
         <TextView
             android:gravity="start|center_vertical"
             android:text="20/01/2016 - 20/01/2016"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
             android:id="@+id/tvDate"
             android:textColor="@color/colorPrimary"
-            android:layout_weight="1.5"  />
-
-        <TextView
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:gravity="start|center_vertical"
-            android:text="Time"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:id="@+id/tvTime"
-            android:textColor="@color/colorAccent"
             android:layout_weight="1.5"
-            />
-
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingBottom="5dp"
-
-        >
-        <ImageView
-            android:contentDescription="@string/title"
-            android:layout_gravity="center"
-            android:src="@drawable/ic_details"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5"
-            android:id="@+id/imgViewDetails"
-            />
-
-        <TextView
-            android:gravity="start|center_vertical"
-            android:text="Title"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:id="@+id/tvTitle"
-            android:textColor="@color/colorPrimaryDark"
-            android:layout_weight="1.5" />
-
-        <TextView
-            android:gravity="end"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="@color/colorPrimaryDark"
-            android:layout_weight="1" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingBottom="5dp"
-        android:id="@+id/descriptionLayout"
-        >
-        <ImageView
-            android:contentDescription="@string/description"
-            android:layout_gravity="center"
-            android:src="@drawable/ic_description"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5"
-            android:id="@+id/imgViewDescription"
-            />
+            android:padding="6dp"
+            android:layout_margin="6dp"
+            android:drawableLeft="@drawable/ic_access_time"
+            android:drawableStart="@drawable/ic_access_time"
+            android:drawablePadding="15dp"
+            android:textSize="18sp"
+            android:fontFamily="sans-serif-condensed" />
 
         <TextView
             android:gravity="start|center_vertical"
             android:text="Description"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
             android:id="@+id/tvDescription"
             android:textColor="@color/colorPrimaryDark"
-            android:layout_weight="1.5" />
-
-
-        <TextView
-            android:gravity="end"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="@color/colorPrimaryDark"
-            android:layout_weight="1" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingBottom="5dp"
-        android:id="@+id/locationLayout"
-        >
-        <ImageView
-            android:contentDescription="@string/location"
-            android:layout_gravity="center"
-            android:src="@drawable/ic_location_on"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5"
-            android:id="@+id/imgViewLocation"
-            />
+            android:layout_weight="1.5"
+            android:layout_margin="6dp"
+            android:padding="6dp"
+            android:drawableLeft="@drawable/ic_description"
+            android:drawableStart="@drawable/ic_description"
+            android:drawablePadding="15dp"
+            android:fontFamily="sans-serif-condensed"
+            android:textSize="18sp"/>
 
         <TextView
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
             android:gravity="start|center_vertical"
             android:text="Location"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
             android:id="@+id/tvLocation"
-            android:textColor="@color/colorPrimaryLight"
-            android:layout_weight="1.5" />
-
-        <TextView
-            android:gravity="end"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@color/colorPrimaryDark"
-            android:layout_weight="1" />
+            android:layout_weight="1.5"
+            android:layout_margin="6dp"
+            android:padding="6dp"
+            android:fontFamily="sans-serif-condensed"
+            android:drawableLeft="@drawable/ic_location_on"
+            android:drawableStart="@drawable/ic_location_on"
+            android:drawablePadding="15dp"
+            android:textSize="18sp"/>
 
     </LinearLayout>
 
 
-</LinearLayout>

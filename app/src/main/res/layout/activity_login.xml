@@ -49,11 +49,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColorHint="@color/colorPrimaryLight"
-        android:background="@color/whiteOpacity"
+        android:background="@drawable/container"
         android:padding="6dp"
-        android:layout_marginRight="6dp"
-        android:layout_marginTop="6dp"
-        android:layout_marginBottom="6dp"
         android:layout_margin="6dp">
 
         <EditText
@@ -75,9 +72,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColorHint="@color/colorPrimaryLight"
-        android:background="@color/whiteOpacity"
+        android:background="@drawable/container"
         android:padding="6dp"
-        android:layout_margin="6dp">
+        android:layout_margin="6dp"
+        >
 
     <EditText
         android:layout_width="match_parent"
@@ -99,7 +97,7 @@
         android:text="@string/login_button"
         android:id="@+id/btnLogin"
         android:gravity="center"
-        android:background="@color/colorPrimaryDark"
+        android:background="@drawable/container_butten"
         android:textColor="@color/white"
         android:layout_gravity="center"
         android:fontFamily="sans-serif-smallcaps"

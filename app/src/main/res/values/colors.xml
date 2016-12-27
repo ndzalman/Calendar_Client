@@ -13,7 +13,8 @@
     <color name="colorAccent">#e87c00</color>
     <color name="colorHeadlines">#171717</color>
     <color name="white">#e8e8e8</color>
-    <color name="colorPrimaryOpacity">#5c007c9c</color>
+    <color name="colorPrimaryDarkOpacity">#5f007c9c</color>
     <color name="whiteOpacity">#50ffffff</color>
     <color name="whiteTide">#ffffff</color>
+    <color name="colorPrimaryOpacity">#96e87c00</color>
 </resources>

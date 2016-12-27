@@ -10,10 +10,11 @@
         android:id="@+id/tvReminder"
         android:layout_width="match_parent"
         android:text="Reminder"
-        android:textAppearance="?android:attr/textAppearanceListItemSmall"
         android:textColor="@color/colorPrimary"
         android:layout_height="wrap_content"
-        />
+        android:layout_margin="3dp"
+        android:padding="3dp"
+        android:fontFamily="sans-serif-condensed" />
 
 
 </LinearLayout>

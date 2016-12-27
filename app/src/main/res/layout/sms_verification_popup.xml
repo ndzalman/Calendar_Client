@@ -4,7 +4,8 @@
     android:layout_height="wrap_content"
     android:background="@drawable/calendario_background"
     android:id="@+id/popup_layout"
-    android:padding="16dp">
+    android:padding="10dp"
+    android:layout_margin="10dp">
 
 
     <TextView
@@ -40,7 +41,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/code"
         android:padding="6dp"
-        android:background="@color/whiteOpacity"
+        android:background="@drawable/clickable_text_view"
         android:layout_margin="10dp">
         <EditText
             android:id="@+id/etCode"
@@ -63,14 +64,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/code"
-        android:layout_margin="10dp"
-        android:background="@color/colorPrimaryDark"
-        android:layout_centerInParent="true"
+        android:background="@drawable/container_butten"
         android:id="@+id/btnConfirm"
         android:padding="10dp"
         android:gravity="center"
         android:textSize="20sp"
         android:textColor="@color/white"
         android:textStyle="bold"
-        android:fontFamily="sans-serif-smallcaps" />
+        android:fontFamily="sans-serif-smallcaps"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp" />
 </RelativeLayout>

@@ -102,10 +102,10 @@
     <string name="exit_dialog_negative">NO</string>
 
     <!--Contact fragnebt-->
-    <string name="add_contacts">contacts</string>
+    <string name="add_contacts">CONTACTS</string>
 
     <!-- Events -->
-    <string name="events_title">upcoming events</string>
+    <string name="events_title">UPCOMING EVENTS</string>
     <string name="no_events_title">You don\'t have any events!</string>
 
     <!-- Profile -->
@@ -131,7 +131,7 @@
     <string name="about_credits">Credits:\nIcons - Freepik</string>
 
     <!-- Tab Layout -->
-    <string name="tab_event_details">Event Details</string>
+    <string name="tab_event_details">EVENT DETAILS</string>
     <string name="tav_event_contacts">Add Contacts</string>
 
     <!--Event Details -->

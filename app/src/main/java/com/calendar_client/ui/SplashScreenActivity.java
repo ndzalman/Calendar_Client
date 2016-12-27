@@ -85,6 +85,7 @@ public class SplashScreenActivity extends AppCompatActivity {
 
 
         data = Data.getInstance();
+        initAlertDialog(getString(R.string.alert_dialog_title));
 
         //check if user in online, then if he is logged get the events from server
         // and start the progress bar task
@@ -203,8 +204,9 @@ public class SplashScreenActivity extends AppCompatActivity {
         protected void onPostExecute(Boolean isConnected) {
             if (!logged) {
                 nextActivity();
-            } else{
-                initAlertDialog(getString(R.string.alert_dialog_title));
+            } else if(isConnected){
+
+            } else if (!isConnected){
                 alertDialog.show();
             }
         }

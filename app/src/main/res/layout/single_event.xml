@@ -3,35 +3,24 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:weightSum="6"
+    android:weightSum="10"
     android:orientation="vertical"
     android:padding="5dp">
 
     <LinearLayout
-        android:layout_weight="1"
+        android:layout_weight="1.5"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:weightSum="10"
-        android:padding="5dp"
-        android:background="@color/whiteOpacity"
-        android:layout_margin="5dp">
-
-        <ImageView
-            android:src="@drawable/ic_details_white"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:id="@+id/imgViewDetails"
-            android:contentDescription="@string/title"
-            android:layout_weight="1"
-            android:layout_gravity="center"
-            android:layout_margin="3dp"
-            android:background="@color/colorPrimary" />
+        android:weightSum="8"
+        android:padding="3dp"
+        android:background="@drawable/container"
+        android:layout_margin="3dp">
 
         <TextView
             android:text="Title"
             android:id="@+id/tvTitle"
-            android:textColor="@color/colorPrimaryLight"
+            android:textColor="@color/colorPrimaryDark"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:padding="3dp"
@@ -39,33 +28,27 @@
             android:gravity="center|start"
             android:layout_weight="4"
             android:fontFamily="sans-serif-condensed"
+            android:drawablePadding="15dp"
+            android:drawableLeft="@drawable/ic_content_paste_black"
+            android:drawableStart="@drawable/ic_content_paste_black"
             android:textSize="18sp"
             android:textStyle="normal|bold" />
-
-        <ImageView
-            android:id="@+id/imgViewTime"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:contentDescription="@string/date"
-            android:src="@drawable/ic_watch_later"
-            android:layout_weight="1"
-            android:layout_gravity="center"
-            android:layout_margin="3dp"
-            android:background="@color/colorPrimaryDark" />
 
         <TextView
             android:text="Time"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:id="@+id/tvTime"
-            android:textColor="@color/colorPrimaryLight"
+            android:textColor="@color/colorPrimary"
             android:padding="3dp"
             android:layout_margin="3dp"
             android:gravity="center|start"
             android:layout_weight="4"
+            android:drawableLeft="@drawable/ic_access_time"
+            android:drawableStart="@drawable/ic_access_time"
+            android:drawablePadding="15dp"
             android:fontFamily="sans-serif-condensed"
             android:textSize="18sp" />
-
 
     </LinearLayout>
 </LinearLayout>

@@ -347,7 +347,7 @@ public class SplashScreenActivity extends AppCompatActivity {
     }
     private class RefreshTokenTask extends AsyncTask<String, Void, String> {
         // get the email and password - before executing task
-        String token;
+        String token="";
 
         @Override
         protected void onPreExecute() {

@@ -182,7 +182,7 @@ public class EventActivity extends AppCompatActivity {
                     image.setImageBitmap(b);
 
                     dialog.show();
-                    dialog.getWindow().setLayout(650, 800);
+                    dialog.getWindow().setLayout(400, 600);
                 }
             });
         } else{

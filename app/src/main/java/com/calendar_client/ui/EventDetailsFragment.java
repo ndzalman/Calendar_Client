@@ -285,7 +285,7 @@ public class EventDetailsFragment extends Fragment {
         } else if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
             Uri filePath = data.getData();
             try {
-                selectedImage = Bitmap.createScaledBitmap(MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), filePath), 600, 800, true);
+                selectedImage = Bitmap.createScaledBitmap(MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), filePath), 400, 600, true);
             } catch (IOException e) {
                 e.printStackTrace();
             }

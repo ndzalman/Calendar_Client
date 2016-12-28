@@ -41,6 +41,22 @@
             android:textSize="18sp"
             android:fontFamily="sans-serif-condensed" />
 
+    <TextView
+        android:gravity="start|center_vertical"
+        android:text="14:00 - 20:00"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:id="@+id/tvTime"
+        android:textColor="@color/colorPrimary"
+        android:layout_weight="1.5"
+        android:padding="6dp"
+        android:layout_margin="6dp"
+        android:drawableLeft="@drawable/ic_access_time"
+        android:drawableStart="@drawable/ic_access_time"
+        android:drawablePadding="15dp"
+        android:textSize="18sp"
+        android:fontFamily="sans-serif-condensed" />
+
         <TextView
             android:gravity="start|center_vertical"
             android:text="Description"

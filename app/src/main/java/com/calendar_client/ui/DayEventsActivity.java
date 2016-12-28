@@ -187,8 +187,8 @@ public class DayEventsActivity extends AppCompatActivity {
                 holder.tvDescription = (TextView) convertView.findViewById(R.id.tvDescription);
                 holder.tvLocation = (TextView) convertView.findViewById(R.id.tvLocation);
                 holder.tvTime = (TextView) convertView.findViewById(R.id.tvTime);
-                holder.descriptionLayout = (LinearLayout) convertView.findViewById(R.id.descriptionLayout);
-                holder.locationLayout = (LinearLayout) convertView.findViewById(R.id.locationLayout);
+//                holder.descriptionLayout = (LinearLayout) convertView.findViewById(R.id.descriptionLayout);
+//                holder.locationLayout = (LinearLayout) convertView.findViewById(R.id.locationLayout);
 
                 convertView.setTag(holder);
 
@@ -200,7 +200,7 @@ public class DayEventsActivity extends AppCompatActivity {
             if (!event.getLocation().isEmpty()){
                 holder.tvLocation.setText(event.getLocation());
             } else{
-                holder.locationLayout.setVisibility(View.GONE);
+                holder.tvLocation.setVisibility(View.GONE);
             }
             SimpleDateFormat sdf = new SimpleDateFormat(TIME_FORMAT);
             holder.tvTime.setText(sdf.format(event.getDateStart().getTime()) + " - " + sdf.format(event.getDateEnd().getTime()));
@@ -208,7 +208,7 @@ public class DayEventsActivity extends AppCompatActivity {
             if (!event.getDescription().isEmpty()) {
                 holder.tvDescription.setText(event.getDescription());
             }else{
-                holder.descriptionLayout.setVisibility(View.GONE);
+                holder.tvDescription.setVisibility(View.GONE);
             }
 
             return convertView;

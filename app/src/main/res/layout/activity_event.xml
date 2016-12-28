@@ -65,14 +65,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:id="@+id/tvEventTitle"
-                android:textColor="@color/colorPrimary"
+                android:textColor="@color/colorPrimaryDark"
                 android:layout_weight="3"
                 android:layout_margin="3dp"
                 android:padding="3dp"
                 android:fontFamily="sans-serif-condensed"
+                android:drawableLeft="@drawable/ic_content_paste_black"
+                android:drawableStart="@drawable/ic_content_paste_black"
+                android:drawablePadding="15dp"
                 android:textSize="18sp" />
-
-
 
             <TextView
                 android:layout_gravity="center|start"
@@ -81,11 +82,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:id="@+id/tvEventDateStart"
-                android:textColor="@color/colorPrimaryDark"
+                android:textColor="@color/colorPrimary"
                 android:layout_weight="3"
                 android:layout_margin="3dp"
                 android:padding="3dp"
                 android:fontFamily="sans-serif-condensed"
+                android:drawableLeft="@drawable/ic_today"
+                android:drawableStart="@drawable/ic_today"
+                android:drawablePadding="15dp"
                 android:textSize="18sp" />
 
 
@@ -96,11 +100,14 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:id="@+id/tvEventDateEnd"
-            android:textColor="@color/colorPrimaryDark"
+            android:textColor="@color/colorPrimary"
             android:layout_weight="3"
             android:layout_margin="3dp"
             android:padding="3dp"
             android:textSize="18sp"
+            android:drawableLeft="@drawable/ic_access_time"
+            android:drawableStart="@drawable/ic_access_time"
+            android:drawablePadding="15dp"
             android:fontFamily="sans-serif-condensed" />
 
 
@@ -117,6 +124,9 @@
             android:layout_margin="3dp"
             android:padding="3dp"
             android:fontFamily="sans-serif-condensed"
+            android:drawableLeft="@drawable/ic_description"
+            android:drawableStart="@drawable/ic_description"
+            android:drawablePadding="15dp"
             android:textSize="18sp" />
 
 
@@ -132,9 +142,16 @@
                 android:layout_margin="3dp"
                 android:padding="3dp"
                 android:fontFamily="sans-serif-condensed"
+                android:drawableLeft="@drawable/ic_location_on"
+                android:drawableStart="@drawable/ic_location_on"
+                android:drawablePadding="15dp"
                 android:textSize="18sp" />
 
-
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/imageLayout"
+    >
         <TextView
             android:layout_gravity="center|start"
             android:gravity="center|start"
@@ -147,8 +164,13 @@
             android:layout_margin="3dp"
             android:padding="3dp"
             android:fontFamily="sans-serif-condensed"
+            android:drawableLeft="@drawable/ic_photo"
+            android:drawableStart="@drawable/ic_photo"
+            android:drawablePadding="15dp"
             android:textSize="18sp" />
 
+
+</LinearLayout>
     </LinearLayout>
 
     <TextView
@@ -160,7 +182,7 @@
         android:id="@+id/tvContacts"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:visibility="gone"
-        />
+        android:fontFamily="sans-serif-condensed" />
 
     <ListView
         android:layout_below="@+id/tvContacts"

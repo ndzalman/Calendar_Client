@@ -176,8 +176,8 @@ public class UpComingEventsActivity extends AppCompatActivity {
                 holder.tvTime = (TextView) convertView.findViewById(R.id.tvTime);
                 holder.tvLocation = (TextView) convertView.findViewById(R.id.tvLocation);
                 holder.tvDate = (TextView) convertView.findViewById(R.id.tvDate);
-                holder.locationLayout = (LinearLayout) convertView.findViewById(R.id.locationLayout);
-                holder.descriptionLayout = (LinearLayout) convertView.findViewById(R.id.descriptionLayout);
+//                holder.locationLayout = (LinearLayout) convertView.findViewById(R.id.locationLayout);
+//                holder.descriptionLayout = (LinearLayout) convertView.findViewById(R.id.descriptionLayout);
 
                 convertView.setTag(holder);
 
@@ -188,13 +188,13 @@ public class UpComingEventsActivity extends AppCompatActivity {
             holder.tvTitle.setText(event.getTitle());
 
             if (event.getLocation() != null && event.getLocation().isEmpty()) {
-                holder.locationLayout.setVisibility(View.GONE);
+                holder.tvLocation.setVisibility(View.GONE);
             }else{
                 holder.tvLocation.setText(event.getLocation());
             }
 
             if (event.getDescription().isEmpty()){
-                holder.descriptionLayout.setVisibility(View.GONE);
+                holder.tvDescription.setVisibility(View.GONE);
             }else{
                 holder.tvDescription.setText(event.getDescription());
             }

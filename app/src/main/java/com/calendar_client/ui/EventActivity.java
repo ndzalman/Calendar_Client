@@ -149,21 +149,21 @@ public class EventActivity extends AppCompatActivity {
 
 
         tvEventDescription = (TextView) findViewById(R.id.tvEventDescription);
-        descriptionLayout = (LinearLayout) findViewById(R.id.descriptionLayout);
+//        descriptionLayout = (LinearLayout) findViewById(R.id.descriptionLayout);
 
         if (event.getDescription() != null && !event.getDescription().isEmpty()) {
             tvEventDescription.setText(event.getDescription());
         } else{
-            descriptionLayout.setVisibility(View.GONE);
+            tvEventDescription.setVisibility(View.GONE);
         }
 
         tvEventLocation = (TextView) findViewById(R.id.tvEventLocation);
-        locationLayout = (LinearLayout) findViewById(R.id.locationLayout);
+//        locationLayout = (LinearLayout) findViewById(R.id.locationLayout);
 
         if (event.getLocation() != null && !event.getLocation().equals("")) {
             tvEventLocation.setText(event.getLocation());
         } else{
-            locationLayout.setVisibility(View.GONE);
+            tvEventLocation.setVisibility(View.GONE);
         }
 
         imageLayout = (LinearLayout) findViewById(R.id.imageLayout);

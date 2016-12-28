@@ -127,7 +127,7 @@
                         android:fontFamily="sans-serif-condensed"
                         android:drawableLeft="@drawable/ic_access_time"
                         android:drawableStart="@drawable/ic_access_time"
-                        android:drawablePadding="10dp"/>
+                        android:drawablePadding="15dp"/>
 
                 </LinearLayout>
             </LinearLayout>
